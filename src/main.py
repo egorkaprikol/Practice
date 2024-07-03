@@ -23,7 +23,9 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @app.post("/patients/")
 async def create_patient(patient: PatientBase, db: db_dependency):
-    db_patient = models.Patient()
+    db_patient = models.Patient(name=patient.name, surname=patient.surname, fathername=patient.fathername,
+                                gender=patient.gender, age=patient.age, sector=patient.sector, number=patient.number,
+                                address=patient.address)
     db.add(db_patient)
     db.commit()
     db.refresh(db_patient)

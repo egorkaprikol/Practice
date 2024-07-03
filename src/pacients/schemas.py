@@ -6,7 +6,7 @@ class PatientBase(BaseModel):
     name: str
     surname: str
     fathername: str
-    gender: str
+    gender: int
     age: int
     sector: int
     number: int
