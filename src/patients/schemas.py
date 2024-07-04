@@ -10,7 +10,6 @@ class PatientBase(BaseModel):
     sector: int
     number: int
     address: str
-    visit: int
 
 
 class GenderBase(BaseModel):
