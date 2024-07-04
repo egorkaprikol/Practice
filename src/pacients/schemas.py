@@ -2,15 +2,15 @@ from pydantic import BaseModel
 
 
 class PatientBase(BaseModel):
-    id: int
     name: str
     surname: str
-    fathername: str
+    father_name: str
     gender: int
     age: int
     sector: int
     number: int
     address: str
+    visit: int
 
 
 class GenderBase(BaseModel):

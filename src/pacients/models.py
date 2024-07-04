@@ -7,7 +7,7 @@ class Patient(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
-    fathername = Column(String)
+    father_name = Column(String)
     gender = Column(Integer, ForeignKey("gender.id"), nullable=False)
     age = Column(Integer, nullable=False)
     sector = Column(Integer, ForeignKey("sector.id"), nullable=False)
