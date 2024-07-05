@@ -1,4 +1,6 @@
+from fastapi._compat import PYDANTIC_V2
 from pydantic import BaseModel
+from pydantic import ConfigDict
 
 
 class PatientBase(BaseModel):
@@ -19,3 +21,10 @@ class GenderBase(BaseModel):
 class SectorBase(BaseModel):
     number: int
     address: str
+
+    if PYDANTIC_V2:  # pragma: no cover
+        model_config = ConfigDict(from_attributes=True)  # type: ignore
+    else:  # pragma: no cover
+
+        class Config:
+            orm_mode = True

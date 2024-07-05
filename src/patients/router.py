@@ -1,7 +1,11 @@
-from fastapi import APIRouter
+from typing import List
+
+from fastapi import APIRouter, Depends
 from src.database.config import db_dependency as db_dependency
 from src.patients import models
+from src.patients.repository import create_sector, create_gender
 from src.patients.schemas import *
+
 
 router = APIRouter(
     prefix="/Patients"
@@ -24,11 +28,15 @@ async def create_patient(patient: PatientBase, db: db_dependency):
     return {"message": "Patient entry created successfully", "Patient": db_patient}
 
 
-@router.post("/sectors")
-async def create_sector(sector: SectorBase, db: db_dependency):
-    db_sector = models.Sector(number=sector.number,
-                              address=sector.address)
-    db.add(db_sector)
-    db.commit()
-    db.refresh(db_sector)
-    return {"message": "Sector entry created successfully", "Sector": db_sector}
+@router.post("/sectors", response_model=list[SectorBase])
+async def create_a_sector(db: db_dependency):
+    response = await create_sector(SectorBase, db)
+    return response
+
+
+@router.post("/genders")
+async def create_a_gender():
+    response = await create_gender(GenderBase)
+    return response
+
+

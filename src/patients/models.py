@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column, String, ForeignKey
+from sqlalchemy import Integer, Column, String, ForeignKey, null
 from src.database.config import Base
 
 
@@ -13,7 +13,6 @@ class Patient(Base):
     sector = Column(Integer, ForeignKey("sector.id"), nullable=False)
     number = Column(Integer, nullable=False)
     address = Column(String, nullable=False)
-    visit = Column(Integer, ForeignKey("visit.id"), nullable=False)
 
 
 class Gender(Base):

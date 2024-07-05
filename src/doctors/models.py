@@ -9,7 +9,6 @@ class Doctor(Base):
     surname = Column(String, nullable=False)
     father_name = Column(String)
     experience = Column(Integer, nullable=False)
-    sector = Column(Integer, ForeignKey("sector.id"), nullable=False)  # как достать сектор из другой папки чтобы он видел ключ?
+    sector = Column(Integer, ForeignKey("sector.id"), nullable=False)
     telephone_number = Column(Integer, nullable=False)
-    visit = Column(Integer, ForeignKey("visit.id"), nullable=False)
 
