@@ -13,7 +13,6 @@ class Visit(Base):
     diagnosis = Column(Integer, ForeignKey("diagnosis.id"), nullable=False)
     instruction = Column(String, nullable=False)
 
-
 class Place(Base):
     __tablename__ = 'place'
     id = Column(Integer, primary_key=True, nullable=False)

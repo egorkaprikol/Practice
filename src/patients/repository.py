@@ -18,3 +18,18 @@ async def create_gender(gender: GenderBase, db: db_dependency):
     db.commit()
     db.refresh(db_gender)
     return {"message": "Gender entry created successfully", "Sector": db_gender}
+
+
+async def create_patient(patient: PatientBase, db: db_dependency):
+    db_patient = models.Patient(name=patient.name,
+                                surname=patient.surname,
+                                father_name=patient.father_name,
+                                gender=patient.gender,
+                                age=patient.age,
+                                sector=patient.sector,
+                                number=patient.number,
+                                address=patient.address)
+    db.add(db_patient)
+    db.commit()
+    db.refresh(db_patient)
+    return {"message": "Patient entry created successfully", "Patient": db_patient}

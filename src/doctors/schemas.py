@@ -8,4 +8,3 @@ class DoctorBase(BaseModel):
     experience: int
     sector: int
     telephone_number: int
-    visit: int
