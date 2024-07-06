@@ -10,5 +10,5 @@ class Doctor(Base):
     father_name = Column(String)
     experience = Column(Integer, nullable=False)
     sector = Column(Integer, ForeignKey("sector.id"), nullable=False)
-    telephone_number = Column(Integer, nullable=False)
+    phone_number = Column(String, nullable=False)
 

@@ -7,4 +7,4 @@ class DoctorBase(BaseModel):
     father_name: str
     experience: int
     sector: int
-    telephone_number: int
+    phone_number: str

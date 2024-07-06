@@ -1,28 +1,28 @@
-from fastapi import APIRouter
-from src.database.config import db_dependency as db_dependency
+from fastapi import APIRouter, status
+from src.database.config import db_dependency
 from src.patients.repository import create_sector, create_gender, create_patient
 from src.patients.schemas import *
 
 
 router = APIRouter(
-    prefix="/Patients"
+    prefix="/patients"
 )
 
 
-@router.post("/")
-async def create_a_patient(patient: PatientBase, db: db_dependency):
+@router.post("/", status_code=status.HTTP_201_CREATED)
+async def patient_create(patient: PatientBase, db: db_dependency):
     response = await create_patient(patient, db)
     return response
 
 
-@router.post("/sectors")
-async def create_a_sector(sector: SectorBase, db: db_dependency):
+@router.post("/sectors", status_code=status.HTTP_201_CREATED)
+async def sector_create(sector: SectorBase, db: db_dependency):
     response = await create_sector(sector, db)
     return response
 
 
-@router.post("/genders")
-async def create_a_gender(gender: GenderBase, db: db_dependency):
+@router.post("/genders", status_code=status.HTTP_201_CREATED)
+async def gender_create(gender: GenderBase, db: db_dependency):
     response = await create_gender(gender, db)
     return response
 

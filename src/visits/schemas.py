@@ -9,18 +9,11 @@ class VisitBase(BaseModel):
     date: Optional[datetime]
     doctor: int
     patient: int
-    symptom: int
-    diagnosis: int
+    symptom: str
+    diagnosis: str
     instruction: str
 
 
 class PlaceBase(BaseModel):
     value: str
 
-
-class SymptomBase(BaseModel):
-    value: str
-
-
-class Diagnosis(BaseModel):
-    value: str
