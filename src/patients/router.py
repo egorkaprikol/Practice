@@ -36,7 +36,7 @@ async def gender_create(gender: GenderBase, db: db_dependency):
     return response
 
 
-@router.post("/register")
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(request: SignUpRequest, db: Session = Depends(get_db)):
     user = create_user(db, request.login, request.password, "patient")
     return user

@@ -23,7 +23,7 @@ async def secure(_=Depends(role_required("doctor"))):
     return {"message": "You are authorized"}
 
 
-@router.post("/register")
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(
     request: SignUpRequest,
     db: Session = Depends(get_db),

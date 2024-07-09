@@ -9,7 +9,7 @@ from src.auth.schemas import SignUpRequest, SignInRequest, SignInResponse
 router = APIRouter()
 
 
-@router.post("/admin")
+@router.post("/admin", status_code=status.HTTP_201_CREATED)
 async def register(request: SignUpRequest, db: Session = Depends(get_db)):
     user = create_user(db, request.login, request.password, "admin")
     return user
