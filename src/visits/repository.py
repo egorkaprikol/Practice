@@ -23,3 +23,4 @@ async def create_visit(visit: VisitBase, db: db_dependency):
     db.commit()
     db.refresh(db_visit)
     return {"message": "Patient entry created successfully", "Patient": db_visit}
+

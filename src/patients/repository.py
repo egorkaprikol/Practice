@@ -33,3 +33,7 @@ async def create_patient(patient: PatientBase, db: db_dependency):
     db.commit()
     db.refresh(db_patient)
     return {"message": "Patient entry created successfully", "Patient": db_patient}
+
+
+async def get_sector(db: db_dependency):
+    return db.query(models.Sector).all()
