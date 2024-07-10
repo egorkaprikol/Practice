@@ -13,6 +13,7 @@ class Patient(Base):
     sector = Column(Integer, ForeignKey("sector.id"), nullable=False)
     number = Column(String, nullable=False)
     address = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
 
 class Gender(Base):
