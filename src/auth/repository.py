@@ -5,9 +5,6 @@ from jwt import PyJWTError, decode, encode
 from sqlalchemy.orm import Session
 from src.auth.config import pwd_context, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from src.auth.models import User
-from src.database.config import db_dependency
-from src.doctors.repository import create_doctor
-from src.patients.repository import create_patient
 
 
 def get_password_hash(password: str):
@@ -88,18 +85,10 @@ def verify_token(token: str):
         return {}
 
 
-async def create_user(db: db_dependency, login: str, password: str, role: str) -> User:
+def create_user(db: Session, login: str, password: str, role: str) -> User:
     hashed_password = get_password_hash(password)
     db_user = User(login=login, hashed_password=hashed_password, role=role)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    if User.role == "patient":
-        await create_patient(db, db_user.id)
-    elif User.role == "doctor":
-        await create_doctor(db, db_user.id)
     return db_user
-
-
-
-
