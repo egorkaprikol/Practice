@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.auth.repository import create_user
 from src.auth.schemas import SignUpRequest
 from src.database.config import db_dependency, get_db
-from src.patients.repository import create_sector, create_gender, create_patient, get_sector
+from src.patients.repository import create_sector, create_gender, create_patient, get_sector, get_visit
 from src.patients.schemas import *
 
 
@@ -40,3 +40,9 @@ async def gender_create(gender: GenderBase, db: db_dependency):
 async def register(request: SignUpRequest, db: Session = Depends(get_db)):
     user = create_user(db, request.login, request.password, "patient")
     return user
+
+
+@router.get("/visits/get")
+async def visit_get(db: db_dependency,date: str = None):
+    visits = await get_visit(db, date)
+    return {"visits": visits}

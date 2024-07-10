@@ -11,4 +11,3 @@ class Doctor(Base):
     experience = Column(Integer, nullable=False)
     sector = Column(Integer, ForeignKey("sector.id"), nullable=False)
     phone_number = Column(String, nullable=False)
-    # account id

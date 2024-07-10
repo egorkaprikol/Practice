@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.auth.repository import role_required, create_user
 from src.auth.schemas import SignUpRequest
 from src.database.config import db_dependency as db_dependency, get_db
-from src.doctors.repository import create_doctor
+from src.doctors.repository import create_doctor, get_visit
 from src.doctors.schemas import DoctorBase
 
 
@@ -31,3 +31,9 @@ async def register(
 ):
     user = create_user(db, request.login, request.password, "doctor")
     return user
+
+
+@router.get("/visits/get")
+async def visit_get(db: db_dependency,date: str = None):
+    visits = await get_visit(db, date)
+    return {"visits": visits}

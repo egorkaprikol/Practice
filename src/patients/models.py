@@ -15,7 +15,7 @@ class Patient(Base):
     address = Column(String, nullable=False)
 
 
-class Gender(Base):   # сделать таблицей только для чтения с заранее известными параметрами
+class Gender(Base):
     __tablename__ = 'gender'
     id = Column(Integer, primary_key=True)
     value = Column(String, nullable=False)
