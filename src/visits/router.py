@@ -18,4 +18,3 @@ async def place_create(place: PlaceBase, db: db_dependency):
 async def visit_create(visit: VisitBase, db: db_dependency):
     response = await create_visit(visit, db)
     return response
-

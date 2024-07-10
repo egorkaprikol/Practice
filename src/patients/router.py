@@ -1,10 +1,9 @@
 from fastapi import APIRouter, status, Depends
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from src.auth.repository import create_user
 from src.auth.schemas import SignUpRequest
 from src.database.config import db_dependency, get_db
-from src.patients.repository import create_sector, create_gender, create_patient, get_sector, get_visit
+from src.patients.repository import create_sector, create_gender, create_patient, get_sector
 from src.patients.schemas import *
 
 
@@ -40,15 +39,4 @@ async def gender_create(gender: GenderBase, db: db_dependency):
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(request: SignUpRequest, db: Session = Depends(get_db)):
     user = create_user(db, request.login, request.password, "patient")
-    return JSONResponse(
-        {
-            "message": "User created successfully. Please provide patient information.",
-            "create_patient_url": "/patients/create",
-        }
-    )
-
-
-@router.get("/visits/get", status_code=status.HTTP_200_OK)
-async def visit_get(db: db_dependency):
-    response = await get_visit(db)
-    return response
+    return user
