@@ -8,3 +8,8 @@ class DoctorBase(BaseModel):
     experience: int
     sector: int
     phone_number: str
+
+
+class DoctorCreateRequest(DoctorBase):
+    login: str
+    password: str

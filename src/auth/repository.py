@@ -89,6 +89,7 @@ def create_user(db: Session, login: str, password: str, role: str) -> User:
     hashed_password = get_password_hash(password)
     db_user = User(login=login, hashed_password=hashed_password, role=role)
     db.add(db_user)
+
     db.commit()
     db.refresh(db_user)
     return db_user

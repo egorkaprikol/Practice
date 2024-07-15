@@ -4,8 +4,7 @@ from src.auth.repository import role_required, create_user
 from src.auth.schemas import SignUpRequest
 from src.database.config import db_dependency as db_dependency, get_db
 from src.doctors.repository import create_doctor, get_visit
-from src.doctors.schemas import DoctorBase
-
+from src.doctors.schemas import DoctorBase, DoctorCreateRequest
 
 router = APIRouter(
     prefix="/doctors"
@@ -25,12 +24,12 @@ async def secure(_=Depends(role_required("doctor"))):
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(
-    request: SignUpRequest,
+    request: DoctorCreateRequest,
     db: Session = Depends(get_db),
     _=Depends(role_required("admin")),
 ):
     user = create_user(db, request.login, request.password, "doctor")
-    return user
+    return await create_doctor(request, user.id, db)
 
 
 @router.get("/visits/get")

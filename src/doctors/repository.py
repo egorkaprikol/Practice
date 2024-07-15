@@ -5,13 +5,14 @@ from src.visits import models as models_visits
 from src.doctors import models as models_doctors
 
 
-async def create_doctor(doctor: DoctorBase, db: db_dependency):
+async def create_doctor(doctor: DoctorBase, user_id, db: db_dependency):
     db_doctor = models_doctors.Doctor(name=doctor.name,
                                       surname=doctor.surname,
                                       father_name=doctor.father_name,
                                       experience=doctor.experience,
                                       sector=doctor.sector,
-                                      phone_number=doctor.phone_number)
+                                      phone_number=doctor.phone_number,
+                                      user_id=user_id)
     db.add(db_doctor)
     db.commit()
     db.refresh(db_doctor)
