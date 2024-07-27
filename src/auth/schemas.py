@@ -6,6 +6,10 @@ class SignUpRequest(BaseModel):
     password: str
 
 
+class RoleBase(BaseModel):
+    name: str
+
+
 class SignInRequest(BaseModel):
     login: str
     password: str

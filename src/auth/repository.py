@@ -4,7 +4,8 @@ from fastapi.params import Depends
 from jwt import PyJWTError, decode, encode
 from sqlalchemy.orm import Session
 from src.auth.config import pwd_context, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
-from src.auth.models import User
+from src.auth.models import User, Role
+from src.auth.schemas import RoleBase
 
 
 def get_password_hash(password: str):
@@ -26,7 +27,7 @@ def authenticate_user(db: Session, login: str, password: str):
 def create_access_token(user: User) -> str:
     payload = {
         "login": user.login,
-        "role": user.role,
+        "role_id": user.role_id,
         "expires": time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60),
     }
 
@@ -52,9 +53,9 @@ def get_current_user(request: Request):
     return data
 
 
-def role_required(required_role: str):
+def role_required(required_role: int):
     def role_required_dependency(user: User = Depends(get_current_user)):
-        if user["role"] != required_role:
+        if user["role_id"] != required_role:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="You don't have enough permissions to access this endpoint"
@@ -85,11 +86,18 @@ def verify_token(token: str):
         return {}
 
 
-def create_user(db: Session, login: str, password: str, role: str) -> User:
+def create_user(db: Session, login: str, password: str, role_id: int) -> User:
     hashed_password = get_password_hash(password)
-    db_user = User(login=login, hashed_password=hashed_password, role=role)
+    db_user = User(login=login, hashed_password=hashed_password, role_id=role_id)
     db.add(db_user)
-
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+async def create_role(db: Session, role: RoleBase):
+    db_role = Role(name=role.name)
+    db.add(db_role)
+    db.commit()
+    db.refresh(db_role)
+    return db_role
