@@ -8,9 +8,8 @@ from src.doctors import models as models_doctors
 async def create_doctor(doctor: DoctorBase, user_id, db: db_dependency):
     db_doctor = models_doctors.Doctor(name=doctor.name,
                                       surname=doctor.surname,
-                                      father_name=doctor.father_name,
+                                      patronymic=doctor.patronymic,
                                       experience=doctor.experience,
-                                      sector=doctor.sector,
                                       phone_number=doctor.phone_number,
                                       user_id=user_id)
     db.add(db_doctor)
@@ -25,7 +24,7 @@ async def get_visit(db: db_dependency, date: str = None):
             models_visits.Visit.date,
             models_patients.Patient.name.label("patient_name"),
             models_patients.Patient.surname.label("patient_surname"),
-            models_patients.Patient.father_name.label("patient_father_name"),
+            models_patients.Patient.patronymic.label("patient_patronymic"),
         )
         .join(models_patients.Patient, models_visits.Visit.patient == models_patients.Patient.id)
     )
@@ -36,7 +35,7 @@ async def get_visit(db: db_dependency, date: str = None):
     return [
         {
             "date": visit.date,
-            "patient_name": f"{visit.patient_name} {visit.patient_surname} {visit.patient_father_name}",
+            "patient_name": f"{visit.patient_name} {visit.patient_surname} {visit.patient_patronymic}",
         }
         for visit in visits.all()
     ]

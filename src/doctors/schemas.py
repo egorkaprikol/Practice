@@ -4,9 +4,8 @@ from pydantic import BaseModel
 class DoctorBase(BaseModel):
     name: str
     surname: str
-    father_name: str
+    patronymic: str
     experience: int
-    sector: int
     phone_number: str
 
 

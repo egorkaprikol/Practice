@@ -5,15 +5,6 @@ from src.visits import models as models_visits
 from src.doctors import models as models_doctors
 
 
-async def create_sector(sector: SectorBase, db: db_dependency):
-    db_sector = models_patients.Sector(number=sector.number,
-                                       address=sector.address)
-    db.add(db_sector)
-    db.commit()
-    db.refresh(db_sector)
-    return {"message": "Sector entry created successfully", "Sector": db_sector}
-
-
 async def create_gender(gender: GenderBase, db: db_dependency):
     db_gender = models_patients.Gender(value=gender.value)
     db.add(db_gender)
@@ -25,10 +16,9 @@ async def create_gender(gender: GenderBase, db: db_dependency):
 async def create_patient(patient: PatientBase, db: db_dependency):
     db_patient = models_patients.Patient(name=patient.name,
                                          surname=patient.surname,
-                                         father_name=patient.father_name,
+                                         patronymic=patient.patronymic,
                                          gender=patient.gender,
                                          age=patient.age,
-                                         sector=patient.sector,
                                          number=patient.number,
                                          address=patient.address)
     db.add(db_patient)
@@ -37,17 +27,13 @@ async def create_patient(patient: PatientBase, db: db_dependency):
     return {"message": "Patient entry created successfully", "Patient": db_patient}
 
 
-async def get_sector(db: db_dependency):
-    return db.query(models_patients.Sector).all()
-
-
 async def get_visit(db: db_dependency, date: str = None):
     visits = (
         db.query(
             models_visits.Visit.date,
             models_doctors.Doctor.name.label("doctor_name"),
             models_doctors.Doctor.surname.label("doctor_surname"),
-            models_doctors.Doctor.father_name.label("doctor_father_name"),
+            models_doctors.Doctor.patronymic.label("doctor_patronymic"),
         )
         .join(models_doctors.Doctor, models_visits.Visit.doctor == models_doctors.Doctor.id)
     )
@@ -58,7 +44,7 @@ async def get_visit(db: db_dependency, date: str = None):
     return [
         {
             "date": visit.date,
-            "doctor_name": f"{visit.doctor_name} {visit.doctor_surname} {visit.doctor_father_name}",
+            "doctor_name": f"{visit.doctor_name} {visit.doctor_surname} {visit.doctor_patronymic}",
         }
         for visit in visits.all()
     ]

@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 @router.get("/secure")
-async def secure(_=Depends(role_required("doctor"))):
+async def secure(_=Depends(role_required(2))):
     return {"message": "You are authorized"}
 
 
