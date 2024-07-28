@@ -14,3 +14,8 @@ class PatientBase(BaseModel):
 class GenderBase(BaseModel):
     value: str
 
+
+class PatientCreateRequest(PatientBase):
+    login: str
+    password: str
+

@@ -8,14 +8,8 @@ from src.patients.schemas import *
 
 
 router = APIRouter(
-    prefix="/patients"
+    prefix=""
 )
-
-
-@router.post("/create", status_code=status.HTTP_201_CREATED)
-async def patient_create(patient: PatientBase, db: db_dependency):
-    response = await create_patient(patient, db)
-    return response
 
 
 @router.post("/genders/create", status_code=status.HTTP_201_CREATED)
@@ -25,9 +19,12 @@ async def gender_create(gender: GenderBase, db: db_dependency):
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-async def register(request: SignUpRequest, db: Session = Depends(get_db)):
+async def register(
+        request: PatientCreateRequest,
+        db: Session = Depends(get_db),
+                ):
     user = create_user(db, request.login, request.password, 3)
-    return user
+    return await create_patient(request, user.id, db)
 
 
 @router.get("/visits/get")

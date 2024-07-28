@@ -12,6 +12,7 @@ class Patient(Base):
     age = Column(Integer, nullable=False)
     number = Column(String, nullable=False)
     address = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
 
 class Gender(Base):
