@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, Column, String, ForeignKey
+from sqlalchemy import Integer, Column, String, ForeignKey, TIMESTAMP
 from src.database.config import Base
 
 
@@ -9,7 +9,7 @@ class Patient(Base):
     surname = Column(String, nullable=False)
     patronymic = Column(String)
     gender = Column(Integer, ForeignKey("genders.id"), nullable=False)
-    age = Column(Integer, nullable=False)
+    birth_date = Column(TIMESTAMP, nullable=False)
     number = Column(String, nullable=False)
     address = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)

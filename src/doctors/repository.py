@@ -9,8 +9,10 @@ async def create_doctor(doctor: DoctorBase, user_id, db: db_dependency):
     db_doctor = models_doctors.Doctor(name=doctor.name,
                                       surname=doctor.surname,
                                       patronymic=doctor.patronymic,
-                                      experience=doctor.experience,
                                       phone_number=doctor.phone_number,
+                                      birth_date=doctor.birth_date,
+                                      gender=doctor.gender,
+                                      profile_id=doctor.profile_id,
                                       user_id=user_id)
     db.add(db_doctor)
     db.commit()
