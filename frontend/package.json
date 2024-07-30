@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "react": "^18.3.1"
+  },
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node_modules/react/umd/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
