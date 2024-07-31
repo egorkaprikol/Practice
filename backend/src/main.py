@@ -10,7 +10,7 @@ from backend.src.auth.router import router as auth_router
 app = FastAPI(
     title="PracticeApp"
 )
-models.Base.metadata.create_all(bind=engine)
+#models.Base.metadata.create_all(bind=engine)
 
 
 app.include_router(patients_router)
