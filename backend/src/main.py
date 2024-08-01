@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(
     title="PracticeApp"
 )
-models.Base.metadata.create_all(bind=engine)
+#models.Base.metadata.create_all(bind=engine)
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
