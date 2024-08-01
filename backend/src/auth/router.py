@@ -9,10 +9,25 @@ from backend.src.auth.schemas import SignUpRequest, SignInRequest, SignInRespons
 router = APIRouter()
 
 
-@router.post("/admin", status_code=status.HTTP_201_CREATED)
+@router.post("/admin/create", status_code=status.HTTP_201_CREATED)
 async def register(request: SignUpRequest, db: Session = Depends(get_db)):
     user = create_user(db, request.login, request.password, 1)
     return user
+
+
+@router.post("/admin")
+async def login(request: SignInRequest, db: Session = Depends(get_db)):
+    user = authenticate_user(db, request.login, request.password)
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect login or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    token = create_access_token(user)
+    return SignInResponse(access_token=token)
 
 
 @router.post("/login")

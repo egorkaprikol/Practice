@@ -24,17 +24,6 @@ def authenticate_user(db: Session, login: str, password: str):
     return user
 
 
-def create_access_token(user: User) -> str:
-    payload = {
-        "login": user.login,
-        "role_id": user.role_id,
-        "expires": time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60),
-    }
-
-    token = encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-    return token
-
-
 def get_current_user(request: Request):
     """
     This function is a dependency that will be used in the secure endpoint.
@@ -53,6 +42,23 @@ def get_current_user(request: Request):
     return data
 
 
+def create_user(db: Session, login: str, password: str, role_id: int) -> User:
+    hashed_password = get_password_hash(password)
+    db_user = User(login=login, hashed_password=hashed_password, role_id=role_id)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+async def create_role(db: Session, role: RoleBase):
+    db_role = Role(name=role.name)
+    db.add(db_role)
+    db.commit()
+    db.refresh(db_role)
+    return db_role
+
+
 def role_required(required_role: int):
     def role_required_dependency(user: User = Depends(get_current_user)):
         if user["role_id"] != required_role:
@@ -63,6 +69,17 @@ def role_required(required_role: int):
         return user
 
     return role_required_dependency
+
+
+def create_access_token(user: User) -> str:
+    payload = {
+        "login": user.login,
+        "role_id": user.role_id,
+        "expires": time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60),
+    }
+
+    token = encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    return token
 
 
 def get_token_from_header(request: Request):
@@ -86,18 +103,3 @@ def verify_token(token: str):
         return {}
 
 
-def create_user(db: Session, login: str, password: str, role_id: int) -> User:
-    hashed_password = get_password_hash(password)
-    db_user = User(login=login, hashed_password=hashed_password, role_id=role_id)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-
-async def create_role(db: Session, role: RoleBase):
-    db_role = Role(name=role.name)
-    db.add(db_role)
-    db.commit()
-    db.refresh(db_role)
-    return db_role
