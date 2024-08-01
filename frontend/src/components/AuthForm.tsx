@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { loginAdmin } from "../services/api";
 
 export const AuthForm = () => {
   const [login, setLogin] = useState("");
@@ -12,6 +13,7 @@ export const AuthForm = () => {
   };
   const onSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
+    loginAdmin(login, password);
     alert(login + " " + password);
   };
 
