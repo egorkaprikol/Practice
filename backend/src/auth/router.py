@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Request
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-from backend.src.auth.repository import get_current_user, authenticate_user, create_access_token, create_role
+from backend.src.auth.repository import get_current_user, authenticate_user, create_access_token, create_role, get_token_from_header, verify_token
 from backend.src.auth.repository import create_user
 from backend.src.database.config import get_db, db_dependency
 from backend.src.auth.schemas import SignUpRequest, SignInRequest, SignInResponse, RoleBase
@@ -28,6 +28,18 @@ async def login(request: SignInRequest, db: Session = Depends(get_db)):
 
     token = create_access_token(user)
     return SignInResponse(access_token=token)
+
+
+@router.get("/token")
+def get_protected_resource(request: Request):
+    token = get_token_from_header(request)
+    token = verify_token(token)
+    if token == {}:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid access token",
+        )
+    return {"message": "OK"}
 
 
 @router.get("/default/secure")
