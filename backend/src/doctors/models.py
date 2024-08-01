@@ -1,4 +1,6 @@
 from sqlalchemy import Integer, Column, String, ForeignKey, TIMESTAMP
+from sqlalchemy.orm import relationship
+
 from backend.src.database.config import Base
 
 
@@ -20,7 +22,7 @@ class Profile(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
-    services_list = Column(String, nullable=False)
+    services = relationship("Service", backref="profile")
 
 
 class Service(Base):

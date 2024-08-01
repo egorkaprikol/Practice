@@ -5,7 +5,8 @@ from backend.src.visits.schemas import PlaceBase, VisitBase, VisitUpdate
 
 
 async def create_place(place: PlaceBase, db: db_dependency):
-    db_place = models_visits.Place(value=place.value)
+    db_place = models_visits.Place(name=place.name,
+                                   address=place.address)
     db.add(db_place)
     db.commit()
     db.refresh(db_place)
@@ -26,7 +27,7 @@ async def create_visit(visit: VisitBase, db: db_dependency):
     return {"message": "Patient entry created successfully", "Patient": db_visit}
 
 
-async def get_visit(db: db_dependency, id: str = None):
+async def get_visit(db: db_dependency, id: int = None):
     visits = (
         db.query(
             models_visits.Visit

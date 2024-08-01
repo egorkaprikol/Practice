@@ -6,9 +6,7 @@ from backend.src.patients.repository import create_gender, create_patient, get_v
 from backend.src.patients.schemas import *
 
 
-router = APIRouter(
-    prefix=""
-)
+router = APIRouter()
 
 
 @router.post("/genders/create", status_code=status.HTTP_201_CREATED)

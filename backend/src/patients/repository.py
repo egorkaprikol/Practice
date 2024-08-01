@@ -6,7 +6,8 @@ from backend.src.doctors import models as models_doctors
 
 
 async def create_gender(gender: GenderBase, db: db_dependency):
-    db_gender = models_patients.Gender(value=gender.value)
+    db_gender = models_patients.Gender(name=gender.name,
+                                       description=gender.description)
     db.add(db_gender)
     db.commit()
     db.refresh(db_gender)

@@ -1,5 +1,5 @@
 from backend.src.database.config import db_dependency
-from backend.src.doctors.schemas import DoctorBase
+from backend.src.doctors.schemas import *
 from backend.src.patients import models as models_patients
 from backend.src.visits import models as models_visits
 from backend.src.doctors import models as models_doctors
@@ -42,3 +42,22 @@ async def get_visit(db: db_dependency, date: str = None):
         for visit in visits.all()
     ]
 
+
+async def create_profile(profile: ProfileCreateRequest, db: db_dependency):
+    db_profile = models_doctors.Profile(name=profile.name,
+                                        description=profile.description)
+    db.add(db_profile)
+    db.commit()
+    db.refresh(db_profile)
+    return {"message": "Profile created successfully", "Profile": db_profile}
+
+
+async def create_service(service: ServiceBase, db: db_dependency):
+    db_service = models_doctors.Service(name=service.name,
+                                        description=service.description,
+                                        price=service.price,
+                                        profile_id=service.profile_id)
+    db.add(db_service)
+    db.commit()
+    db.refresh(db_service)
+    return {"message": "Service created successfully", "Service": db_service}
