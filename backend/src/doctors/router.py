@@ -2,7 +2,8 @@ from fastapi import APIRouter, status, Depends
 from sqlalchemy.orm import Session
 from backend.src.auth.repository import role_required, create_user
 from backend.src.database.config import db_dependency as db_dependency, get_db
-from backend.src.doctors.repository import create_doctor, get_visit, create_profile, create_service
+from backend.src.doctors.repository import create_doctor, get_visit, create_profile, create_service, add_experience, \
+    get_doctors
 from backend.src.doctors.schemas import *
 
 router = APIRouter()
@@ -13,7 +14,7 @@ async def secure(_=Depends(role_required(2))):
     return {"message": "You are authorized"}
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+@router.post("/doctors/register", status_code=status.HTTP_201_CREATED)
 async def register(
         request: DoctorCreateRequest,
         db: Session = Depends(get_db),
@@ -38,4 +39,16 @@ async def profile_create(profile: ProfileCreateRequest, db: db_dependency):
 @router.post("/service/create", status_code=status.HTTP_201_CREATED)
 async def service_create(service: ServiceBase, db: db_dependency):
     response = await create_service(service, db)
+    return response
+
+
+@router.post("/experience", status_code=status.HTTP_201_CREATED)
+async def experience_create(experience: ExperienceBase, db: db_dependency):
+    response = await add_experience(experience, db)
+    return response
+
+
+@router.get("/doctors/get", status_code=status.HTTP_200_OK)
+async def doctors_get(db: db_dependency):
+    response = await get_doctors(db)
     return response

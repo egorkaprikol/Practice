@@ -1,6 +1,5 @@
 from sqlalchemy import Integer, Column, String, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
-
 from backend.src.database.config import Base
 
 

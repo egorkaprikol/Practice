@@ -61,3 +61,35 @@ async def create_service(service: ServiceBase, db: db_dependency):
     db.commit()
     db.refresh(db_service)
     return {"message": "Service created successfully", "Service": db_service}
+
+
+async def add_experience(experience: ExperienceBase, db: db_dependency):
+    db_experience = models_doctors.Experience(name=experience.name,
+                                              position=experience.position,
+                                              start_date=experience.start_date,
+                                              end_date=experience.end_date,
+                                              doctor_id=experience.doctor_id)
+    db.add(db_experience)
+    db.commit()
+    db.refresh(db_experience)
+    return {"message": "Experience added successfully"}
+
+
+async def get_doctors(db: db_dependency):
+    doctor = (
+        db.query(
+            models_doctors.Doctor.name.label("doctor_name"),
+            models_doctors.Doctor.surname.label("doctor_surname"),
+            models_doctors.Doctor.patronymic.label("doctor_patronymic"),
+            models_doctors.Doctor.birth_date.label("doctor_birthdate"),
+            models_doctors.Profile.name,
+        )
+        .join(models_doctors.Doctor, models_doctors.Profile.id == models_doctors.Doctor.profile_id)
+    )
+    return [
+        {
+            "doctor_info": f"{doctor.doctor_name} {doctor.doctor_surname} {doctor.doctor_patronymic} {doctor.doctor_birthdate}",
+            "profile_name": doctor.name
+        }
+        for doctor in doctor.all()
+    ]
