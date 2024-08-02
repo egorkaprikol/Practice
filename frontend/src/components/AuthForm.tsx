@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { checkToken, loginAdmin } from "../services/api";
 import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
+import Button from "./Button";
 
 export const AuthForm = () => {
   const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   const { login } = useAuthStore();
-  const onChangeusername = (event: React.FormEvent<HTMLInputElement>) => {
+  const onChangeUsername = (event: React.FormEvent<HTMLInputElement>) => {
     setusername(event.currentTarget.value);
   };
   const onChangePassword = (event: React.FormEvent<HTMLInputElement>) => {
@@ -15,30 +19,46 @@ export const AuthForm = () => {
   const onSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     const isAuth = await loginAdmin(username, password);
-    if (isAuth) login();
+    if (isAuth) {
+      login();
+      navigate("/admin/dashboard");
+    }
   };
 
   return (
-    <form className="p-4 flex justify-center" onSubmit={onSubmit}>
-      <label>
-        username
+    <form
+      className="p-4 pt-8 flex flex-col w-full justify-center font-semibold items-center text-teal-200"
+      onSubmit={onSubmit}
+    >
+      <div className="w-1/4 flex flex-col mb-3 items-center">
         <input
-          className="p-1 m-3"
+          className="p-1 my-1 bg-gray-300 border-none h-10 rounded-md outline-none font-bold text-purple-900 w-full"
           type="text"
           value={username}
-          onChange={onChangeusername}
+          placeholder="Login"
+          required
+          onChange={onChangeUsername}
         />
-      </label>
-      <label>
-        Password
+      </div>
+      <div className="w-1/4 flex flex-col mb-3 items-center">
         <input
-          className="p-1 m-3"
+          className="bg-gray-300 border-none outline-none my-1 p-1 h-10 rounded-md font-bold text-purple-900 w-full"
           type="password"
           value={password}
+          placeholder="Password"
+          required
           onChange={onChangePassword}
         />
-      </label>
-      <input type="submit" />
+      </div>
+      <Button
+        type="submit"
+        className={twMerge(
+          "w-1/4 rounded-md",
+          password && username ? "" : "opacity-75 "
+        )}
+      >
+        Log in
+      </Button>
     </form>
   );
 };

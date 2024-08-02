@@ -1,13 +1,13 @@
-import React from "react";
-import Button from "../components/Button";
-import { useAuthStore } from "../store/authStore";
+import { Outlet } from "react-router-dom";
+import DashboardSidebar from "../components/DashboardSidebar";
 
 const AdminDashboard = () => {
-  const { logout } = useAuthStore();
   return (
-    <div>
-      <p>Admin Dashboard</p>
-      <Button onClick={logout}>Logout</Button>
+    <div className="flex">
+      <DashboardSidebar />
+      <div className="flex-1 p-2">
+        <Outlet />
+      </div>
     </div>
   );
 };

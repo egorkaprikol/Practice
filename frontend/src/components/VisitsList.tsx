@@ -1,7 +1,7 @@
 import React from "react";
 
 const VisitsList = () => {
-  return <div>VisitsList</div>;
+  return <div>Visits List</div>;
 };
 
 export default VisitsList;
