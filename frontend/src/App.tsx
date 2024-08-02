@@ -1,11 +1,12 @@
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import { AuthForm } from "./components/AuthForm";
+import AuthAdmin from "./pages/AuthAdmin";
 
 function App() {
   return (
-    <div className="bg">
-      <AuthForm></AuthForm>
-    </div>
+    <Routes>
+      <Route path="/admin" element={<AuthAdmin />}></Route>
+    </Routes>
   );
 }
 
