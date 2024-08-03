@@ -81,14 +81,15 @@ async def get_doctors(db: db_dependency):
             models_doctors.Doctor.name.label("doctor_name"),
             models_doctors.Doctor.surname.label("doctor_surname"),
             models_doctors.Doctor.patronymic.label("doctor_patronymic"),
-            models_doctors.Doctor.phone_number.label("doctor_phone_number"),
+            models_doctors.Doctor.phone_number,
             models_doctors.Profile.name,
         )
         .join(models_doctors.Doctor, models_doctors.Profile.id == models_doctors.Doctor.profile_id)
     )
     return [
         {
-            "doctor_info": f"{doctor.doctor_name} {doctor.doctor_surname} {doctor.doctor_patronymic} {doctor.doctor_phone_number}",
+            "doctor_info": f"{doctor.doctor_name} {doctor.doctor_surname} {doctor.doctor_patronymic}",
+            "doctor_phone_number": doctor.phone_number,
             "profile_name": doctor.name
         }
         for doctor in doctor.all()
