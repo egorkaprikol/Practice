@@ -6,6 +6,7 @@ import DashboardMain from "./components/dashboard/DashboardMain";
 import VisitsList from "./components/dashboard/VisitsList";
 import DoctorsList from "./components/dashboard/DoctorsList";
 import NotFoundPage from "./pages/NotFoundPage";
+import AddDoctor from "./components/dashboard/AddDoctor";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route index element={<DashboardMain />}></Route>
             <Route path="visits" element={<VisitsList />}></Route>
             <Route path="doctors" element={<DoctorsList />}></Route>
+            <Route path="doctors/new" element={<AddDoctor />}></Route>
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>
