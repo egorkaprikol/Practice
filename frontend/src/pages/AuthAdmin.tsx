@@ -16,9 +16,11 @@ const AuthAdmin = () => {
         if (isToken) {
           console.log("auth");
           login();
-          if (location.pathname === "/admin") {
-            // Перенаправление только если путь - "/admin"
-            navigate("/admin/dashboard");
+          if (
+            location.pathname === "/admin" ||
+            location.pathname === "/admin/"
+          ) {
+            navigate("/admin/dashboard", { replace: true });
           }
         } else {
           console.log("not auth");
