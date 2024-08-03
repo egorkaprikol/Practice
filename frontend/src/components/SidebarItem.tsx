@@ -19,12 +19,12 @@ export const SidebarItem = ({
     <Link
       to={href}
       className={twMerge(
-        "flex flex-row h-auto items-center gap-x-4 font-medium cursor-pointer hover:text-white transition text-neutral-400 py-1",
+        "flex bg-gray-300 flex-row h-auto items-center gap-x-4 font-semibold cursor-pointer hover:text-white transition text-lg text-neutral-400 py-2",
         active && "text-red-700"
       )}
     >
       {/* <Icon size={26}></Icon> */}
-      <p className="truncate w-full ">{label}</p>
+      <p className="w-full px-3 ">{label}</p>
     </Link>
   );
 };

@@ -15,16 +15,16 @@ const Button = ({
   type = "button",
 }: ButtonProps) => {
   return (
-    <div
+    <button
       className={twMerge(
         "p-2 rounded-xl text-purple-900 bg-emerald-400 font-bold flex  items-center justify-center w-20 h-10",
         className
       )}
+      type={type}
+      onClick={onClick}
     >
-      <button type={type} onClick={onClick}>
-        {children}
-      </button>
-    </div>
+      {children}
+    </button>
   );
 };
 

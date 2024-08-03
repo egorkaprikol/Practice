@@ -17,7 +17,8 @@
   ); */
   width: 100vw;
   height: 100vh;
-  background: rgb(207, 255, 231);
+
+  /* background: rgb(207, 255, 231);
   background: -moz-linear-gradient(
     0deg,
     rgba(207, 255, 231, 1) 0%,
@@ -33,7 +34,7 @@
     rgba(207, 255, 231, 1) 0%,
     rgba(255, 255, 255, 1) 100%
   );
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#cfffe7",endColorstr="#ffffff",GradientType=1);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#cfffe7",endColorstr="#ffffff",GradientType=1); */
   /* background: rgb(13, 7, 31);
   background: -moz-linear-gradient(
     0deg,

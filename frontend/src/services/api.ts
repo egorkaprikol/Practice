@@ -1,6 +1,25 @@
 import Cookies from "js-cookie";
+import { Doctor } from "../types";
 
 const API_URL = "http://127.0.0.1:8000";
+<<<<<<< HEAD
+=======
+
+export const fetchDoctors = async () => {
+  const response = await fetch(`${API_URL}/doctors/get`);
+  if (!response.ok) {
+    alert("fail");
+    return;
+  }
+  try {
+    const doctorsData: Doctor[] = await response.json();
+    return doctorsData;
+  } catch (error) {
+    alert(error);
+    return;
+  }
+};
+>>>>>>> frontend
 
 export const loginAdmin = async (
   login: string,
