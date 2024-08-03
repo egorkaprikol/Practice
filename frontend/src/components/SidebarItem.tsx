@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface SidebarItemProps {
-  //   icon: IconType;
+  icon: IconType;
   label: string;
   active?: boolean;
   href: string;
 }
 
 export const SidebarItem = ({
-  //   icon: Icon,
+  icon: Icon,
   label,
   active,
   href,
@@ -19,12 +19,12 @@ export const SidebarItem = ({
     <Link
       to={href}
       className={twMerge(
-        "flex bg-gray-300 flex-row h-auto items-center gap-x-4 font-semibold cursor-pointer hover:text-white transition text-lg text-neutral-400 py-2",
-        active && "text-red-700"
+        "flex flex-row h-auto items-center hover:text-white/70 gap-x-2 font-semibold cursor-pointer text-white transition text-lg py-2",
+        active && "text-primary hover:text-primary"
       )}
     >
-      {/* <Icon size={26}></Icon> */}
-      <p className="w-full px-3 ">{label}</p>
+      <Icon size={18}></Icon>
+      <p className="w-full px-1 truncate">{label}</p>
     </Link>
   );
 };
