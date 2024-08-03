@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from backend.src.database.config import db_dependency
 from backend.src.visits import models as models_visits
-from backend.src.visits.schemas import PlaceBase, VisitBase, VisitUpdate
+from backend.src.visits.schemas import PlaceBase, VisitBase, VisitUpdate, AppointmentBase
 
 
 async def create_place(place: PlaceBase, db: db_dependency):
@@ -71,3 +71,15 @@ async def update_visit(visit_id: int, visit: VisitUpdate, db: db_dependency):
         return {"message": "Осмотр успешно обновлен", "Visit": db_visit}
     else:
         raise HTTPException(status_code=404, detail="Осмотр не найден")
+
+
+async def create_appointment(appointment: AppointmentBase, db: db_dependency):
+    db_appointment = models_visits.Appointment(date=appointment.date,
+                                               doctor_id=appointment.doctor_id,
+                                               patient_id=appointment.patient_id,
+                                               place_id=appointment.place_id,
+                                               service_id=appointment.service_id)
+    db.add(db_appointment)
+    db.commit()
+    db.refresh(db_appointment)
+    return {"message": "Заявка успешно создана", "Appointment": db_appointment}

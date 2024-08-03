@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 from backend.src.database.config import db_dependency
 from backend.src.visits.schemas import *
-from backend.src.visits.repository import create_place, create_visit, get_visit, update_visit
+from backend.src.visits.repository import create_place, create_visit, get_visit, update_visit, create_appointment
 
 router = APIRouter(
     prefix="/visits"
@@ -20,7 +20,7 @@ async def visit_create(visit: VisitBase, db: db_dependency):
     return response
 
 
-@router.get("/{visit_id}")
+@router.get("/{visit_id}", status_code=status.HTTP_200_OK)
 async def get_visit_details(db: db_dependency, visit_id: str = None):
     response = await get_visit(db, visit_id)
     return response
@@ -30,3 +30,9 @@ async def get_visit_details(db: db_dependency, visit_id: str = None):
 async def update_visit_route(visit_id: int, visit: VisitUpdate, db: db_dependency):
     updated_visit = await update_visit(visit_id, visit, db)
     return updated_visit
+
+
+@router.post("/appointment/create", status_code=status.HTTP_201_CREATED)
+async def appointment_create(appointment: AppointmentBase, db: db_dependency):
+    response = await create_appointment(appointment, db)
+    return response

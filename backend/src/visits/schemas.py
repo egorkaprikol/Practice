@@ -28,3 +28,10 @@ class PlaceBase(BaseModel):
     name: str
     address: str
 
+
+class AppointmentBase(BaseModel):
+    date: datetime
+    doctor_id: int
+    place_id: int
+    patient_id: int
+    service_id: int
