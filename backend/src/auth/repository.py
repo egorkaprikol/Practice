@@ -101,5 +101,3 @@ def verify_token(token: str):
         return decoded_token if decoded_token["expires"] >= time.time() else None
     except PyJWTError:
         return {}
-
-
