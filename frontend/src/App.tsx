@@ -5,10 +5,11 @@ import AdminDashboard from "./pages/AdminDashboard";
 import DashboardMain from "./components/dashboard/DashboardMain";
 import VisitsList from "./components/dashboard/VisitsList";
 import DoctorsList from "./components/dashboard/DoctorsList";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
-    <div className="bg bg-gray-100">
+    <div className="bg bg-bg">
       <Routes>
         <Route path="/admin" element={<AuthAdmin />}>
           <Route path="dashboard" element={<AdminDashboard />}>
@@ -17,10 +18,7 @@ function App() {
             <Route path="doctors" element={<DoctorsList />}></Route>
           </Route>
         </Route>
-        <Route
-          path="*"
-          element={<p className="text-2xl">Страницы не существует</p>}
-        ></Route>
+        <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </div>
   );

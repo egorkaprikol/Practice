@@ -1,10 +1,12 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import Button from "../Button";
 import { Box } from "../Box";
 import { SidebarItem } from "../SidebarItem";
-
+import { FaListUl } from "react-icons/fa6";
+import { FaNotesMedical } from "react-icons/fa";
+import { FaUserDoctor } from "react-icons/fa6";
 const DashboardSidebar = () => {
   const pathname = useLocation().pathname;
   const { logout } = useAuthStore();
@@ -17,21 +19,21 @@ const DashboardSidebar = () => {
     () => [
       {
         active: pathname === "/admin/dashboard",
-        label: "Главная",
+        label: "Main",
         href: "/admin/dashboard",
-        // icon: HiHome,
+        icon: FaListUl,
       },
       {
         active: pathname === "/admin/dashboard/doctors",
-        label: "Доктора",
+        label: "Doctors",
         href: "/admin/dashboard/doctors",
-        // icon: HiHome,
+        icon: FaUserDoctor,
       },
       {
         active: pathname === "/admin/dashboard/visits",
-        label: "Посещения",
+        label: "Visits",
         href: "/admin/dashboard/visits",
-        // icon: HiHome,
+        icon: FaNotesMedical,
       },
     ],
     [pathname]
@@ -39,15 +41,18 @@ const DashboardSidebar = () => {
 
   return (
     <div>
-      <div className="flex flex-col items-center  w-48 p-2 gap-y-4 h-full">
-        <Box className="p-3 bg-gray-200 h-full flex flex-col justify-between">
-          <div className="flex-1">
+      <div className="flex flex-col  items-center w-52 gap-y-4 h-full">
+        <Box className=" bg-side py-6 h-full flex flex-col justify-between">
+          <div className="flex-1 px-5">
             {routes.map((item) => {
               return <SidebarItem key={item.label} {...item}></SidebarItem>;
             })}
           </div>
 
-          <Button className="mb-6 mt-auto w-full" onClick={handleLogout}>
+          <Button
+            className="rounded-none mt-auto w-full"
+            onClick={handleLogout}
+          >
             Logout
           </Button>
         </Box>
