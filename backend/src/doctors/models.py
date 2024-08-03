@@ -14,14 +14,14 @@ class Doctor(Base):
     birth_date: Mapped[date] = mapped_column(nullable=False)
     gender: Mapped[int] = mapped_column(ForeignKey("genders.id"), nullable=False, index=True)
     profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=False, index=True)
-    phone_number: Mapped[str] = mapped_column(String(12), nullable=False, index=True)
+    phone_number: Mapped[str] = mapped_column(String(12), unique=True, nullable=False, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
 
 
 class Profile(Base):
     __tablename__ = 'profiles'
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
     description: Mapped[str] = mapped_column(String(50), nullable=True)
 
     services: Mapped[List["Service"]] = relationship(back_populates="profiles")

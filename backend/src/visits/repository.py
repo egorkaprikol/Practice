@@ -20,7 +20,8 @@ async def create_visit(visit: VisitBase, db: db_dependency):
                                    patient=visit.patient,
                                    symptom=visit.symptom,
                                    diagnosis=visit.diagnosis,
-                                   instruction=visit.instruction)
+                                   instruction=visit.instruction,
+                                   appointment_id=visit.appointment_id)
     db.add(db_visit)
     db.commit()
     db.refresh(db_visit)

@@ -25,6 +25,6 @@ async def register(
 
 
 @router.get("/visits/get")
-async def visit_get(db: db_dependency,date: str = None):
+async def visit_get(db: db_dependency, date: str = None):
     visits = await get_visit(db, date)
     return {"visits": visits}

@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel
 
 
@@ -6,8 +7,8 @@ class PatientBase(BaseModel):
     surname: str
     patronymic: str
     gender: int
-    age: int
-    number: str
+    birth_date: date
+    phone_number: str
     address: str
 
 

@@ -20,7 +20,7 @@ async def create_patient(patient: PatientBase, user_id, db: db_dependency):
                                          patronymic=patient.patronymic,
                                          gender=patient.gender,
                                          birth_date=patient.birth_date,
-                                         number=patient.number,
+                                         phone_number=patient.phone_number,
                                          address=patient.address,
                                          user_id=user_id)
     db.add(db_patient)

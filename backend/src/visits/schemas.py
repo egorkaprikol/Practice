@@ -1,28 +1,30 @@
 from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel
 
 
 class VisitBase(BaseModel):
     place: int
-    date: Optional[datetime]
+    date: datetime
     doctor: int
     patient: int
     symptom: str
     diagnosis: str
     instruction: str
+    appointment_id: int
 
 
 class VisitUpdate(BaseModel):
-    place: int = None
-    date: Optional[datetime]
-    doctor: int = None
-    patient: int = None
-    symptom: str = None
-    diagnosis: str = None
-    instruction: str = None
+    place: int
+    date: datetime
+    doctor: int
+    patient: int
+    symptom: str
+    diagnosis: str
+    instruction: str
+    appointment_id: int
 
 
 class PlaceBase(BaseModel):
-    value: str
+    name: str
+    address: str
 

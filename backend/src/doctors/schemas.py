@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import List, Optional
+from datetime import date
+from typing import List
 from pydantic import BaseModel
 
 
@@ -7,7 +7,7 @@ class DoctorBase(BaseModel):
     name: str
     surname: str
     patronymic: str
-    birth_date: Optional[datetime]
+    birth_date: date
     phone_number: str
     gender: int
     profile_id: int
@@ -37,6 +37,6 @@ class ProfileBase(ProfileCreateRequest):
 class ExperienceBase(BaseModel):
     name: str
     position: str
-    start_date: Optional[datetime]
-    end_date: Optional[datetime]
+    start_date: date
+    end_date: date
     doctor_id: int
