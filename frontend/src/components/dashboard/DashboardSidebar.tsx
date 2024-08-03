@@ -24,7 +24,7 @@ const DashboardSidebar = () => {
         icon: FaListUl,
       },
       {
-        active: pathname === "/admin/dashboard/doctors",
+        active: pathname.startsWith("/admin/dashboard/doctors"),
         label: "Doctors",
         href: "/admin/dashboard/doctors",
         icon: FaUserDoctor,
