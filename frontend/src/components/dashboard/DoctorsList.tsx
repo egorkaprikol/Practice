@@ -27,7 +27,7 @@ const DoctorsList = () => {
   }, []);
   if (isLoading) return <div className="">Loading</div>;
   return (
-    <div className="bg-item h-full rounded-3xl p-5 font-medium text-lg">
+    <div className="">
       <div className="pb-5 flex justify-between">
         Search
         <Button onClick={handleNavigate} className="min-w-60">
