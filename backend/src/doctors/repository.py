@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from backend.src.database.config import db_dependency
 from backend.src.doctors.schemas import *
 from backend.src.patients import models as models_patients
@@ -49,10 +50,14 @@ async def create_profile(profile: ProfileCreateRequest, db: db_dependency):
     db.add(db_profile)
     db.commit()
     db.refresh(db_profile)
-    return {"message": "Profile created successfully", "Profile": db_profile}
+    return db_profile
 
 
-async def create_service(service: ServiceBase, db: db_dependency):
+async def create_service(service: ServiceCreate, db: db_dependency):
+    db_profile = db.query(models_doctors.Profile).filter_by(id=service.profile_id).first()
+    if not db_profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found")
+
     db_service = models_doctors.Service(name=service.name,
                                         description=service.description,
                                         price=service.price,
@@ -61,6 +66,11 @@ async def create_service(service: ServiceBase, db: db_dependency):
     db.commit()
     db.refresh(db_service)
     return {"message": "Service created successfully", "Service": db_service}
+
+
+async def get_services(db: db_dependency, profile_id: int):
+    services = (db.query(models_doctors.Service).filter(models_doctors.Service.profile_id == profile_id)).all()
+    return services
 
 
 async def add_experience(experience: ExperienceBase, db: db_dependency):

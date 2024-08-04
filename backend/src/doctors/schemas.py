@@ -1,5 +1,4 @@
 from datetime import date
-from typing import List
 from pydantic import BaseModel
 
 
@@ -18,20 +17,16 @@ class DoctorCreateRequest(DoctorBase):
     password: str
 
 
-class ServiceBase(BaseModel):
+class ServiceCreate(BaseModel):
     name: str
     description: str
-    price: int
+    price: float
     profile_id: int
 
 
 class ProfileCreateRequest(BaseModel):
     name: str
     description: str
-
-
-class ProfileBase(ProfileCreateRequest):
-    services: List[ServiceBase] = []
 
 
 class ExperienceBase(BaseModel):

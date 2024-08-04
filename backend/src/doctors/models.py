@@ -24,8 +24,6 @@ class Profile(Base):
     name: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
     description: Mapped[str] = mapped_column(String(50), nullable=True)
 
-    services: Mapped[List["Service"]] = relationship(back_populates="profiles")
-
 
 class Service(Base):
     __tablename__ = 'services'
@@ -34,8 +32,6 @@ class Service(Base):
     description: Mapped[str] = mapped_column(String(50), nullable=True)
     price: Mapped[float] = mapped_column(nullable=False)
     profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=False, index=True)
-
-    profiles: Mapped["Profile"] = relationship(back_populates="services")
 
 
 class Experience(Base):
