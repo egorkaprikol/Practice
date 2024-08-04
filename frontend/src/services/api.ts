@@ -1,10 +1,14 @@
 import Cookies from "js-cookie";
-import { Doctor } from "../types";
+import { Doctor, NewDoctor } from "../types";
 
 const API_URL = "http://127.0.0.1:8000";
 
+export const getToken = () => {
+  return Cookies.get("token");
+};
+
 export const fetchDoctors = async () => {
-  const response = await fetch(`${API_URL}/doctors/get`);
+  const response = await fetch(`${API_URL}/get_doctors`);
   if (!response.ok) {
     alert("fail");
     return;
@@ -16,6 +20,25 @@ export const fetchDoctors = async () => {
     alert(error);
     return;
   }
+};
+
+export const createDoctor = async ({ ...items }: NewDoctor) => {
+  const token = getToken();
+  return fetch(`${API_URL}/doctors/register`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ ...items, profile_id: "1", gender: "1" }),
+  }).then((res) => {
+    if (!res.ok) {
+      alert("Fail");
+      console.log(res);
+      return Promise.reject("Response error");
+    }
+    return res.json();
+  });
 };
 
 export const loginAdmin = async (
