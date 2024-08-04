@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from backend.src.database.config import db_dependency
 from backend.src.visits import models as models_visits
-from backend.src.visits.schemas import PlaceBase, VisitBase, VisitUpdate, AppointmentBase
+from backend.src.visits.schemas import PlaceBase, VisitBase, VisitUpdate, AppointmentBase, ReviewBase
 
 
 async def create_place(place: PlaceBase, db: db_dependency):
@@ -83,3 +83,35 @@ async def create_appointment(appointment: AppointmentBase, db: db_dependency):
     db.commit()
     db.refresh(db_appointment)
     return {"message": "Заявка успешно создана", "Appointment": db_appointment}
+
+
+async def create_review(review: ReviewBase, db: db_dependency):
+    db_review = models_visits.Reviews(date=review.date,
+                                      doctor_id=review.doctor_id,
+                                      place_id=review.place_id,
+                                      description=review.description,
+                                      rate=review.rate)
+    db.add(db_review)
+    db.commit()
+    db.refresh(db_review)
+    return {"message": "Спасибо за обратную связь!", "Ваш отзыв:": db_review}
+
+
+async def get_reviews(db: db_dependency):
+    reviews = (db.query(models_visits.Reviews).all())
+    return reviews
+
+
+async def get_reviews_by_id(db: db_dependency, review_id: int):
+    reviews = (db.query(models_visits.Reviews).filter(models_visits.Reviews.id == review_id).all())
+    return reviews
+
+
+async def get_appointments(db: db_dependency):
+    appointments = (db.query(models_visits.Appointment).all())
+    return appointments
+
+
+async def get_appointments_by_id(db: db_dependency, appointment_id: int):
+    appointments = (db.query(models_visits.Appointment).filter(models_visits.Appointment.id == appointment_id).all())
+    return appointments

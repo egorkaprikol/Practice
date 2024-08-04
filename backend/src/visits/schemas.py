@@ -35,3 +35,11 @@ class AppointmentBase(BaseModel):
     place_id: int
     patient_id: int
     service_id: int
+
+
+class ReviewBase(BaseModel):
+    doctor_id: int
+    place_id: int
+    description: str
+    rate: int
+    date: datetime
