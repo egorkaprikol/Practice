@@ -104,3 +104,8 @@ async def get_doctors(db: db_dependency):
         }
         for doctor in doctor.all()
     ]
+
+
+async def get_profiles(db: db_dependency):
+    profiles = (db.query(models_doctors.Profile)).all()
+    return profiles

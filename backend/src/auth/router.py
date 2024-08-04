@@ -62,7 +62,7 @@ def secure(user=Depends(get_current_user)):
     return {"message": "This is a secure endpoint for " + user["login"]}
 
 
-@router.post("/roles/create", status_code=status.HTTP_201_CREATED)
+@router.post("/create_role", status_code=status.HTTP_201_CREATED)
 async def role_create(role: RoleBase, db: db_dependency):
     response = await create_role(db, role)
     return response

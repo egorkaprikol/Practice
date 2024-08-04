@@ -50,3 +50,21 @@ async def get_visit(db: db_dependency, date: str = None):
         }
         for visit in visits.all()
     ]
+
+
+async def get_patients(db: db_dependency):
+    patient = (
+        db.query(
+            models_patients.Patient.name.label("patient_name"),
+            models_patients.Patient.surname.label("patient_surname"),
+            models_patients.Patient.patronymic.label("patient_patronymic"),
+            models_patients.Patient.phone_number,
+        )
+    )
+    return [
+        {
+            "patient_info": f"{patient.patient_name} {patient.patient_surname} {patient.patient_patronymic}",
+            "patient_phone_number": patient.phone_number,
+        }
+        for patient in patient.all()
+    ]
