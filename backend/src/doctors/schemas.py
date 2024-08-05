@@ -11,6 +11,15 @@ class DoctorBase(BaseModel):
     profile_id: int
 
 
+class DoctorUpdate(BaseModel):
+    name: str
+    surname: str
+    patronymic: str
+    birth_date: date
+    gender_id: int
+    profile_id: int
+
+
 class DoctorCreateRequest(DoctorBase):
     login: str
     password: str

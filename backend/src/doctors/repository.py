@@ -21,6 +21,60 @@ async def create_doctor(doctor: DoctorBase, user_id, db: db_dependency):
     return {"message": "Doctor entry created successfully", "Doctor": db_doctor}
 
 
+async def update_doctor(doctor_id: int, doctor: DoctorUpdate, db: db_dependency):
+    db_doctor = (
+        db.query(models_doctors.Doctor)
+        .filter(models_doctors.Doctor.id == doctor_id)
+        .first()
+    )
+    if db_doctor:
+        if doctor.name:
+            db_doctor.name = doctor.name
+        if doctor.surname:
+            db_doctor.surname = doctor.surname
+        if doctor.patronymic:
+            db_doctor.patronymic = doctor.patronymic
+        if doctor.birth_date:
+            db_doctor.birth_date = doctor.birth_date
+        if doctor.gender_id:
+            db_doctor.gender_id = doctor.gender_id
+        if doctor.profile_id:
+            db_doctor.profile_id = doctor.profile_id
+
+        db.commit()
+        db.refresh(db_doctor)
+        return {"message": "Профиль доктора успешно обновлен", "Doctor": db_doctor}
+    else:
+        raise HTTPException(status_code=404, detail="Доктор не найден")
+
+
+async def delete_doctor(doctor_id: int, db: db_dependency):
+    db_doctor = db.query(models_doctors.Doctor).filter(models_doctors.Doctor.id == doctor_id).first()
+
+    if db_doctor:
+
+        appointments = db.query(models_visits.Appointment).filter(
+            models_visits.Appointment.doctor_id == doctor_id).all()
+        for appointment in appointments:
+            db.delete(appointment)
+
+        experiences = db.query(models_doctors.Experience).filter(
+            models_doctors.Experience.doctor_id == doctor_id).all()
+        for experience in experiences:
+            db.delete(experience)
+
+        users = db.query(models_auth.User).filter(
+            models_auth.User.id == doctor_id).all()
+        for user in users:
+            db.delete(user)
+
+        db.delete(db_doctor)
+        db.commit()
+        return {"message": "Профиль доктора успешно удален"}
+    else:
+        raise HTTPException(status_code=404, detail="Доктор не найден")
+
+
 async def get_visit(db: db_dependency, date: str = None):
     visits = (
         db.query(
@@ -110,3 +164,5 @@ async def get_doctors(db: db_dependency):
 async def get_profiles(db: db_dependency):
     profiles = (db.query(models_doctors.Profile)).all()
     return profiles
+
+
