@@ -86,28 +86,24 @@ async def add_experience(experience: ExperienceBase, db: db_dependency):
 
 
 async def get_doctors(db: db_dependency):
-    doctor = (
+    doctors = (
         db.query(
+            models_auth.User.login.label("doctor_login"),
             models_doctors.Doctor.name.label("doctor_name"),
             models_doctors.Doctor.surname,
-            models_doctors.Profile.name,
-        )
-        .join(models_doctors.Doctor, models_doctors.Profile.id == models_doctors.Doctor.profile_id)
-    )
-    doctor2 = (
-        db.query(
-            models_auth.User.login
+            models_doctors.Profile.name.label("profile_name")
         )
         .join(models_doctors.Doctor, models_auth.User.id == models_doctors.Doctor.user_id)
+        .join(models_doctors.Profile, models_doctors.Doctor.profile_id == models_doctors.Profile.id)
     )
     return [
         {
             "doctor_name": f"{doctor.doctor_name}",
             "doctor_surname": doctor.surname,
-            "doctor_phone_number": doctor2.login,
-            "profile_name": doctor.name
+            "doctor_phone_number": doctor.doctor_login,
+            "profile_name": f"{doctor.profile_name}"
         }
-        for doctor in doctor.all()
+        for doctor in doctors.all()
     ]
 
 
