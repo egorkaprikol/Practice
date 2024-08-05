@@ -5,10 +5,17 @@ import { twMerge } from "tailwind-merge";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Button from "../Button";
 import { Link, useNavigate } from "react-router-dom";
+import SearchInput from "../SearchInput";
+import { useDebounce } from "../../hooks/useDebounce";
 const DoctorsList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [doctors, setDoctors] = useState<Doctor[] | undefined>([]);
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[] | undefined>(
+    []
+  );
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search);
   const handleNavigate = () => {
     navigate("new", { replace: true });
   };
@@ -25,11 +32,24 @@ const DoctorsList = () => {
     };
     getDoctors();
   }, []);
+
+  useEffect(() => {
+    const filteredData = doctors!.filter((doctor) =>
+      doctor.doctor_phone_number
+        .toLowerCase()
+        .includes(debouncedSearch.toLowerCase())
+    );
+    setFilteredDoctors(filteredData);
+  }, [debouncedSearch, doctors]);
+
   if (isLoading) return <div className="">Loading</div>;
   return (
     <div className="">
       <div className="pb-5 flex justify-between">
-        Search
+        <SearchInput
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        ></SearchInput>
         <Button onClick={handleNavigate} className="min-w-60">
           Add new doctor
         </Button>
@@ -43,7 +63,7 @@ const DoctorsList = () => {
         <div className="text-primary col-span-2">Profile</div>
         <div className="text-primary flex justify-self-end">Actions</div>
       </div>
-      {doctors?.map((doctor, index) => {
+      {filteredDoctors?.map((doctor, index) => {
         return (
           <div
             className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
