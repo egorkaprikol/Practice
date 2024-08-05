@@ -89,8 +89,8 @@ async def get_doctors(db: db_dependency):
     doctor = (
         db.query(
             models_doctors.Doctor.name.label("doctor_name"),
-            models_doctors.Doctor.surname.label("doctor_surname"),
-            models_doctors.Doctor.patronymic.label("doctor_patronymic"),
+            models_doctors.Doctor.surname,
+            models_doctors.Doctor.patronymic,
             models_doctors.Doctor.phone_number,
             models_doctors.Profile.name,
         )
@@ -98,7 +98,8 @@ async def get_doctors(db: db_dependency):
     )
     return [
         {
-            "doctor_info": f"{doctor.doctor_name} {doctor.doctor_surname} {doctor.doctor_patronymic}",
+            "doctor_name": f"{doctor.doctor_name}",
+            "doctor_surname": doctor.surname,
             "doctor_phone_number": doctor.phone_number,
             "profile_name": doctor.name
         }
