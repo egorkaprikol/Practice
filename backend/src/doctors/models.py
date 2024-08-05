@@ -11,9 +11,8 @@ class Doctor(Base):
     surname: Mapped[str] = mapped_column(String(30), nullable=False)
     patronymic: Mapped[str] = mapped_column(String(30), nullable=True)
     birth_date: Mapped[date] = mapped_column(nullable=False)
-    gender: Mapped[int] = mapped_column(ForeignKey("genders.id"), nullable=False, index=True)
+    gender_id: Mapped[int] = mapped_column(ForeignKey("genders.id"), nullable=False, index=True)
     profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=False, index=True)
-    phone_number: Mapped[str] = mapped_column(String(12), unique=True, nullable=False, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
 
 

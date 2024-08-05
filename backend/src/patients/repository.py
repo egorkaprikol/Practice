@@ -3,6 +3,7 @@ from backend.src.patients import models as models_patients
 from backend.src.patients.schemas import *
 from backend.src.visits import models as models_visits
 from backend.src.doctors import models as models_doctors
+from backend.src.auth import models as models_auth
 
 
 async def create_gender(gender: GenderBase, db: db_dependency):
@@ -18,9 +19,8 @@ async def create_patient(patient: PatientBase, user_id, db: db_dependency):
     db_patient = models_patients.Patient(name=patient.name,
                                          surname=patient.surname,
                                          patronymic=patient.patronymic,
-                                         gender=patient.gender,
+                                         gender_id=patient.gender,
                                          birth_date=patient.birth_date,
-                                         phone_number=patient.phone_number,
                                          address=patient.address,
                                          user_id=user_id)
     db.add(db_patient)
@@ -58,13 +58,14 @@ async def get_patients(db: db_dependency):
             models_patients.Patient.name.label("patient_name"),
             models_patients.Patient.surname.label("patient_surname"),
             models_patients.Patient.patronymic.label("patient_patronymic"),
-            models_patients.Patient.phone_number,
+            models_auth.User.login,
         )
+        .join(models_patients.Patient, models_auth.User.id == models_patients.Patient.user_id)
     )
     return [
         {
             "patient_info": f"{patient.patient_name} {patient.patient_surname} {patient.patient_patronymic}",
-            "patient_phone_number": patient.phone_number,
+            "patient_phone_number": patient.login,
         }
         for patient in patient.all()
     ]

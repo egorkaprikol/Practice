@@ -7,8 +7,7 @@ class DoctorBase(BaseModel):
     surname: str
     patronymic: str
     birth_date: date
-    phone_number: str
-    gender: int
+    gender_id: int
     profile_id: int
 
 

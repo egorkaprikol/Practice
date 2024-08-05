@@ -6,9 +6,8 @@ class PatientBase(BaseModel):
     name: str
     surname: str
     patronymic: str
-    gender: int
+    gender_id: int
     birth_date: date
-    phone_number: str
     address: str
 
 

@@ -4,15 +4,15 @@ from backend.src.doctors.schemas import *
 from backend.src.patients import models as models_patients
 from backend.src.visits import models as models_visits
 from backend.src.doctors import models as models_doctors
+from backend.src.auth import models as models_auth
 
 
 async def create_doctor(doctor: DoctorBase, user_id, db: db_dependency):
     db_doctor = models_doctors.Doctor(name=doctor.name,
                                       surname=doctor.surname,
                                       patronymic=doctor.patronymic,
-                                      phone_number=doctor.phone_number,
                                       birth_date=doctor.birth_date,
-                                      gender=doctor.gender,
+                                      gender_id=doctor.gender_id,
                                       profile_id=doctor.profile_id,
                                       user_id=user_id)
     db.add(db_doctor)
@@ -90,17 +90,17 @@ async def get_doctors(db: db_dependency):
         db.query(
             models_doctors.Doctor.name.label("doctor_name"),
             models_doctors.Doctor.surname,
-            models_doctors.Doctor.patronymic,
-            models_doctors.Doctor.phone_number,
+            models_auth.User.login,
             models_doctors.Profile.name,
         )
         .join(models_doctors.Doctor, models_doctors.Profile.id == models_doctors.Doctor.profile_id)
+        .join(models_doctors.Doctor, models_auth.User.id == models_doctors.Doctor.user_id)
     )
     return [
         {
             "doctor_name": f"{doctor.doctor_name}",
             "doctor_surname": doctor.surname,
-            "doctor_phone_number": doctor.phone_number,
+            "doctor_phone_number": doctor.login,
             "profile_name": doctor.name
         }
         for doctor in doctor.all()

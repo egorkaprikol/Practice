@@ -14,10 +14,10 @@ async def create_place(place: PlaceBase, db: db_dependency):
 
 
 async def create_visit(visit: VisitBase, db: db_dependency):
-    db_visit = models_visits.Visit(place=visit.place,
+    db_visit = models_visits.Visit(place_id=visit.place,
                                    date=visit.date,
-                                   doctor=visit.doctor,
-                                   patient=visit.patient,
+                                   doctor_id=visit.doctor,
+                                   patient_id=visit.patient,
                                    symptom=visit.symptom,
                                    diagnosis=visit.diagnosis,
                                    instruction=visit.instruction,
@@ -86,11 +86,11 @@ async def create_appointment(appointment: AppointmentBase, db: db_dependency):
 
 
 async def create_review(review: ReviewBase, db: db_dependency):
-    db_review = models_visits.Reviews(date=review.date,
-                                      doctor_id=review.doctor_id,
-                                      place_id=review.place_id,
-                                      description=review.description,
-                                      rate=review.rate)
+    db_review = models_visits.Review(date=review.date,
+                                     doctor_id=review.doctor_id,
+                                     place_id=review.place_id,
+                                     description=review.description,
+                                     rate=review.rate)
     db.add(db_review)
     db.commit()
     db.refresh(db_review)
@@ -98,12 +98,12 @@ async def create_review(review: ReviewBase, db: db_dependency):
 
 
 async def get_reviews(db: db_dependency):
-    reviews = (db.query(models_visits.Reviews).all())
+    reviews = (db.query(models_visits.Review).all())
     return reviews
 
 
 async def get_reviews_by_id(db: db_dependency, review_id: int):
-    reviews = (db.query(models_visits.Reviews).filter(models_visits.Reviews.id == review_id).all())
+    reviews = (db.query(models_visits.Review).filter(models_visits.Review.id == review_id).all())
     return reviews
 
 

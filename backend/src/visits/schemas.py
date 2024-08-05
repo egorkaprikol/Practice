@@ -3,10 +3,10 @@ from pydantic import BaseModel
 
 
 class VisitBase(BaseModel):
-    place: int
+    place_id: int
     date: datetime
-    doctor: int
-    patient: int
+    doctor_id: int
+    patient_id: int
     symptom: str
     diagnosis: str
     instruction: str
@@ -14,10 +14,10 @@ class VisitBase(BaseModel):
 
 
 class VisitUpdate(BaseModel):
-    place: int
+    place_id: int
     date: datetime
-    doctor: int
-    patient: int
+    doctor_id: int
+    patient_id: int
     symptom: str
     diagnosis: str
     instruction: str
