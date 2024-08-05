@@ -19,7 +19,7 @@ async def create_patient(patient: PatientBase, user_id, db: db_dependency):
     db_patient = models_patients.Patient(name=patient.name,
                                          surname=patient.surname,
                                          patronymic=patient.patronymic,
-                                         gender_id=patient.gender,
+                                         gender_id=patient.gender_id,
                                          birth_date=patient.birth_date,
                                          address=patient.address,
                                          user_id=user_id)
