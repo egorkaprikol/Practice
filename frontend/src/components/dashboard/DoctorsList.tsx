@@ -1,22 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { fetchDoctors } from "../../services/api";
-import { Doctor } from "../../types";
-import { twMerge } from "tailwind-merge";
+import { useEffect, useState } from "react";
+
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Button from "../Button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { DoctorsFilters, fetchFilteredDoctors } from "../../services/doctors";
+import DoctorsListsFilters from "./DoctorsListsFilters";
+import { Doctor } from "../../types";
 const DoctorsList = () => {
+  // const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<Doctor[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [doctors, setDoctors] = useState<Doctor[] | undefined>([]);
+  const [search, setSearch] = useState<DoctorsFilters["search"]>();
   const navigate = useNavigate();
+
   const handleNavigate = () => {
     navigate("new", { replace: true });
   };
+
   useEffect(() => {
     const getDoctors = async () => {
       try {
-        const doctorsData = await fetchDoctors();
-        setDoctors(doctorsData);
+        const doctorsData = await fetchFilteredDoctors({ search });
+        setData(doctorsData);
       } catch (error) {
         alert(error);
       } finally {
@@ -24,12 +29,17 @@ const DoctorsList = () => {
       }
     };
     getDoctors();
-  }, []);
-  if (isLoading) return <div className="">Loading</div>;
+  }, [search]);
+
+  if (isLoading) return <div className=""> -- Loading -- </div>;
   return (
     <div className="">
       <div className="pb-5 flex justify-between">
-        Search
+        <DoctorsListsFilters
+          onChange={(filters) => {
+            setSearch(filters.search);
+          }}
+        ></DoctorsListsFilters>
         <Button onClick={handleNavigate} className="min-w-60">
           Add new doctor
         </Button>
@@ -43,29 +53,30 @@ const DoctorsList = () => {
         <div className="text-primary col-span-2">Profile</div>
         <div className="text-primary flex justify-self-end">Actions</div>
       </div>
-      {doctors?.map((doctor, index) => {
-        return (
-          <div
-            className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
-            key={doctor.doctor_info}
-          >
-            <div className="col-span-3">
-              <span className="px-4 text-primary ">{index + 1}</span>{" "}
-              {doctor.doctor_info}
+      {data &&
+        data.map((doctor, index) => {
+          return (
+            <div
+              className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
+              key={doctor.doctor_phone_number}
+            >
+              <div className="col-span-3">
+                <span className="px-4 text-primary ">{index + 1}</span>{" "}
+                {doctor.doctor_name} {doctor.doctor_surname}
+              </div>
+              <div className="col-span-2">{doctor.doctor_phone_number}</div>
+              <div className="col-span-2">{doctor.profile_name}</div>
+              <div className="flex justify-end gap-5">
+                <button>
+                  <FaEdit className="text-teal-600" />
+                </button>
+                <button>
+                  <FaTrashAlt className="text-red-600" size={18}></FaTrashAlt>
+                </button>
+              </div>
             </div>
-            <div className="col-span-2">{doctor.doctor_phone_number}</div>
-            <div className="col-span-2">{doctor.profile_name}</div>
-            <div className="flex justify-end gap-5">
-              <button>
-                <FaEdit className="text-teal-600" />
-              </button>
-              <button>
-                <FaTrashAlt className="text-red-600" size={18}></FaTrashAlt>
-              </button>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </div>
   );
 };
