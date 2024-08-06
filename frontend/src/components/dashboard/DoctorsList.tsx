@@ -4,7 +4,6 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import { DoctorsFilters, fetchFilteredDoctors } from "../../services/doctors";
-import { useQuery } from "@tanstack/react-query";
 import DoctorsListsFilters from "./DoctorsListsFilters";
 import { Doctor } from "../../types";
 const DoctorsList = () => {
