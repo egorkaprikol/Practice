@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { AuthForm } from "../components/AuthForm";
-import { checkToken } from "../services/api";
 import { useAuthStore } from "../store/authStore";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { checkToken } from "../services/apiUtils";
 
 const AuthAdmin = () => {
   const { login, logout, isAuthenticated } = useAuthStore();

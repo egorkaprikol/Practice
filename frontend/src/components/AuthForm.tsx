@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { checkToken, loginAdmin } from "../services/api";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import Button from "./Button";
+import { loginAdmin } from "../services/apiUtils";
 
 export const AuthForm = () => {
   const [username, setusername] = useState("");

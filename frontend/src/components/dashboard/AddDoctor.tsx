@@ -5,9 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
-import { createDoctor } from "../../services/api";
 import { Gender, ProfileId } from "../../types";
 import { useNavigate } from "react-router-dom";
+import { createDoctor } from "../../services/doctors";
 
 const genderEnum = z.enum(["male", "female"]);
 const profileIdEnum = z.enum(["surgeon", "raper", "oksi"]);
@@ -17,10 +17,9 @@ const schema = z.object({
   surname: z.string().min(2, "Surname is required"),
   patronymic: z.string().min(2, "Patronymic is required"),
   birth_date: z.date().min(new Date("1900-01-01")).max(new Date()),
-  phone_number: z.string().min(6, "Phone number is required"),
+  login: z.string().min(6, "Phone number is required"),
   gender: genderEnum,
   profile_id: profileIdEnum,
-  login: z.string().min(2, "Login is required"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 type FormFields = z.infer<typeof schema>;
@@ -132,12 +131,10 @@ const AddDoctor = () => {
         <input
           id="phone_number"
           className="form-input"
-          {...register("phone_number")}
+          {...register("login")}
           placeholder="e.g., +7 999 012 1212"
         />
-        {errors.phone_number && (
-          <p className="text-red-500">{errors.phone_number.message}</p>
-        )}
+        {errors.login && <p className="text-red-500">{errors.login.message}</p>}
       </div>
 
       <div className="flex items-center gap-4">
@@ -175,19 +172,6 @@ const AddDoctor = () => {
         {errors.profile_id && (
           <p className="text-red-500">{errors.profile_id.message}</p>
         )}
-      </div>
-
-      <div className="flex items-center gap-4">
-        <label htmlFor="login" className="w-32 text-right">
-          Login*
-        </label>
-        <input
-          id="login"
-          className="form-input"
-          {...register("login")}
-          placeholder="e.g., johndoe"
-        />
-        {errors.login && <p className="text-red-500">{errors.login.message}</p>}
       </div>
 
       <div className="flex items-center gap-4">
