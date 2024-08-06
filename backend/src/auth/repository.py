@@ -8,8 +8,13 @@ from backend.src.auth.models import User, Role
 from backend.src.auth.schemas import RoleBase
 
 
-def get_password_hash(password: str):
-    return pwd_context.hash(password)
+def create_user(db: Session, login: str, password: str, role_id: int) -> User:
+    hashed_password = get_password_hash(password)
+    db_user = User(login=login, hashed_password=hashed_password, role_id=role_id)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
 
 
 def authenticate_user(db: Session, login: str, password: str):
@@ -40,15 +45,6 @@ def get_current_user(request: Request):
         )
 
     return data
-
-
-def create_user(db: Session, login: str, password: str, role_id: int) -> User:
-    hashed_password = get_password_hash(password)
-    db_user = User(login=login, hashed_password=hashed_password, role_id=role_id)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
 
 
 async def create_role(db: Session, role: RoleBase):
@@ -101,3 +97,7 @@ def verify_token(token: str):
         return decoded_token if decoded_token["expires"] >= time.time() else None
     except PyJWTError:
         return {}
+
+
+def get_password_hash(password: str):
+    return pwd_context.hash(password)

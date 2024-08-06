@@ -75,26 +75,25 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail="Доктор не найден")
 
 
-async def get_visit(db: db_dependency, date: str = None):
-    visits = (
+async def get_doctors(db: db_dependency):
+    doctors = (
         db.query(
-            models_visits.Visit.date,
-            models_patients.Patient.name.label("patient_name"),
-            models_patients.Patient.surname.label("patient_surname"),
-            models_patients.Patient.patronymic.label("patient_patronymic"),
+            models_auth.User.login.label("doctor_login"),
+            models_doctors.Doctor.name.label("doctor_name"),
+            models_doctors.Doctor.surname,
+            models_doctors.Profile.name.label("profile_name")
         )
-        .join(models_patients.Patient, models_visits.Visit.patient == models_patients.Patient.id)
+        .join(models_doctors.Doctor, models_auth.User.id == models_doctors.Doctor.user_id)
+        .join(models_doctors.Profile, models_doctors.Doctor.profile_id == models_doctors.Profile.id)
     )
-
-    if date:
-        visits = visits.filter(models_visits.Visit.date == date)
-
     return [
         {
-            "date": visit.date,
-            "patient_name": f"{visit.patient_name} {visit.patient_surname} {visit.patient_patronymic}",
+            "doctor_name": f"{doctor.doctor_name}",
+            "doctor_surname": doctor.surname,
+            "doctor_phone_number": doctor.doctor_login,
+            "profile_name": f"{doctor.profile_name}"
         }
-        for visit in visits.all()
+        for doctor in doctors.all()
     ]
 
 
@@ -105,6 +104,11 @@ async def create_profile(profile: ProfileCreateRequest, db: db_dependency):
     db.commit()
     db.refresh(db_profile)
     return db_profile
+
+
+async def get_profiles(db: db_dependency):
+    profiles = (db.query(models_doctors.Profile)).all()
+    return profiles
 
 
 async def create_service(service: ServiceCreate, db: db_dependency):
@@ -139,30 +143,26 @@ async def add_experience(experience: ExperienceBase, db: db_dependency):
     return {"message": "Experience added successfully"}
 
 
-async def get_doctors(db: db_dependency):
-    doctors = (
+async def get_visits_all_for_doctor(db: db_dependency, date: str = None):
+    visits = (
         db.query(
-            models_auth.User.login.label("doctor_login"),
-            models_doctors.Doctor.name.label("doctor_name"),
-            models_doctors.Doctor.surname,
-            models_doctors.Profile.name.label("profile_name")
+            models_visits.Visit.date,
+            models_patients.Patient.name.label("patient_name"),
+            models_patients.Patient.surname.label("patient_surname"),
+            models_patients.Patient.patronymic.label("patient_patronymic"),
         )
-        .join(models_doctors.Doctor, models_auth.User.id == models_doctors.Doctor.user_id)
-        .join(models_doctors.Profile, models_doctors.Doctor.profile_id == models_doctors.Profile.id)
+        .join(models_patients.Patient, models_visits.Visit.patient == models_patients.Patient.id)
     )
+
+    if date:
+        visits = visits.filter(models_visits.Visit.date == date)
+
     return [
         {
-            "doctor_name": f"{doctor.doctor_name}",
-            "doctor_surname": doctor.surname,
-            "doctor_phone_number": doctor.doctor_login,
-            "profile_name": f"{doctor.profile_name}"
+            "date": visit.date,
+            "patient_name": f"{visit.patient_name} {visit.patient_surname} {visit.patient_patronymic}",
         }
-        for doctor in doctors.all()
+        for visit in visits.all()
     ]
-
-
-async def get_profiles(db: db_dependency):
-    profiles = (db.query(models_doctors.Profile)).all()
-    return profiles
 
 

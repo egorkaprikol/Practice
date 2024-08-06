@@ -4,15 +4,6 @@ from backend.src.visits import models as models_visits
 from backend.src.visits.schemas import PlaceBase, VisitBase, VisitUpdate, AppointmentBase, ReviewBase
 
 
-async def create_place(place: PlaceBase, db: db_dependency):
-    db_place = models_visits.Place(name=place.name,
-                                   address=place.address)
-    db.add(db_place)
-    db.commit()
-    db.refresh(db_place)
-    return {"message": "Place entry created successfully", "Place": db_place}
-
-
 async def create_visit(visit: VisitBase, db: db_dependency):
     db_visit = models_visits.Visit(place_id=visit.place,
                                    date=visit.date,
@@ -26,22 +17,6 @@ async def create_visit(visit: VisitBase, db: db_dependency):
     db.commit()
     db.refresh(db_visit)
     return {"message": "Patient entry created successfully", "Patient": db_visit}
-
-
-async def get_visit(db: db_dependency, id: int = None):
-    visits = (
-        db.query(
-            models_visits.Visit
-        )
-    )
-
-    if id:
-        visits = visits.filter(models_visits.Visit.id == id)
-
-    return [
-        visit.__dict__
-        for visit in visits.all()
-    ]
 
 
 async def update_visit(visit_id: int, visit: VisitUpdate, db: db_dependency):
@@ -73,6 +48,31 @@ async def update_visit(visit_id: int, visit: VisitUpdate, db: db_dependency):
         raise HTTPException(status_code=404, detail="Осмотр не найден")
 
 
+async def get_visit_by_id(db: db_dependency, id: int = None):
+    visits = (
+        db.query(
+            models_visits.Visit
+        )
+    )
+
+    if id:
+        visits = visits.filter(models_visits.Visit.id == id)
+
+    return [
+        visit.__dict__
+        for visit in visits.all()
+    ]
+
+
+async def create_place(place: PlaceBase, db: db_dependency):
+    db_place = models_visits.Place(name=place.name,
+                                   address=place.address)
+    db.add(db_place)
+    db.commit()
+    db.refresh(db_place)
+    return {"message": "Place entry created successfully", "Place": db_place}
+
+
 async def create_appointment(appointment: AppointmentBase, db: db_dependency):
     db_appointment = models_visits.Appointment(date=appointment.date,
                                                doctor_id=appointment.doctor_id,
@@ -83,6 +83,16 @@ async def create_appointment(appointment: AppointmentBase, db: db_dependency):
     db.commit()
     db.refresh(db_appointment)
     return {"message": "Заявка успешно создана", "Appointment": db_appointment}
+
+
+async def get_appointments(db: db_dependency):
+    appointments = (db.query(models_visits.Appointment).all())
+    return appointments
+
+
+async def get_appointments_by_id(db: db_dependency, appointment_id: int):
+    appointments = (db.query(models_visits.Appointment).filter(models_visits.Appointment.id == appointment_id).all())
+    return appointments
 
 
 async def create_review(review: ReviewBase, db: db_dependency):
@@ -106,12 +116,3 @@ async def get_reviews_by_id(db: db_dependency, review_id: int):
     reviews = (db.query(models_visits.Review).filter(models_visits.Review.id == review_id).all())
     return reviews
 
-
-async def get_appointments(db: db_dependency):
-    appointments = (db.query(models_visits.Appointment).all())
-    return appointments
-
-
-async def get_appointments_by_id(db: db_dependency, appointment_id: int):
-    appointments = (db.query(models_visits.Appointment).filter(models_visits.Appointment.id == appointment_id).all())
-    return appointments
