@@ -16,11 +16,12 @@ const DoctorsListsFilters = ({ onChange }: DoctorsListsFiltersProps) => {
   }, []);
   return (
     <input
+      className="py-1 px-3 my-1 bg-gray-100 border border-primary/30 h-10 rounded-2xl outline-none font-bold text-black w-1/4"
       type="text"
       value={search}
       //   onChange={(e) => setSearch(e.target.value)}
       onChange={handleChange}
-      placeholder="text"
+      placeholder="Search doctors"
     />
   );
 };
