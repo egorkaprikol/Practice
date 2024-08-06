@@ -32,7 +32,7 @@ export const AuthForm = () => {
     >
       <div className="w-1/4 flex flex-col mb-3 items-center">
         <input
-          className="p-1 my-1 bg-gray-300 border-none h-10 rounded-md outline-none font-bold text-purple-900 w-full"
+          className="p-1 my-1 bg-gray-300 border-none h-10 rounded-md outline-none font-bold text-black w-full"
           type="text"
           value={username}
           placeholder="Login"
@@ -42,7 +42,7 @@ export const AuthForm = () => {
       </div>
       <div className="w-1/4 flex flex-col mb-3 items-center">
         <input
-          className="bg-gray-300 border-none outline-none my-1 p-1 h-10 rounded-md font-bold text-purple-900 w-full"
+          className="bg-gray-300 border-none outline-none my-1 p-1 h-10 rounded-md font-bold text-black w-full"
           type="password"
           value={password}
           placeholder="Password"
