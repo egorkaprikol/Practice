@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, status, Request
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-from backend.src.auth.repository import get_current_user, authenticate_user, create_access_token, create_role, get_token_from_header, verify_token
+from backend.src.auth.repository import get_current_user, authenticate_user, create_access_token, create_role, \
+    get_token_from_header, verify_token, update_admin
 from backend.src.auth.repository import create_user
 from backend.src.database.config import get_db, db_dependency
-from backend.src.auth.schemas import SignUpRequest, SignInRequest, SignInResponse, RoleBase
+from backend.src.auth.schemas import SignUpRequest, SignInRequest, SignInResponse, RoleBase, UserUpdate
 
 router = APIRouter()
 
@@ -13,6 +14,12 @@ router = APIRouter()
 async def register(request: SignUpRequest, db: Session = Depends(get_db)):
     user = create_user(db, request.login, request.password, 1)
     return user
+
+
+@router.put("/admin/update", status_code=status.HTTP_200_OK)
+async def update(user_id: int, user: UserUpdate, db: db_dependency):
+    response = await update_admin(user_id, user, db)
+    return response
 
 
 @router.post("/admin")

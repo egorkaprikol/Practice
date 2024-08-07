@@ -4,21 +4,37 @@ from fastapi.params import Depends
 from jwt import PyJWTError, decode, encode
 from sqlalchemy.orm import Session
 from backend.src.auth.config import pwd_context, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
-from backend.src.auth.models import User, Role
-from backend.src.auth.schemas import RoleBase
+from backend.src.auth import models as models_auth
+from backend.src.auth.schemas import RoleBase, UserUpdate
+from backend.src.database.config import db_dependency
 
 
-def create_user(db: Session, login: str, password: str, role_id: int) -> User:
+def create_user(db: Session, login: str, password: str, role_id: int) -> models_auth.User:
     hashed_password = get_password_hash(password)
-    db_user = User(login=login, hashed_password=hashed_password, role_id=role_id)
+    db_user = models_auth.User(login=login, hashed_password=hashed_password, role_id=role_id)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 
+async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
+    db_user = (
+        db.query(models_auth.User).filter(models_auth.User.id == user_id).first())
+    if db_user.role_id == 1:
+        if user.login:
+            db_user.login = user.login
+        if user.password:
+            db_user.hashed_password = get_password_hash(user.password)
+        db.commit()
+        db.refresh(db_user)
+        return {"message": "Профиль админа успешно обновлен", "Админ": db_user}
+    else:
+        raise HTTPException(status_code=403, detail="Пользователь не является админом")
+
+
 def authenticate_user(db: Session, login: str, password: str):
-    user = db.query(User).filter(User.login == login).first()
+    user = db.query(models_auth.User).filter(models_auth.User.login == login).first()
 
     if not user:
         return False
@@ -48,7 +64,7 @@ def get_current_user(request: Request):
 
 
 async def create_role(db: Session, role: RoleBase):
-    db_role = Role(name=role.name)
+    db_role = models_auth.Role(name=role.name)
     db.add(db_role)
     db.commit()
     db.refresh(db_role)
@@ -56,7 +72,7 @@ async def create_role(db: Session, role: RoleBase):
 
 
 def role_required(required_role: int):
-    def role_required_dependency(user: User = Depends(get_current_user)):
+    def role_required_dependency(user: models_auth.User = Depends(get_current_user)):
         if user["role_id"] != required_role:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -67,7 +83,7 @@ def role_required(required_role: int):
     return role_required_dependency
 
 
-def create_access_token(user: User) -> str:
+def create_access_token(user: models_auth.User) -> str:
     payload = {
         "login": user.login,
         "role_id": user.role_id,

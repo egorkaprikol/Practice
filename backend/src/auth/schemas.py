@@ -27,3 +27,7 @@ class UserBase(BaseModel):
     class Config:
         from_attributes = True
 
+
+class UserUpdate(BaseModel):
+    login: str
+    password: str
