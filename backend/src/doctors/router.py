@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from backend.src.auth.repository import role_required, create_user
 from backend.src.database.config import db_dependency as db_dependency, get_db
 from backend.src.doctors.repository import create_doctor, create_profile, create_service, add_experience, \
-    get_doctors, get_services, get_profiles, update_doctor, delete_doctor, get_visits_all_for_doctor
+    get_services, get_profiles, update_doctor, delete_doctor, get_visits_all_for_doctor, get_doctor_by_id, \
+    get_doctors_all
 from backend.src.doctors.schemas import *
 
 router = APIRouter()
@@ -36,9 +37,15 @@ async def delete(doctor_id: int, db: db_dependency):
     return response
 
 
-@router.get("/get_doctors", status_code=status.HTTP_200_OK)
+@router.get("/doctors/get_all", status_code=status.HTTP_200_OK)
 async def doctors_get(db: db_dependency):
-    response = await get_doctors(db)
+    response = await get_doctors_all(db)
+    return response
+
+
+@router.get("/doctors/get_by_id", status_code=status.HTTP_200_OK)
+async def doctors_get_by_id(doctor_id: int, db: db_dependency):
+    response = await get_doctor_by_id(doctor_id, db)
     return response
 
 

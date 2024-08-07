@@ -9,7 +9,7 @@ from backend.src.auth.schemas import RoleBase, UserUpdate
 from backend.src.database.config import db_dependency
 
 
-def create_user(db: Session, login: str, password: str, role_id: int) -> models_auth.User:
+def create_user(db: Session, login: str, password: str, role_id: int) -> models_auth.User:      ## create user = create admin (because it have the same fields)
     hashed_password = get_password_hash(password)
     db_user = models_auth.User(login=login, hashed_password=hashed_password, role_id=role_id)
     db.add(db_user)
@@ -18,7 +18,7 @@ def create_user(db: Session, login: str, password: str, role_id: int) -> models_
     return db_user
 
 
-async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
+async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):      ## update admin = update user (because it have the same fields)
     db_user = (
         db.query(models_auth.User).filter(models_auth.User.id == user_id).first())
     if db_user.role_id == 1:
@@ -31,6 +31,18 @@ async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
         return {"message": "Профиль админа успешно обновлен", "Админ": db_user}
     else:
         raise HTTPException(status_code=403, detail="Пользователь не является админом")
+
+
+async def delete_admin(user_id: int, db: db_dependency):    ## delete admin = delete user (because it have the same fields)
+    db_admin = db.query(models_auth.User).filter(models_auth.User.id == user_id).first()
+
+    if db_admin:
+
+        db.delete(db_admin)
+        db.commit()
+        return {"message": "Профиль админа успешно удален"}
+    else:
+        raise HTTPException(status_code=404, detail="Админ не найден")
 
 
 def authenticate_user(db: Session, login: str, password: str):

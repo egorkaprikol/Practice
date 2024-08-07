@@ -53,17 +53,17 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
 
     if db_doctor:
 
-        appointments = db.query(models_visits.Appointment).filter(
+        appointments = db.query(models_visits.Appointment).filter(      ## Если удалить доктора, то удалятся заявки, в которых он был указан
             models_visits.Appointment.doctor_id == doctor_id).all()
         for appointment in appointments:
             db.delete(appointment)
 
-        experiences = db.query(models_doctors.Experience).filter(
+        experiences = db.query(models_doctors.Experience).filter(       ## Если удалить доктора, то вместе с ним удалятся и сущности опыта, привязнные к нему
             models_doctors.Experience.doctor_id == doctor_id).all()
         for experience in experiences:
             db.delete(experience)
 
-        users = db.query(models_auth.User).filter(
+        users = db.query(models_auth.User).filter(      ## Если удалить доктора, то вместе с ним удалится и юзер к которому он привязан
             models_auth.User.id == doctor_id).all()
         for user in users:
             db.delete(user)
@@ -75,7 +75,7 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail="Доктор не найден")
 
 
-async def get_doctors(db: db_dependency):
+async def get_doctors_all(db: db_dependency):
     doctors = (
         db.query(
             models_auth.User.login.label("doctor_login"),
@@ -95,6 +95,45 @@ async def get_doctors(db: db_dependency):
         }
         for doctor in doctors.all()
     ]
+
+
+async def get_doctor_by_id(doctor_id: int, db: db_dependency):
+
+    db_doctor = (
+        db.query(
+            models_doctors.Doctor.id,
+            models_doctors.Doctor.name.label("doctor_name"),
+            models_doctors.Doctor.surname,
+            models_doctors.Doctor.patronymic,
+            models_doctors.Doctor.birth_date,
+            models_patients.Gender.name.label("gender_name"),
+            models_auth.User.login.label("doctor_login"),
+            models_doctors.Profile.name.label("profile_name")
+        )
+        .join(models_patients.Gender, models_doctors.Doctor.gender_id == models_patients.Gender.id)
+        .join(models_auth.User, models_auth.User.id == models_doctors.Doctor.user_id)
+        .join(models_doctors.Profile, models_doctors.Doctor.profile_id == models_doctors.Profile.id)
+    )
+
+    if doctor_id:
+        db_doctor = db_doctor.filter(models_doctors.Doctor.id == doctor_id).all()
+
+    if db_doctor:
+        return [
+            {
+                "doctor_id": doctor.id,
+                "doctor_name": doctor.doctor_name,
+                "doctor_surname": doctor.surname,
+                "doctor_patronymic": doctor.patronymic,
+                "gender": doctor.gender_name,
+                "birth_date": doctor.birth_date,
+                "doctor_phone_number": doctor.doctor_login,
+                "profile_name": doctor.profile_name
+            }
+            for doctor in db_doctor
+        ]
+    else:
+        raise HTTPException(status_code=404, detail={"message": "Доктор не найден"})
 
 
 async def create_profile(profile: ProfileCreateRequest, db: db_dependency):
