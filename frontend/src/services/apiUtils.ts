@@ -9,10 +9,16 @@ export const getToken = () => {
 export const handleResponse = async (res: Response) => {
   if (!res.ok) {
     const msg = await res.text();
-    console.log(msg);
-    return Promise.reject("Response error");
+    console.error(msg);
+    return Promise.reject(new Error("Response error"));
   }
-  return res.json();
+
+  try {
+    return await res.json();
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+    return Promise.reject(new Error("Error parsing JSON response"));
+  }
 };
 
 export const loginAdmin = async (

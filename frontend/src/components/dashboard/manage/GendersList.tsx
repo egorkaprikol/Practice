@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import Button from "../Button";
+import Button from "../shared/Button";
 import { useNavigate } from "react-router-dom";
-import { DoctorsFilters, fetchFilteredDoctors } from "../../services/doctors";
-import DoctorsListsFilters from "./DoctorsListsFilters";
-import { Doctor } from "../../types";
-const DoctorsList = () => {
-  // const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<Doctor[] | undefined>([]);
+import { Gender } from "../../../types";
+import { getGenders } from "../../../services/genders";
+const GendersList = () => {
+  const [data, setData] = useState<Gender[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState<DoctorsFilters["search"]>();
+  // const [search, setSearch] = useState<gendersFilters["search"]>();
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -18,30 +16,25 @@ const DoctorsList = () => {
   };
 
   useEffect(() => {
-    const getDoctors = async () => {
+    const getGendersData = async () => {
       try {
-        const doctorsData = await fetchFilteredDoctors({ search });
-        setData(doctorsData);
+        const gendersData = await getGenders();
+        setData(gendersData);
       } catch (error) {
         alert(error);
       } finally {
         setIsLoading(false);
       }
     };
-    getDoctors();
-  }, [search]);
+    getGendersData();
+  }, []);
 
   if (isLoading) return <div className=""> -- Loading -- </div>;
   return (
     <div className="">
       <div className="pb-5 flex justify-between">
-        <DoctorsListsFilters
-          onChange={(filters) => {
-            setSearch(filters.search);
-          }}
-        ></DoctorsListsFilters>
         <Button onClick={handleNavigate} className="min-w-60">
-          Add new doctor
+          Add new gender
         </Button>
       </div>
       <div className="grid grid-cols-8 gap-3 pb-4">
@@ -54,18 +47,16 @@ const DoctorsList = () => {
         <div className="text-primary flex justify-self-end">Actions</div>
       </div>
       {data &&
-        data.map((doctor, index) => {
+        data.map((gender, index) => {
           return (
             <div
-              className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
-              key={doctor.doctor_phone_number}
+              className="grid grid-cols-2 py-4 gap-3 border-t border-gray-300"
+              key={gender.id}
             >
               <div className="col-span-3">
                 <span className="px-4 text-primary ">{index + 1}</span>{" "}
-                {doctor.doctor_name} {doctor.doctor_surname}
+                {gender.name}
               </div>
-              <div className="col-span-2">{doctor.doctor_phone_number}</div>
-              <div className="col-span-2">{doctor.profile_name}</div>
               <div className="flex justify-end gap-5">
                 <button>
                   <FaEdit className="text-teal-600" />
@@ -81,4 +72,4 @@ const DoctorsList = () => {
   );
 };
 
-export default DoctorsList;
+export default GendersList;

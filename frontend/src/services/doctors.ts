@@ -61,7 +61,7 @@ export const createDoctor = async ({
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ ...items, profile_id: 1, gender_id: 1 }),
+      body: JSON.stringify({ ...items }),
     });
 
     if (!response.ok) {
