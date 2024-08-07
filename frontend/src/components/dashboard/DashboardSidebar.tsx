@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
-import Button from "../Button";
-import { Box } from "../Box";
-import { SidebarItem } from "../SidebarItem";
+import Button from "./shared/Button";
+import { Box } from "./shared/Box";
+import { SidebarItem } from "./shared/SidebarItem";
 import { FaListUl } from "react-icons/fa6";
 import { FaNotesMedical } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
@@ -27,6 +27,12 @@ const DashboardSidebar = () => {
         active: pathname.startsWith("/admin/dashboard/doctors"),
         label: "Doctors",
         href: "/admin/dashboard/doctors",
+        icon: FaUserDoctor,
+      },
+      {
+        active: pathname.startsWith("/admin/dashboard/manage"),
+        label: "Manage",
+        href: "/admin/dashboard/manage",
         icon: FaUserDoctor,
       },
       {

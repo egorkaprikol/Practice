@@ -8,23 +8,24 @@ export type Doctor = {
 export type NewDoctor = {
   name: string;
   surname: string;
-  patronymic: string;
+  patronymic?: string;
   birth_date: string; // ISO date string, e.g., "2024-08-04"
-  gender: Gender; // Используем перечисление Gender
-  profile_id: ProfileId; // Используем перечисление ProfileId
+  gender_id: string; // Используем перечисление Gender
+  profile_id: string; // Используем перечисление ProfileId
   login: string;
   password: string;
 };
 
-// Перечисление для gender
-export enum Gender {
-  Male = "male",
-  Female = "female",
-}
+export type Gender = {
+  id: string;
+  name: string;
+  description?: string;
+};
 
-// Перечисление для profile_id
-export enum ProfileId {
-  Surgeon = "surgeon",
-  Rapper = "raper",
-  Oxxy = "oksi",
-}
+export type Profile = {
+  id: string;
+  name: string;
+  description?: string;
+};
+
+

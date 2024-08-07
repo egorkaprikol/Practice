@@ -4,9 +4,10 @@ import AuthAdmin from "./pages/AuthAdmin";
 import AdminDashboard from "./pages/AdminDashboard";
 import DashboardMain from "./components/dashboard/DashboardMain";
 import VisitsList from "./components/dashboard/VisitsList";
-import DoctorsList from "./components/dashboard/DoctorsList";
+import DoctorsList from "./components/dashboard/doctors/DoctorsList";
 import NotFoundPage from "./pages/NotFoundPage";
-import AddDoctor from "./components/dashboard/AddDoctor";
+import AddDoctor from "./components/dashboard/doctors/AddDoctor";
+import ManageList from "./components/dashboard/manage/ManageList";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="visits" element={<VisitsList />}></Route>
             <Route path="doctors" element={<DoctorsList />}></Route>
             <Route path="doctors/new" element={<AddDoctor />}></Route>
+            <Route path="manage" element={<ManageList />}></Route>
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>

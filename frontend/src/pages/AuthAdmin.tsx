@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AuthForm } from "../components/AuthForm";
+import { AuthForm } from "../components/dashboard/shared/AuthForm";
 import { useAuthStore } from "../store/authStore";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { checkToken } from "../services/apiUtils";
