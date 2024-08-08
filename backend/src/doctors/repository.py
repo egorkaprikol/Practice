@@ -52,18 +52,20 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
     db_doctor = db.query(models_doctors.Doctor).filter(models_doctors.Doctor.id == doctor_id).first()
 
     if db_doctor:
-
-        appointments = db.query(models_visits.Appointment).filter(      ## Если удалить доктора, то удалятся заявки, в которых он был указан
+        ## Если удалить доктора, то удалятся заявки, в которых он был указан
+        appointments = db.query(models_visits.Appointment).filter(
             models_visits.Appointment.doctor_id == doctor_id).all()
         for appointment in appointments:
             db.delete(appointment)
 
-        experiences = db.query(models_doctors.Experience).filter(       ## Если удалить доктора, то вместе с ним удалятся и сущности опыта, привязнные к нему
+        ## Если удалить доктора, то вместе с ним удалятся и сущности опыта, привязнные к нему
+        experiences = db.query(models_doctors.Experience).filter(
             models_doctors.Experience.doctor_id == doctor_id).all()
         for experience in experiences:
             db.delete(experience)
 
-        users = db.query(models_auth.User).filter(      ## Если удалить доктора, то вместе с ним удалится и юзер к которому он привязан
+        ## Если удалить доктора, то вместе с ним удалится и юзер к которому он привязан
+        users = db.query(models_auth.User).filter(
             models_auth.User.id == doctor_id).all()
         for user in users:
             db.delete(user)
@@ -164,6 +166,7 @@ async def update_profile(profile_id: int, profile: ProfileUpdate, db: db_depende
 async def delete_profile(profile_id: int, db: db_dependency):
     db_profile = db.query(models_doctors.Profile).filter(models_doctors.Profile.id == profile_id).first()
 
+    ## Когда удаляешь профиль, удаляются и услуги, связанные с ним
     if db_profile:
         services = db.query(models_doctors.Service).filter(models_doctors.Service.profile_id == profile_id).all()
         for service in services:
