@@ -184,6 +184,15 @@ async def get_profiles_all(db: db_dependency):
     return profiles
 
 
+async def get_profile_by_id(profile_id: int, db: db_dependency):
+    db_profile = db.query(models_doctors.Profile).filter(models_doctors.Profile.id == profile_id).first()
+
+    if db_profile:
+        return db_profile
+    else:
+        raise HTTPException(status_code=404, detail={"message": "Профиль не найден"})
+
+
 async def create_service(service: ServiceCreate, db: db_dependency):
     db_profile = db.query(models_doctors.Profile).filter_by(id=service.profile_id).first()
     if not db_profile:

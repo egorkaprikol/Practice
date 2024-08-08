@@ -71,6 +71,12 @@ async def profiles_get(db: db_dependency):
     return response
 
 
+@router.get("/profile/get_by_id", status_code=status.HTTP_200_OK)
+async def get_profiles_by_id(profile_id: int, db: db_dependency):
+    response = await get_profile_by_id(profile_id, db)
+    return response
+
+
 @router.post("/create_service", status_code=status.HTTP_201_CREATED)
 async def service_create(service: ServiceCreate, db: db_dependency):
     response = await create_service(service, db)
