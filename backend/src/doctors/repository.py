@@ -208,9 +208,90 @@ async def create_service(service: ServiceCreate, db: db_dependency):
     return {"message": "Service created successfully", "Service": db_service}
 
 
-async def get_services(db: db_dependency, profile_id: int):
-    services = (db.query(models_doctors.Service).filter(models_doctors.Service.profile_id == profile_id)).all()
-    return services
+async def service_update(service_id: int, service: ServiceUpdate, db: db_dependency):
+    db_service = db.query(models_doctors.Service).filter(models_doctors.Service.id == service_id).first()
+
+    if db_service:
+        if service.name:
+            db_service.name = service.name,
+        if service.description:
+            db_service.description = service.description
+        if service.price:
+            db_service.price = service.price
+        if service.profile_id:
+            db_service.profile_id = service.profile_id
+        db.commit()
+        db.refresh(db_service)
+        return {"message": "Услуга успешно обновлена", "Service": db_service}
+
+    raise HTTPException(status_code=404, detail="Услуга не найдена")
+
+
+async def service_delete(service_id: int, db: db_dependency):
+    db_service = db.query(models_doctors.Service).filter(models_doctors.Service.id == service_id).first()
+    if db_service:
+        db.delete(db_service)
+        db.commit()
+        return {"message": "Услуга успешно удалена", "Service": db_service}
+    raise HTTPException(status_code=404, detail="Услуга не найдена")
+
+
+async def get_services_by_profile_id(db: db_dependency, profile_id: int):
+
+        services = (
+            db.query
+            (
+                models_doctors.Service.id,
+                models_doctors.Service.name,
+                models_doctors.Service.description,
+                models_doctors.Service.price,
+                models_doctors.Profile.name.label("profile_name")
+            )
+            .join(models_doctors.Service, models_doctors.Service.profile_id == models_doctors.Profile.id)
+        )
+
+        if profile_id:
+            services = services.filter(models_doctors.Service.profile_id == profile_id).all()
+
+        if services:
+            return [
+                    {
+                        "service_id": service.id,
+                        "service_name": service.name,
+                        "service_description": service.description,
+                        "service_price": service.price,
+                        "profile_name": f"{service.profile_name}"
+                    }
+                    for service in services
+            ]
+        else:
+            raise HTTPException(status_code=404, detail="Услуги у профиля не найдены")
+
+
+async def get_all_services(db: db_dependency):
+    db_service = (
+        db.query
+        (
+                models_doctors.Service.id,
+                models_doctors.Service.name,
+                models_doctors.Service.description,
+                models_doctors.Service.price,
+                models_doctors.Profile.name.label("profile_name")
+            )
+        .join(models_doctors.Service, models_doctors.Service.profile_id == models_doctors.Profile.id)
+                )
+    if db_service:
+        return [
+            {
+                "service_id": service.id,
+                "service_name": service.name,
+                "service_description": service.description,
+                "service_price": service.price,
+                "profile_name": f"{service.profile_name}"
+            }
+            for service in db_service
+        ]
+    raise HTTPException(status_code=404, detail="Услуги не найдены")
 
 
 async def add_experience(experience: ExperienceBase, db: db_dependency):

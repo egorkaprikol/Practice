@@ -77,15 +77,33 @@ async def get_profiles_by_id(profile_id: int, db: db_dependency):
     return response
 
 
-@router.post("/create_service", status_code=status.HTTP_201_CREATED)
+@router.post("/service/create", status_code=status.HTTP_201_CREATED)
 async def service_create(service: ServiceCreate, db: db_dependency):
     response = await create_service(service, db)
     return response
 
 
-@router.get("/get_services", status_code=status.HTTP_200_OK)
+@router.put("/service/update", status_code=status.HTTP_200_OK)
+async def update_service(service_id: int, service: ServiceUpdate, db: db_dependency):
+    response = await service_update(service_id, service, db)
+    return response
+
+
+@router.delete("/service/delete", status_code=status.HTTP_200_OK)
+async def delete_service(service_id: int, db: db_dependency):
+    response = await service_delete(service_id, db)
+    return response
+
+
+@router.get("/service/get_all_by_profile_id", status_code=status.HTTP_200_OK)
 async def services_get(db: db_dependency, profile_id: int):
-    response = await get_services(db, profile_id)
+    response = await get_services_by_profile_id(db, profile_id)
+    return response
+
+
+@router.get("/service/get_all", status_code=status.HTTP_200_OK)
+async def get_services(db: db_dependency):
+    response = await get_all_services(db)
     return response
 
 

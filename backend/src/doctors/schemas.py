@@ -32,6 +32,13 @@ class ServiceCreate(BaseModel):
     profile_id: int
 
 
+class ServiceUpdate(BaseModel):
+    name: str
+    description: str
+    price: float
+    profile_id: int
+
+
 class ProfileCreateRequest(BaseModel):
     name: str
     description: str
