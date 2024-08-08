@@ -1,8 +1,5 @@
-from fastapi import APIRouter, HTTPException, status, Request
-from fastapi.params import Depends
-from sqlalchemy.orm import Session
-from backend.src.auth.repository import get_current_user, authenticate_user, create_access_token, create_role, \
-    get_token_from_header, verify_token, update_admin, delete_admin
+from fastapi import APIRouter
+from backend.src.auth.repository import *
 from backend.src.auth.repository import create_user
 from backend.src.database.config import get_db, db_dependency
 from backend.src.auth.schemas import SignUpRequest, SignInRequest, SignInResponse, RoleBase, UserUpdate
@@ -75,7 +72,7 @@ def secure(user=Depends(get_current_user)):
     return {"message": "This is a secure endpoint for " + user["login"]}
 
 
-@router.post("/create_role", status_code=status.HTTP_201_CREATED)
+@router.post("/role/create", status_code=status.HTTP_201_CREATED)
 async def role_create(role: RoleBase, db: db_dependency):
     response = await create_role(db, role)
     return response

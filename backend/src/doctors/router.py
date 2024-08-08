@@ -1,16 +1,14 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from backend.src.auth.repository import role_required, create_user
-from backend.src.database.config import db_dependency as db_dependency, get_db
-from backend.src.doctors.repository import create_doctor, create_profile, create_service, add_experience, \
-    get_services, get_profiles, update_doctor, delete_doctor, get_visits_all_for_doctor, get_doctor_by_id, \
-    get_doctors_all
+from backend.src.database.config import get_db
+from backend.src.doctors.repository import *
 from backend.src.doctors.schemas import *
 
 router = APIRouter()
 
 
-@router.get("/secure")
+@router.get("/doctors/secure")
 async def secure(_=Depends(role_required(2))):
     return {"message": "You are authorized"}
 
@@ -49,15 +47,27 @@ async def doctors_get_by_id(doctor_id: int, db: db_dependency):
     return response
 
 
-@router.post("/create_profile", status_code=status.HTTP_201_CREATED)
+@router.post("/profile/create", status_code=status.HTTP_201_CREATED)
 async def profile_create(profile: ProfileCreateRequest, db: db_dependency):
     response = await create_profile(profile, db)
     return response
 
 
-@router.get("/get_profiles", status_code=status.HTTP_200_OK)
+@router.put("/profile/update", status_code=status.HTTP_200_OK)
+async def profile_update(profile_id: int, profile: ProfileUpdate, db: db_dependency):
+    response = await update_profile(profile_id, profile, db)
+    return response
+
+
+@router.delete("/profile/delete", status_code=status.HTTP_200_OK)
+async def profile_delete(profile_id: int, db: db_dependency):
+    response = await delete_profile(profile_id, db)
+    return response
+
+
+@router.get("/profile/get_all", status_code=status.HTTP_200_OK)
 async def profiles_get(db: db_dependency):
-    response = await get_profiles(db)
+    response = await get_profiles_all(db)
     return response
 
 

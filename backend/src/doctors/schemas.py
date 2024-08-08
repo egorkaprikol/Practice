@@ -37,6 +37,11 @@ class ProfileCreateRequest(BaseModel):
     description: str
 
 
+class ProfileUpdate(BaseModel):
+    name: str
+    description: str
+
+
 class ExperienceBase(BaseModel):
     name: str
     position: str

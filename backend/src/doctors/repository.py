@@ -18,7 +18,7 @@ async def create_doctor(doctor: DoctorBase, user_id, db: db_dependency):
     db.add(db_doctor)
     db.commit()
     db.refresh(db_doctor)
-    return {"message": "Doctor entry created successfully", "Doctor": db_doctor}
+    return {"message": "Доктор успешно создан", "Doctor": db_doctor}
 
 
 async def update_doctor(doctor_id: int, doctor: DoctorUpdate, db: db_dependency):
@@ -145,7 +145,38 @@ async def create_profile(profile: ProfileCreateRequest, db: db_dependency):
     return db_profile
 
 
-async def get_profiles(db: db_dependency):
+async def update_profile(profile_id: int, profile: ProfileUpdate, db: db_dependency):
+    db_profile = db.query(models_doctors.Profile).filter(models_doctors.Profile.id == profile_id).first()
+
+    if db_profile:
+        if profile.name:
+            db_profile.name = profile.name,
+        if profile.description:
+            db_profile.description = profile.description
+        db.commit()
+        db.refresh(db_profile)
+        return {"message": "Профиль успешно обновлен", "Profile": db_profile}
+
+    else:
+        raise HTTPException(status_code=404, detail="Профиль не найден")
+
+
+async def delete_profile(profile_id: int, db: db_dependency):
+    db_profile = db.query(models_doctors.Profile).filter(models_doctors.Profile.id == profile_id).first()
+
+    if db_profile:
+        services = db.query(models_doctors.Service).filter(models_doctors.Service.profile_id == profile_id).all()
+        for service in services:
+            db.delete(service)
+
+        db.delete(db_profile)
+        db.commit()
+        return {"message": "Профиль успешно удалён"}
+    else:
+        raise HTTPException(status_code=404, detail="Профиль не найден")
+
+
+async def get_profiles_all(db: db_dependency):
     profiles = (db.query(models_doctors.Profile)).all()
     return profiles
 
