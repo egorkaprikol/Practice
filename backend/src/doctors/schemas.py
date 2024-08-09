@@ -55,3 +55,11 @@ class ExperienceBase(BaseModel):
     start_date: date
     end_date: date
     doctor_id: int
+
+
+class ExperienceUpdate(BaseModel):
+    name: str
+    position: str
+    start_date: date
+    end_date: date
+    doctor_id: int

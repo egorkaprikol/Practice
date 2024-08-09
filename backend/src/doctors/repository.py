@@ -303,7 +303,55 @@ async def add_experience(experience: ExperienceBase, db: db_dependency):
     db.add(db_experience)
     db.commit()
     db.refresh(db_experience)
-    return {"message": "Experience added successfully"}
+    return {"message": "Опыт успешно добавлен"}
+
+
+async def update_experience(experience_id: int, experience: ExperienceUpdate, db: db_dependency):
+
+    db_experience = db.query(models_doctors.Experience).filter(models_doctors.Experience.id == experience_id).first()
+
+    if db_experience:
+        if experience.name:
+            db_experience.name = experience.name,
+        if experience.position:
+            db_experience.position = experience.position,
+        if experience.start_date:
+            db_experience.start_date = experience.start_date,
+        if experience.end_date:
+            db_experience.end_date = experience.end_date,
+        if experience.doctor_id:
+            db_experience.doctor_id = experience.doctor_id
+        db.commit()
+        db.refresh(db_experience)
+        return {"message": "Опыт успешно обновлен", "Experience": db_experience}
+
+    raise HTTPException(status_code=404, detail="Опыт не найден")
+
+
+async def delete_experience(experience_id: int, db: db_dependency):
+
+    db_experience = db.query(models_doctors.Experience).filter(models_doctors.Experience.id == experience_id).first()
+    if db_experience:
+        db.delete(db_experience)
+        db.commit()
+        return {"message": "Опыт успешно удален"}
+
+    raise HTTPException(status_code=404, detail="Опыт не найден")
+
+
+async def get_all_experiences_by_doctor_id(doctor_id: int, db: db_dependency):
+
+    db_doctor = db.query(models_doctors.Doctor).filter(models_doctors.Doctor.id == doctor_id).first()
+
+    if db_doctor:
+        db_experience = db.query(models_doctors.Experience).filter(models_doctors.Experience.doctor_id == doctor_id).all()
+
+        if db_experience:
+            return db_experience
+
+        raise HTTPException(status_code=404, detail="У данного доктора не указан опыт")
+
+    raise HTTPException(status_code=404, detail="Доктор не найден")
 
 
 async def get_visits_all_for_doctor(db: db_dependency, date: str = None):

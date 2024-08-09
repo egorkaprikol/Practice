@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 from backend.src.auth.repository import *
-from backend.src.auth.repository import create_user
 from backend.src.database.config import get_db, db_dependency
-from backend.src.auth.schemas import SignUpRequest, SignInRequest, SignInResponse, RoleBase, UserUpdate
+from backend.src.auth.schemas import *
 
 router = APIRouter()
 
@@ -25,7 +24,7 @@ async def delete(user_id: int, db: db_dependency):
     return response
 
 
-@router.post("/admin")
+@router.post("/admin", status_code=status.HTTP_200_OK)
 async def login(request: SignInRequest, db: Session = Depends(get_db)):
     user = authenticate_user(db, request.login, request.password)
 
@@ -40,7 +39,7 @@ async def login(request: SignInRequest, db: Session = Depends(get_db)):
     return SignInResponse(access_token=token)
 
 
-@router.post("/login")
+@router.post("/login", status_code=status.HTTP_200_OK)
 async def login(request: SignInRequest, db: Session = Depends(get_db)):
     user = authenticate_user(db, request.login, request.password)
 
@@ -55,7 +54,7 @@ async def login(request: SignInRequest, db: Session = Depends(get_db)):
     return SignInResponse(access_token=token)
 
 
-@router.get("/token")
+@router.get("/token", status_code=status.HTTP_200_OK)
 def get_protected_resource(request: Request):
     token = get_token_from_header(request)
     token = verify_token(token)
@@ -67,7 +66,7 @@ def get_protected_resource(request: Request):
     return {"message": "OK"}
 
 
-@router.get("/default/secure")
+@router.get("/default/secure", status_code=status.HTTP_200_OK)
 def secure(user=Depends(get_current_user)):
     return {"message": "This is a secure endpoint for " + user["login"]}
 

@@ -5,11 +5,11 @@ from jwt import PyJWTError, decode, encode
 from sqlalchemy.orm import Session
 from backend.src.auth.config import pwd_context, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from backend.src.auth import models as models_auth
-from backend.src.auth.schemas import RoleBase, UserUpdate
+from backend.src.auth.schemas import *
 from backend.src.database.config import db_dependency
 
 
-## create user = create admin (because it have the same fields)
+## методом create_user мы создаем админа, потому что у него только два поля - логин и пароль
 def create_user(db: Session, login: str, password: str, role_id: int) -> models_auth.User:
     hashed_password = get_password_hash(password)
     db_user = models_auth.User(login=login, hashed_password=hashed_password, role_id=role_id)
@@ -19,7 +19,7 @@ def create_user(db: Session, login: str, password: str, role_id: int) -> models_
     return db_user
 
 
-## update admin = update user (because it have the same fields)
+## этим методом можно обновить логин и пароль админа
 async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
     db_user = (
         db.query(models_auth.User).filter(models_auth.User.id == user_id).first())
@@ -35,7 +35,7 @@ async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
         raise HTTPException(status_code=403, detail="Пользователь не является админом")
 
 
-## delete admin = delete user (because it have the same fields)
+## этим методом мы удаляем админа
 async def delete_admin(user_id: int, db: db_dependency):
     db_admin = db.query(models_auth.User).filter(models_auth.User.id == user_id).first()
 

@@ -17,8 +17,7 @@ async def secure(_=Depends(role_required(2))):
 async def register(
         request: DoctorCreateRequest,
         db: Session = Depends(get_db),
-        _=Depends(role_required(1)),
-):
+        _=Depends(role_required(1)),):
     user = create_user(db, request.login, request.password, 2)
     return await create_doctor(request, user.id, db)
 
@@ -107,13 +106,31 @@ async def get_services(db: db_dependency):
     return response
 
 
-@router.post("/add_experience", status_code=status.HTTP_201_CREATED)
+@router.post("/experience/add", status_code=status.HTTP_201_CREATED)
 async def experience_create(experience: ExperienceBase, db: db_dependency):
     response = await add_experience(experience, db)
     return response
 
 
-@router.get("/get_visits")
+@router.put("/experience/update", status_code=status.HTTP_200_OK)
+async def experience_update(experience_id: int, experience: ExperienceUpdate, db: db_dependency):
+    response = await update_experience(experience_id, experience, db)
+    return response
+
+
+@router.delete("/experience/delete", status_code=status.HTTP_200_OK)
+async def experience_delete(experience_id: int, db: db_dependency):
+    response = await delete_experience(experience_id, db)
+    return response
+
+
+@router.get("/experience/get_all_by_doctor_id", status_code=status.HTTP_200_OK)
+async def experience_get_all_by_doctor_id(doctor_id: int, db: db_dependency):
+    response = await get_all_experiences_by_doctor_id(doctor_id, db)
+    return response
+
+
+@router.get("/visits/get_all_for_doctor")
 async def visit_get(db: db_dependency, date: str = None):
     visits = await get_visits_all_for_doctor(db, date)
     return {"visits": visits}
