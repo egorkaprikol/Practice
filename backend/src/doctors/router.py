@@ -13,7 +13,7 @@ async def secure(_=Depends(role_required(2))):
     return {"message": "You are authorized"}
 
 
-@router.post("/doctors/register", status_code=status.HTTP_201_CREATED)
+@router.post("/doctors", status_code=status.HTTP_201_CREATED)
 async def register(
         request: DoctorCreateRequest,
         db: Session = Depends(get_db),
@@ -22,115 +22,115 @@ async def register(
     return await create_doctor(request, user.id, db)
 
 
-@router.put("/doctors/update", status_code=status.HTTP_200_OK)
+@router.patch("/doctors", status_code=status.HTTP_200_OK)
 async def update(doctor_id: int, doctor: DoctorUpdate, db: db_dependency):
     response = await update_doctor(doctor_id, doctor, db)
     return response
 
 
-@router.delete("/doctors/delete", status_code=status.HTTP_200_OK)
+@router.delete("/doctors", status_code=status.HTTP_200_OK)
 async def delete(doctor_id: int, db: db_dependency):
     response = await delete_doctor(doctor_id, db)
     return response
 
 
-@router.get("/doctors/get_all", status_code=status.HTTP_200_OK)
+@router.get("/doctors", status_code=status.HTTP_200_OK)
 async def doctors_get(db: db_dependency):
     response = await get_doctors_all(db)
     return response
 
 
-@router.get("/doctors/get_by_id", status_code=status.HTTP_200_OK)
+@router.get("/doctors/:id", status_code=status.HTTP_200_OK)
 async def doctors_get_by_id(doctor_id: int, db: db_dependency):
     response = await get_doctor_by_id(doctor_id, db)
     return response
 
 
-@router.post("/profile/create", status_code=status.HTTP_201_CREATED)
+@router.post("/profiles", status_code=status.HTTP_201_CREATED)
 async def profile_create(profile: ProfileCreateRequest, db: db_dependency):
     response = await create_profile(profile, db)
     return response
 
 
-@router.put("/profile/update", status_code=status.HTTP_200_OK)
+@router.put("/profiles", status_code=status.HTTP_200_OK)
 async def profile_update(profile_id: int, profile: ProfileUpdate, db: db_dependency):
     response = await update_profile(profile_id, profile, db)
     return response
 
 
-@router.delete("/profile/delete", status_code=status.HTTP_200_OK)
+@router.delete("/profiles", status_code=status.HTTP_200_OK)
 async def profile_delete(profile_id: int, db: db_dependency):
     response = await delete_profile(profile_id, db)
     return response
 
 
-@router.get("/profile/get_all", status_code=status.HTTP_200_OK)
+@router.get("/profiles", status_code=status.HTTP_200_OK)
 async def profiles_get(db: db_dependency):
     response = await get_profiles_all(db)
     return response
 
 
-@router.get("/profile/get_by_id", status_code=status.HTTP_200_OK)
+@router.get("/profiles/:id", status_code=status.HTTP_200_OK)
 async def get_profiles_by_id(profile_id: int, db: db_dependency):
     response = await get_profile_by_id(profile_id, db)
     return response
 
 
-@router.post("/service/create", status_code=status.HTTP_201_CREATED)
+@router.post("/services", status_code=status.HTTP_201_CREATED)
 async def service_create(service: ServiceCreate, db: db_dependency):
     response = await create_service(service, db)
     return response
 
 
-@router.put("/service/update", status_code=status.HTTP_200_OK)
+@router.put("/services", status_code=status.HTTP_200_OK)
 async def update_service(service_id: int, service: ServiceUpdate, db: db_dependency):
     response = await service_update(service_id, service, db)
     return response
 
 
-@router.delete("/service/delete", status_code=status.HTTP_200_OK)
+@router.delete("/services", status_code=status.HTTP_200_OK)
 async def delete_service(service_id: int, db: db_dependency):
     response = await service_delete(service_id, db)
     return response
 
 
-@router.get("/service/get_all_by_profile_id", status_code=status.HTTP_200_OK)
+@router.get("/services/:profile_id", status_code=status.HTTP_200_OK)
 async def services_get(db: db_dependency, profile_id: int):
     response = await get_services_by_profile_id(db, profile_id)
     return response
 
 
-@router.get("/service/get_all", status_code=status.HTTP_200_OK)
+@router.get("/services", status_code=status.HTTP_200_OK)
 async def get_services(db: db_dependency):
     response = await get_all_services(db)
     return response
 
 
-@router.post("/experience/add", status_code=status.HTTP_201_CREATED)
+@router.post("/experiences", status_code=status.HTTP_201_CREATED)
 async def experience_create(experience: ExperienceBase, db: db_dependency):
     response = await add_experience(experience, db)
     return response
 
 
-@router.put("/experience/update", status_code=status.HTTP_200_OK)
+@router.put("/experiences", status_code=status.HTTP_200_OK)
 async def experience_update(experience_id: int, experience: ExperienceUpdate, db: db_dependency):
     response = await update_experience(experience_id, experience, db)
     return response
 
 
-@router.delete("/experience/delete", status_code=status.HTTP_200_OK)
+@router.delete("/experiences", status_code=status.HTTP_200_OK)
 async def experience_delete(experience_id: int, db: db_dependency):
     response = await delete_experience(experience_id, db)
     return response
 
 
-@router.get("/experience/get_all_by_doctor_id", status_code=status.HTTP_200_OK)
+@router.get("/experiences/:doctor_id", status_code=status.HTTP_200_OK)
 async def experience_get_all_by_doctor_id(doctor_id: int, db: db_dependency):
     response = await get_all_experiences_by_doctor_id(doctor_id, db)
     return response
 
 
-@router.get("/visits/get_all_for_doctor")
+@router.get("/doctors/visits")
 async def visit_get(db: db_dependency, date: str = None):
     visits = await get_visits_all_for_doctor(db, date)
     return {"visits": visits}
