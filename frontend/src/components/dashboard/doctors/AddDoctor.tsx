@@ -16,7 +16,7 @@ import Button from "../shared/Button";
 const schema = z.object({
   name: z.string().min(2, "Name is required"),
   surname: z.string().min(2, "Surname is required"),
-  patronymic: z.string().min(2, "2 chars minimum").optional(),
+  patronymic: z.string().optional(),
   birth_date: z.date().min(new Date("1900-01-01")).max(new Date()),
   login: z.string().min(6, "Phone number is required"),
   gender_id: z.string().min(1, "Gender is required"), // исправлено на правильное сообщение об ошибке
@@ -74,150 +74,174 @@ const AddDoctor = () => {
   };
 
   return (
-    <form
-      className="flex flex-col w-full gap-4"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div className="flex items-center gap-4">
-        <label htmlFor="name" className="w-32 text-right">
-          Name*
-        </label>
-        <input
-          id="name"
-          className="form-input"
-          {...register("name")}
-          placeholder="e.g., John"
-        />
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-      </div>
-
-      <div className="flex items-center gap-4">
-        <label htmlFor="surname" className="w-32 text-right">
-          Surname*
-        </label>
-        <input
-          id="surname"
-          className="form-input"
-          {...register("surname")}
-          placeholder="e.g., Doe"
-        />
-        {errors.surname && (
-          <p className="text-red-500">{errors.surname.message}</p>
-        )}
-      </div>
-
-      <div className="flex items-center gap-4">
-        <label htmlFor="patronymic" className="w-32 text-right">
-          Patronymic
-        </label>
-        <input
-          id="patronymic"
-          className="form-input"
-          {...register("patronymic")}
-          placeholder="e.g., Ivanovich"
-        />
-        {errors.patronymic && (
-          <p className="text-red-500">{errors.patronymic.message}</p>
-        )}
-      </div>
-
-      <div className="flex items-center gap-4">
-        <label htmlFor="birth_date" className="w-32 text-right">
-          Birth Date*
-        </label>
-        <Controller
-          name="birth_date"
-          control={control}
-          render={({ field }) => (
-            <DatePicker
-              selected={field.value}
-              onChange={field.onChange}
-              dateFormat="yyyy-MM-dd"
-              placeholderText="yyyy-MM-dd"
-              className="form-input"
-            />
+    <div className="px-44">
+      <form
+        className="grid pt-20 grid-cols-2 w-full gap-x-8 gap-y-2"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="flex flex-col">
+          <label htmlFor="name" className="font-light">
+            First Name*
+          </label>
+          <input
+            id="name"
+            className="form-input"
+            {...register("name")}
+            placeholder="e.g., John"
+          />
+          {errors.name && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.name.message}
+            </p>
           )}
-        />
-        {errors.birth_date && (
-          <p className="text-red-500">{errors.birth_date.message}</p>
-        )}
-      </div>
+        </div>
 
-      <div className="flex items-center gap-4">
-        <label htmlFor="login" className="w-32 text-right">
-          Phone Number*
-        </label>
-        <input
-          id="login"
-          className="form-input"
-          {...register("login")}
-          placeholder="e.g., +7 999 012 1212"
-        />
-        {errors.login && <p className="text-red-500">{errors.login.message}</p>}
-      </div>
+        <div className="flex flex-col">
+          <label htmlFor="surname" className="form-label">
+            Surname*
+          </label>
+          <input
+            id="surname"
+            className="form-input"
+            {...register("surname")}
+            placeholder="e.g., Doe"
+          />
+          {errors.surname && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.surname.message}
+            </p>
+          )}
+        </div>
 
-      <div className="flex items-center gap-4">
-        <label htmlFor="gender" className="w-32 text-right">
-          Gender*
-        </label>
-        <select id="gender" {...register("gender_id")} className="form-input">
-          <option value="" disabled>
-            Select Gender
-          </option>
-          {genders?.map((gender) => (
-            <option key={gender.id} value={gender.id}>
-              {gender.name}
+        <div className="flex flex-col">
+          <label htmlFor="patronymic" className="form-label">
+            Patronymic
+          </label>
+          <input
+            id="patronymic"
+            className="form-input"
+            {...register("patronymic")}
+            placeholder="e.g., Ivanovich"
+          />
+          {errors.patronymic && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.patronymic.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="birth_date" className="form-label">
+            Birth Date*
+          </label>
+          <Controller
+            name="birth_date"
+            control={control}
+            render={({ field }) => (
+              <DatePicker
+                selected={field.value}
+                onChange={field.onChange}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="yyyy-MM-dd"
+                className="form-input"
+              />
+            )}
+          />
+          {errors.birth_date && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.birth_date.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="login" className="form-label">
+            Phone Number*
+          </label>
+          <input
+            id="login"
+            className="form-input"
+            {...register("login")}
+            placeholder="e.g., +7 999 012 1212"
+          />
+          {errors.login && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.login.message}
+            </p>
+          )}
+        </div>
+        <div className="flex flex-col ">
+          <label htmlFor="gender" className="form-label pr-4">
+            Gender*
+          </label>
+          <div className="flex gap-4 h-full items-center">
+            {genders?.map((gender, index) => (
+              <div key={gender.id} className="flex gap-2 font-light">
+                <input
+                  type="radio"
+                  value={gender.id}
+                  defaultChecked={index === 0}
+                  {...register("gender_id")}
+                />
+                <label>{gender.name}</label>
+              </div>
+            ))}
+          </div>
+          {errors.gender_id && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.gender_id.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="profile_id" className="form-label">
+            Profile
+          </label>
+          <select
+            id="profile_id"
+            {...register("profile_id")}
+            className="form-input"
+          >
+            <option value="" disabled>
+              Select Profile
             </option>
-          ))}
-        </select>
-        {errors.gender_id && (
-          <p className="text-red-500">{errors.gender_id.message}</p>
-        )}
-      </div>
+            {profiles?.map((profile) => (
+              <option key={profile.id} value={profile.id}>
+                {profile.name}
+              </option>
+            ))}
+          </select>
+          {errors.profile_id && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.profile_id.message}
+            </p>
+          )}
+        </div>
 
-      <div className="flex items-center gap-4">
-        <label htmlFor="profile_id" className="w-32 text-right">
-          Profile
-        </label>
-        <select
-          id="profile_id"
-          {...register("profile_id")}
-          className="form-input"
-        >
-          <option value="" disabled>
-            Select Profile
-          </option>
-          {profiles?.map((profile) => (
-            <option key={profile.id} value={profile.id}>
-              {profile.name}
-            </option>
-          ))}
-        </select>
-        {errors.profile_id && (
-          <p className="text-red-500">{errors.profile_id.message}</p>
-        )}
-      </div>
+        <div className="flex flex-col">
+          <label htmlFor="password" className="form-label">
+            Password*
+          </label>
+          <input
+            id="password"
+            type="password"
+            className="form-input"
+            {...register("password")}
+            placeholder="e.g., password123"
+          />
+          {errors.password && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
 
-      <div className="flex items-center gap-4">
-        <label htmlFor="password" className="w-32 text-right">
-          Password*
-        </label>
-        <input
-          id="password"
-          type="password"
-          className="form-input"
-          {...register("password")}
-          placeholder="e.g., password123"
-        />
-        {errors.password && (
-          <p className="text-red-500">{errors.password.message}</p>
-        )}
-      </div>
-
-      <Button className="w-40" disabled={isSubmitting} type="submit">
-        {isSubmitting ? "Loading..." : "Add doctor"}
-      </Button>
-    </form>
+        <Button className="w-40" disabled={isSubmitting} type="submit">
+          {isSubmitting ? "Loading..." : "Add doctor"}
+        </Button>
+      </form>
+    </div>
   );
 };
 

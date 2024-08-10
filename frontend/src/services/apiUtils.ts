@@ -55,7 +55,7 @@ export const checkToken = async () => {
   if (!token) {
     return Promise.reject("Not authorized");
   }
-  const res = await fetch(`${API_URL}/token`, {
+  const res = await fetch(`${API_URL}/check_token`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
