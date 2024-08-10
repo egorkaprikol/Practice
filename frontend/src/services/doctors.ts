@@ -1,5 +1,5 @@
 import { Doctor, NewDoctor } from "../types";
-import { API_URL, getToken } from "./apiUtils";
+import { API_URL, getToken, handleResponse } from "./apiUtils";
 
 export interface DoctorsFilters {
   gender?: "male" | "female";
@@ -9,7 +9,7 @@ export interface DoctorsFilters {
 // Функция для получения всех докторов
 export const fetchDoctors = async (): Promise<Doctor[] | undefined> => {
   try {
-    const response = await fetch(`${API_URL}/get_doctors`);
+    const response = await fetch(`${API_URL}/doctors`);
     if (!response.ok) {
       throw new Error("Failed to fetch doctors");
     }
@@ -49,13 +49,25 @@ export const fetchFilteredDoctors = async (
   return filteredDoctors;
 };
 
+export const deleteDoctorById = async (id: number) => {
+  try {
+    const res = await fetch(`${API_URL}/doctors?doctor_id=${id}`);
+    if (!res.ok) {
+      return new Error(res.statusText);
+    }
+    alert("deleted profile");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // Функция для создания нового доктора
 export const createDoctor = async ({
   ...items
 }: NewDoctor): Promise<NewDoctor | undefined> => {
   const token = getToken();
   try {
-    const response = await fetch(`${API_URL}/doctors/register`, {
+    const response = await fetch(`${API_URL}/doctors`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
