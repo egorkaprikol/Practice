@@ -66,13 +66,13 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
 
         ## Если удалить доктора, то вместе с ним удалится и юзер к которому он привязан
         users = db.query(models_auth.User).filter(
-            models_auth.User.id == doctor_id).all()
+            models_auth.User.id == models_doctors.Doctor.user_id).all()
         for user in users:
             db.delete(user)
 
         db.delete(db_doctor)
         db.commit()
-        return {"message": "Профиль доктора успешно удален"}
+        return {"Профиль доктора успешно удален": [db_doctor.name, db_doctor.surname]}
     else:
         raise HTTPException(status_code=404, detail="Доктор не найден")
 
@@ -81,6 +81,7 @@ async def get_doctors_all(db: db_dependency):
     doctors = (
         db.query(
             models_auth.User.login.label("doctor_login"),
+            models_doctors.Doctor.id,
             models_doctors.Doctor.name.label("doctor_name"),
             models_doctors.Doctor.surname,
             models_doctors.Profile.name.label("profile_name")
@@ -90,6 +91,7 @@ async def get_doctors_all(db: db_dependency):
     )
     return [
         {
+            "doctor_id": doctor.id,
             "doctor_name": f"{doctor.doctor_name}",
             "doctor_surname": doctor.surname,
             "doctor_phone_number": doctor.doctor_login,
