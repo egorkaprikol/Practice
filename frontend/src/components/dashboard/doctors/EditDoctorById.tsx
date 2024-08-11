@@ -4,55 +4,34 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format } from "date-fns";
-import { Gender, Profile } from "../../../types";
-import { useNavigate } from "react-router-dom";
-import { createDoctor } from "../../../services/doctors";
+import { format, parseISO } from "date-fns";
+import { Doctor, Gender, Profile } from "../../../types";
+import { useNavigate, useParams } from "react-router-dom";
+import { editDoctorById, getDoctorById } from "../../../services/doctors";
 import { getGenders } from "../../../services/genders";
 import { getProfiles } from "../../../services/profiles";
 import Button from "../shared/Button";
 import { toast } from "sonner";
-import { profile } from "console";
 import { playNotification } from "../../../utils/playNotification";
 
-// Схема валидации с помощью zod
 const schema = z.object({
   name: z.string().min(2, "Name is required"),
   surname: z.string().min(2, "Surname is required"),
   patronymic: z.string().optional(),
   birth_date: z.date().min(new Date("1900-01-01")).max(new Date()),
-  login: z.string().min(6, "Phone number is required"),
-  gender_id: z.string().min(1, "Gender is required"), // исправлено на правильное сообщение об ошибке
-  profile_id: z.string().min(1, "Profile is required"), // исправлено на правильное сообщение об ошибке
-  password: z.string().min(8, "Password must be at least 8 characters long"),
+  gender_id: z.string().min(1, "Gender is required"),
+  profile_id: z.string().min(1, "Profile is required"),
 });
 
 type FormFields = z.infer<typeof schema>;
 
-const AddDoctor = () => {
+const EditDoctor = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [genders, setGenders] = useState<Gender[]>();
   const [profiles, setProfiles] = useState<Profile[]>();
+  const [doctor, setDoctor] = useState<Doctor>();
 
-  useEffect(() => {
-    const getGendersData = async () => {
-      const data = await getGenders();
-      setGenders(data);
-    };
-
-    const getProfilesData = async () => {
-      const data = await getProfiles();
-      setProfiles(data);
-      if (data) {
-        reset({
-          profile_id: String(data[0].id),
-        });
-      }
-    };
-
-    getGendersData();
-    getProfilesData();
-  }, []);
   const {
     register,
     handleSubmit,
@@ -62,26 +41,75 @@ const AddDoctor = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      profile_id: "",
+    defaultValues: async () => {
+      return {
+        name: "",
+        surname: "",
+        patronymic: "",
+        birth_date: new Date(),
+        gender_id: "",
+        profile_id: "",
+      };
     },
   });
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const [gendersData, profilesData, doctorData] = await Promise.all([
+          getGenders(),
+          getProfiles(),
+          getDoctorById(id!),
+        ]);
+
+        setGenders(gendersData);
+        setProfiles(profilesData);
+        setDoctor(doctorData);
+        const foundedGender = gendersData.find(
+          (gender) => gender.name === doctorData?.gender
+        );
+        const foundedProfile = profilesData.find(
+          (profile) => profile.name === doctorData?.profile_name
+        );
+        if (doctorData) {
+          reset({
+            name: doctorData.name,
+            surname: doctorData.surname,
+            patronymic: doctorData.patronymic,
+            birth_date: doctorData.birth_date
+              ? parseISO(doctorData.birth_date)
+              : undefined,
+            gender_id: foundedGender?.id,
+            profile_id: String(foundedProfile?.id),
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    getData();
+  }, [id, reset]);
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
-      const formattedData = {
-        ...data,
-        birth_date: format(new Date(data.birth_date), "yyyy-MM-dd"),
+      const formattedData: Doctor = {
+        name: data.name,
+        surname: data.surname,
+        patronymic: data.patronymic,
+        birth_date: data.birth_date
+          ? format(new Date(data.birth_date), "yyyy-MM-dd")
+          : undefined,
+        gender_id: data.gender_id,
+        profile_id: data.profile_id,
       };
-      const res = await createDoctor(formattedData);
+      const res = await editDoctorById(id!, formattedData);
       if (res) {
         navigate("/admin/dashboard/doctors");
         playNotification();
-        toast.success(
-          `Doctor ${data.surname} ${data.name} has been successfully added`
-        );
+        toast.success(`Profile edited`);
       }
     } catch (error) {
+      toast.error("Error");
       setError("root", {
         message: "Error submit",
       });
@@ -169,33 +197,17 @@ const AddDoctor = () => {
           )}
         </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="login" className="form-label">
-            Phone Number*
-          </label>
-          <input
-            id="login"
-            className="form-input"
-            {...register("login")}
-            placeholder="e.g., +7 999 012 1212"
-          />
-          {errors.login && (
-            <p className="form-label form-label text-sm text-red-500">
-              {errors.login.message}
-            </p>
-          )}
-        </div>
         <div className="flex flex-col ">
           <label htmlFor="gender" className="form-label pr-4">
             Gender*
           </label>
           <div className="flex gap-4 h-full items-center">
-            {genders?.map((gender, index) => (
+            {genders?.map((gender) => (
               <div key={gender.id} className="flex gap-2 font-light">
                 <input
                   type="radio"
                   value={gender.id}
-                  defaultChecked={index === 0}
+                  defaultChecked={gender.name === doctor?.gender}
                   {...register("gender_id")}
                 />
                 <label>{gender.name}</label>
@@ -218,7 +230,7 @@ const AddDoctor = () => {
             {...register("profile_id")}
             className="form-input"
           >
-            <option disabled value="">
+            <option value="" disabled>
               Select Profile
             </option>
             {profiles?.map((profile) => (
@@ -234,30 +246,12 @@ const AddDoctor = () => {
           )}
         </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="password" className="form-label">
-            Password*
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="form-input"
-            {...register("password")}
-            placeholder="e.g., password123"
-          />
-          {errors.password && (
-            <p className="form-label form-label text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
         <Button className="w-40 mt-3" disabled={isSubmitting} type="submit">
-          {isSubmitting ? "Loading..." : "Add doctor"}
+          {isSubmitting ? "Loading..." : "Edit doctor"}
         </Button>
       </form>
     </div>
   );
 };
 
-export default AddDoctor;
+export default EditDoctor;

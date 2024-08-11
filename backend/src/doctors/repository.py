@@ -94,7 +94,7 @@ async def get_doctors_all(db: db_dependency):
             "id": doctor.id,
             "name": f"{doctor.doctor_name}",
             "surname": doctor.surname,
-            "phone_number": doctor.doctor_login,
+            "login": doctor.doctor_login,
             "profile_name": f"{doctor.profile_name}"
         }
         for doctor in doctors.all()
@@ -131,7 +131,7 @@ async def get_doctor_by_id(doctor_id: int, db: db_dependency):
                 "patronymic": doctor.patronymic,
                 "gender": doctor.gender_name,
                 "birth_date": doctor.birth_date,
-                "phone_number": doctor.doctor_login,
+                "login": doctor.doctor_login,
                 "profile_name": doctor.profile_name
             }
             for doctor in db_doctor

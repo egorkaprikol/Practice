@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
   deleteDoctorById,
   DoctorsFilters,
-  fetchFilteredDoctors,
+  getFilteredDoctors,
 } from "../../../services/doctors";
 import DoctorsListsFilters from "./DoctorsListsFilters";
 import { Doctor } from "../../../types";
@@ -14,21 +14,32 @@ import { twMerge } from "tailwind-merge";
 const DoctorsList = () => {
   const [data, setData] = useState<Doctor[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState<DoctorsFilters["search"]>();
   const navigate = useNavigate();
 
-  const handleDeleteDoctor = (id: number) => {
-    console.log(id);
-    const res = deleteDoctorById(id);
+  const handleDeleteDoctor = async (id: number) => {
+    try {
+      const res = await deleteDoctorById(id);
+      if (res) {
+        setRefresh(!refresh); // Обновляем состояние, чтобы компонент перерисовался
+      }
+    } catch (error) {
+      console.error("Ошибка при удалении доктора:", error);
+    }
+  };
+
+  const handleNavigateToEdit = (id: number) => {
+    navigate(`edit/${id}`, { replace: true });
   };
 
   const handleNavigate = () => {
     navigate("new", { replace: true });
   };
   useEffect(() => {
-    const getDoctors = async () => {
+    const getDoctorsData = async () => {
       try {
-        const doctorsData = await fetchFilteredDoctors({ search });
+        const doctorsData = await getFilteredDoctors({ search });
         setData(doctorsData);
       } catch (error) {
         alert(error);
@@ -36,8 +47,8 @@ const DoctorsList = () => {
         setIsLoading(false);
       }
     };
-    getDoctors();
-  }, [search]);
+    getDoctorsData();
+  }, [search, refresh]);
 
   if (isLoading) return <div className=""> -- Loading -- </div>;
   return (
@@ -70,21 +81,21 @@ const DoctorsList = () => {
           data.map((doctor, index) => (
             <div
               className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
-              key={doctor.doctor_phone_number}
+              key={doctor.login}
             >
               <div className="col-span-3 flex">
                 <div className="text-primary w-8 text-center">{index + 1}</div>
                 <div className="">
-                  {doctor.doctor_name} {doctor.doctor_surname}
+                  {doctor.name} {doctor.surname}
                 </div>
               </div>
-              <div className="col-span-2">{doctor.doctor_phone_number}</div>
+              <div className="col-span-2">{doctor.login}</div>
               <div className="col-span-2">{doctor.profile_name}</div>
               <div className="flex justify-end gap-5">
-                <button>
+                <button onClick={() => handleNavigateToEdit(doctor.id!)}>
                   <FaEdit className="text-teal-600" />
                 </button>
-                <button onClick={() => handleDeleteDoctor(doctor.doctor_id)}>
+                <button onClick={() => handleDeleteDoctor(doctor.id!)}>
                   <FaTrashAlt className="text-red-600" size={18} />
                 </button>
               </div>
