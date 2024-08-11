@@ -1,21 +1,18 @@
-export type Doctor = {
-  doctor_id: number;
-  doctor_name: string;
-  doctor_surname: string;
-  doctor_phone_number: string;
-  profile_name: string;
-};
 
-export type NewDoctor = {
+export type Doctor = {
+  id?: number;
   name: string;
   surname: string;
   patronymic?: string;
-  birth_date: string; // ISO date string, e.g., "2024-08-04"
-  gender_id: string; // Используем перечисление Gender
-  profile_id: string; // Используем перечисление ProfileId
-  login: string;
-  password: string;
+  birth_date?: string ; // ISO e.g., "2024-08-04"
+  gender?: string;
+  profile_name?: string;
+  login?: string;
+  password?: string;
+  gender_id?: string,
+  profile_id?: string,
 };
+
 
 export type Gender = {
   id: string;
