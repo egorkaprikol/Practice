@@ -76,7 +76,7 @@ const AddDoctor = () => {
       const res = await createDoctor(formattedData);
       if (res) {
         navigate("/admin/dashboard/doctors");
-        playNotification();
+        playNotification(2);
         toast.success(
           `Doctor ${data.surname} ${data.name} has been successfully added`
         );
