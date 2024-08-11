@@ -1,4 +1,5 @@
 export type Doctor = {
+  doctor_id: number;
   doctor_name: string;
   doctor_surname: string;
   doctor_phone_number: string;
@@ -27,5 +28,3 @@ export type Profile = {
   name: string;
   description?: string;
 };
-
-

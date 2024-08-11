@@ -64,12 +64,11 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
         for experience in experiences:
             db.delete(experience)
 
-        ## Если удалить доктора, то вместе с ним удалится и юзер к которому он привязан
-        users = db.query(models_auth.User).filter(
-            models_auth.User.id == models_doctors.Doctor.user_id).all()
-        for user in users:
+        if db_doctor.user_id:
+            user = db.query(models_auth.User).filter(
+                models_auth.User.id == db_doctor.user_id).first()
             db.delete(user)
-
+            
         db.delete(db_doctor)
         db.commit()
         return {"Профиль доктора успешно удален": [db_doctor.name, db_doctor.surname]}

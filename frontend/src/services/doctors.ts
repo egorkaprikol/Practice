@@ -51,11 +51,15 @@ export const fetchFilteredDoctors = async (
 
 export const deleteDoctorById = async (id: number) => {
   try {
-    const res = await fetch(`${API_URL}/doctors?doctor_id=${id}`);
+    const token = getToken();
+    const res = await fetch(`${API_URL}/doctors?doctor_id=${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
     if (!res.ok) {
       return new Error(res.statusText);
     }
-    alert("deleted profile");
+    console.log("deleted profile");
   } catch (error) {
     console.error(error);
   }
@@ -66,6 +70,7 @@ export const createDoctor = async ({
   ...items
 }: NewDoctor): Promise<NewDoctor | undefined> => {
   const token = getToken();
+  console.log(token);
   try {
     const response = await fetch(`${API_URL}/doctors`, {
       method: "POST",

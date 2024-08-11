@@ -4,6 +4,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Button from "../shared/Button";
 import { useNavigate } from "react-router-dom";
 import {
+  deleteDoctorById,
   DoctorsFilters,
   fetchFilteredDoctors,
 } from "../../../services/doctors";
@@ -15,6 +16,11 @@ const DoctorsList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState<DoctorsFilters["search"]>();
   const navigate = useNavigate();
+
+  const handleDeleteDoctor = (id: number) => {
+    console.log(id);
+    const res = deleteDoctorById(id);
+  };
 
   const handleNavigate = () => {
     navigate("new", { replace: true });
@@ -42,7 +48,7 @@ const DoctorsList = () => {
             setSearch(filters.search);
           }}
         />
-        <Button onClick={handleNavigate} className="min-w-60">
+        <Button onClick={handleNavigate} className="w-60">
           Add new doctor
         </Button>
       </div>
@@ -78,7 +84,7 @@ const DoctorsList = () => {
                 <button>
                   <FaEdit className="text-teal-600" />
                 </button>
-                <button>
+                <button onClick={() => handleDeleteDoctor(doctor.doctor_id)}>
                   <FaTrashAlt className="text-red-600" size={18} />
                 </button>
               </div>
