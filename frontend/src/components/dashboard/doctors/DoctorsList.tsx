@@ -11,6 +11,8 @@ import {
 import DoctorsListsFilters from "./DoctorsListsFilters";
 import { Doctor } from "../../../types";
 import { twMerge } from "tailwind-merge";
+import { toast } from "sonner";
+import { playNotification } from "../../../utils/playNotification";
 const DoctorsList = () => {
   const [data, setData] = useState<Doctor[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +25,8 @@ const DoctorsList = () => {
       const res = await deleteDoctorById(id);
       if (res) {
         setRefresh(!refresh); // Обновляем состояние, чтобы компонент перерисовался
+        playNotification(3);
+        toast.success("Doctor deleted");
       }
     } catch (error) {
       console.error("Ошибка при удалении доктора:", error);

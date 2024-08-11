@@ -4,6 +4,12 @@ export const playNotification = (num: number = 1) => {
     case 2:
       url = "/zdravstvuite_svetlana.mp3";
       break;
+    case 3:
+      url = "/ban4ik.m4a";
+      break;
+    case 4:
+      url = "/eto_strashilka.mp3";
+      break;
     default:
       break;
   }
