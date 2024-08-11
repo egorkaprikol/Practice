@@ -28,6 +28,7 @@ async def update_doctor(doctor_id: int, doctor: DoctorUpdate, db: db_dependency)
         .first()
     )
     if db_doctor:
+
         if doctor.name:
             db_doctor.name = doctor.name
         if doctor.surname:
@@ -40,9 +41,9 @@ async def update_doctor(doctor_id: int, doctor: DoctorUpdate, db: db_dependency)
             db_doctor.gender_id = doctor.gender_id
         if doctor.profile_id:
             db_doctor.profile_id = doctor.profile_id
-
         db.commit()
         db.refresh(db_doctor)
+
         return {"message": "Профиль доктора успешно обновлен", "Doctor": db_doctor}
     else:
         raise HTTPException(status_code=404, detail="Доктор не найден")
@@ -90,10 +91,10 @@ async def get_doctors_all(db: db_dependency):
     )
     return [
         {
-            "doctor_id": doctor.id,
-            "doctor_name": f"{doctor.doctor_name}",
-            "doctor_surname": doctor.surname,
-            "doctor_phone_number": doctor.doctor_login,
+            "id": doctor.id,
+            "name": f"{doctor.doctor_name}",
+            "surname": doctor.surname,
+            "phone_number": doctor.doctor_login,
             "profile_name": f"{doctor.profile_name}"
         }
         for doctor in doctors.all()
@@ -124,13 +125,13 @@ async def get_doctor_by_id(doctor_id: int, db: db_dependency):
     if db_doctor:
         return [
             {
-                "doctor_id": doctor.id,
-                "doctor_name": doctor.doctor_name,
-                "doctor_surname": doctor.surname,
-                "doctor_patronymic": doctor.patronymic,
+                "id": doctor.id,
+                "name": doctor.doctor_name,
+                "surname": doctor.surname,
+                "patronymic": doctor.patronymic,
                 "gender": doctor.gender_name,
                 "birth_date": doctor.birth_date,
-                "doctor_phone_number": doctor.doctor_login,
+                "phone_number": doctor.doctor_login,
                 "profile_name": doctor.profile_name
             }
             for doctor in db_doctor
