@@ -64,10 +64,10 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
         for experience in experiences:
             db.delete(experience)
 
-        if db_doctor.user_id:
-            user = db.query(models_auth.User).filter(
-                models_auth.User.id == db_doctor.user_id).first()
-            db.delete(user)
+        ## Если удалить доктора, то вместе с ним удалится юзер в таблице users, в котором лежат логин и пароль доктора
+        user = db.query(models_auth.User).filter(
+            models_auth.User.id == db_doctor.user_id).first()
+        db.delete(user)
             
         db.delete(db_doctor)
         db.commit()

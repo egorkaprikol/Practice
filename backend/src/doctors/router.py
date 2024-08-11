@@ -23,13 +23,13 @@ async def register(
 
 
 @router.patch("/doctors", status_code=status.HTTP_200_OK)
-async def update(doctor_id: int, doctor: DoctorUpdate, db: db_dependency):
+async def update(doctor_id: int, doctor: DoctorUpdate, db: db_dependency, _=Depends(role_required(1)),):
     response = await update_doctor(doctor_id, doctor, db)
     return response
 
 
 @router.delete("/doctors", status_code=status.HTTP_200_OK)
-async def delete(doctor_id: int, db: db_dependency):
+async def delete(doctor_id: int, db: db_dependency, _=Depends(role_required(1)),):
     response = await delete_doctor(doctor_id, db)
     return response
 
