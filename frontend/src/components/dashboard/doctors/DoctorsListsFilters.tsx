@@ -16,7 +16,7 @@ const DoctorsListsFilters = ({ onChange }: DoctorsListsFiltersProps) => {
   }, []);
   return (
     <input
-      className="py-1 px-3 my-1 bg-gray-100 border border-primary/30 h-10 rounded-2xl outline-none font-bold text-black w-1/4"
+      className="py-1 px-3 my-1 bg-gray-100 border border-primary/30 h-10 rounded-2xl outline-none font-bold text-black w-60"
       type="text"
       value={search}
       onChange={handleChange}
