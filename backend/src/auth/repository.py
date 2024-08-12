@@ -9,17 +9,29 @@ from backend.src.auth.schemas import *
 from backend.src.database.config import db_dependency
 
 
-## методом create_user мы создаем админа, потому что у него только два поля - логин и пароль
-def create_user(db: Session, login: str, password: str, role_id: int) -> models_auth.User:
+def create_user(db: db_dependency, phone_number: str, password: str, role_id: int) -> models_auth.User:
     hashed_password = get_password_hash(password)
-    db_user = models_auth.User(login=login, hashed_password=hashed_password, role_id=role_id)
+    db_user = models_auth.User(phone_number=phone_number, hashed_password=hashed_password, role_id=role_id)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
 
-## этим методом можно обновить логин и пароль админа
+async def create_admin(admin: AdminBase, user_id, db: db_dependency):
+    db_admin = models_auth.Admin(name=admin.name,
+                                 surname=admin.surname,
+                                 patronymic=admin.patronymic,
+                                 user_id=user_id)
+    db.add(db_admin)
+    db.commit()
+    db.refresh(db_admin)
+    if db_admin:
+        return {"message": "Админ успешно создан", "Admin": db_admin}
+    user = db.query(models_auth.User).filter(models_auth.User.id == user_id).first()
+    db.delete(user)
+
+
 async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
     db_user = (
         db.query(models_auth.User).filter(models_auth.User.id == user_id).first())
@@ -35,7 +47,6 @@ async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
         raise HTTPException(status_code=403, detail="Пользователь не является админом")
 
 
-## этим методом мы удаляем админа
 async def delete_admin(user_id: int, db: db_dependency):
     db_admin = db.query(models_auth.User).filter(models_auth.User.id == user_id).first()
 

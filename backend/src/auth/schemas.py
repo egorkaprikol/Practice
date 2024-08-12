@@ -31,3 +31,15 @@ class UserBase(BaseModel):
 class UserUpdate(BaseModel):
     login: str
     password: str
+
+
+class AdminBase(BaseModel):
+    name: str
+    surname: str
+    patronymic: str = None
+
+
+class AdminCreateRequest(AdminBase):
+    login: str
+    password: str
+

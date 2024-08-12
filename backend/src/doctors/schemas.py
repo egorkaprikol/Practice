@@ -5,7 +5,7 @@ from pydantic import BaseModel
 class DoctorBase(BaseModel):
     name: str
     surname: str
-    patronymic: str
+    patronymic: str = None
     birth_date: date
     gender_id: int
     profile_id: int
@@ -14,7 +14,7 @@ class DoctorBase(BaseModel):
 class DoctorUpdate(BaseModel):
     name: str
     surname: str
-    patronymic: str
+    patronymic: str = None
     birth_date: date
     gender_id: int
     profile_id: int
@@ -27,14 +27,14 @@ class DoctorCreateRequest(DoctorBase):
 
 class ServiceCreate(BaseModel):
     name: str
-    description: str
+    description: str = None
     price: float
     profile_id: int
 
 
 class ServiceUpdate(BaseModel):
     name: str
-    description: str
+    description: str = None
     price: float
     profile_id: int
 

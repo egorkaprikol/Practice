@@ -5,7 +5,7 @@ from pydantic import BaseModel
 class PatientBase(BaseModel):
     name: str
     surname: str
-    patronymic: str
+    patronymic: str = None
     gender_id: int
     birth_date: date
     address: str

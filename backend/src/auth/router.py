@@ -6,19 +6,19 @@ from backend.src.auth.schemas import *
 router = APIRouter()
 
 
-@router.post("/admin", status_code=status.HTTP_201_CREATED)
-async def register(request: SignUpRequest, db: Session = Depends(get_db)):
+@router.post("/admins", status_code=status.HTTP_201_CREATED)
+async def register(request: AdminCreateRequest, db: db_dependency):
     user = create_user(db, request.login, request.password, 1)
-    return user
+    return await create_admin(request, user.id, db)
 
 
-@router.put("/admin", status_code=status.HTTP_200_OK)
+@router.put("/admins", status_code=status.HTTP_200_OK)
 async def update(user_id: int, user: UserUpdate, db: db_dependency):
     response = await update_admin(user_id, user, db)
     return response
 
 
-@router.delete("/admin", status_code=status.HTTP_200_OK)
+@router.delete("/admins", status_code=status.HTTP_200_OK)
 async def delete(user_id: int, db: db_dependency):
     response = await delete_admin(user_id, db)
     return response
