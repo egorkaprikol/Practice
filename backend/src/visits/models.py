@@ -22,6 +22,7 @@ class Place(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
     address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    multimedia_id: Mapped[int] = mapped_column(ForeignKey("multimedia.id"), nullable=True, index=True)
 
 
 class Appointment(Base):
@@ -40,6 +41,7 @@ class Review(Base):
     description: Mapped[str] = mapped_column(String(256), nullable=True)
     rate: Mapped[int] = mapped_column(nullable=False, index=True)
     date: Mapped[datetime] = mapped_column(insert_default=func.now())
+    multimedia_id: Mapped[int] = mapped_column(ForeignKey("multimedia.id"), nullable=True, index=True)
     doctor_id: Mapped[int] = mapped_column(ForeignKey("doctors.id"), nullable=False, index=True)
     place_id: Mapped[int] = mapped_column(ForeignKey("places.id"), nullable=False, index=True)
 

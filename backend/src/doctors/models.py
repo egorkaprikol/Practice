@@ -7,10 +7,11 @@ from backend.src.database.config import Base
 class Doctor(Base):
     __tablename__ = 'doctors'
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    name: Mapped[str] = mapped_column(String(30), index=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(30), nullable=False)
     surname: Mapped[str] = mapped_column(String(30), nullable=False)
     patronymic: Mapped[str] = mapped_column(String(30), nullable=True)
     birth_date: Mapped[date] = mapped_column(nullable=False)
+    multimedia_id: Mapped[int] = mapped_column(ForeignKey("multimedia.id"), nullable=True, index=True)
     gender_id: Mapped[int] = mapped_column(ForeignKey("genders.id"), nullable=False, index=True)
     profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=False, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)

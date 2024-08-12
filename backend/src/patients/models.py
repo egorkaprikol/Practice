@@ -12,6 +12,7 @@ class Patient(Base):
     patronymic: Mapped[str] = mapped_column(String(30), nullable=True)
     birth_date: Mapped[date] = mapped_column(nullable=False, index=True)
     address: Mapped[str] = mapped_column(String(256), nullable=False, index=True)
+    multimedia_id: Mapped[int] = mapped_column(ForeignKey("multimedia.id"), nullable=True, index=True)
     gender_id: Mapped[int] = mapped_column(ForeignKey("genders.id"), nullable=False, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
 
