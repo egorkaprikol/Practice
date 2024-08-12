@@ -12,15 +12,27 @@ async def register(request: AdminCreateRequest, db: db_dependency):
     return await create_admin(request, user.id, db)
 
 
-@router.put("/admins", status_code=status.HTTP_200_OK)
-async def update(user_id: int, user: UserUpdate, db: db_dependency):
-    response = await update_admin(user_id, user, db)
+@router.patch("/admins", status_code=status.HTTP_200_OK)
+async def update(admin_id: int, admin: AdminUpdate, db: db_dependency):
+    response = await update_admin(admin_id, admin, db)
     return response
 
 
 @router.delete("/admins", status_code=status.HTTP_200_OK)
-async def delete(user_id: int, db: db_dependency):
-    response = await delete_admin(user_id, db)
+async def delete(admin_id: int, db: db_dependency):
+    response = await delete_admin(admin_id, db)
+    return response
+
+
+@router.get("/admins", status_code=status.HTTP_200_OK)
+async def get_all_admins(db: db_dependency):
+    response = await get_admins_all(db)
+    return response
+
+
+@router.get("/admins/:id", status_code=status.HTTP_200_OK)
+async def get_by_id(admin_id: int, db: db_dependency):
+    response = await get_admin_by_id(admin_id, db)
     return response
 
 

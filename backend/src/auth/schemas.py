@@ -43,3 +43,8 @@ class AdminCreateRequest(AdminBase):
     login: str
     password: str
 
+
+class AdminUpdate(BaseModel):
+    name: str
+    surname: str
+    patronymic: str = None

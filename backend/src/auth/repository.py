@@ -32,31 +32,98 @@ async def create_admin(admin: AdminBase, user_id, db: db_dependency):
     db.delete(user)
 
 
-async def update_admin(user_id: int, user: UserUpdate, db: db_dependency):
-    db_user = (
-        db.query(models_auth.User).filter(models_auth.User.id == user_id).first())
-    if db_user.role_id == 1:
-        if user.login:
-            db_user.login = user.login
-        if user.password:
-            db_user.hashed_password = get_password_hash(user.password)
+async def update_admin(admin_id: int, admin: AdminUpdate, db: db_dependency):
+    db_admin = (
+        db.query(models_auth.Admin)
+        .filter(models_auth.Admin.id == admin_id).first()
+    )
+    if db_admin:
+
+        if admin.name:
+            db_admin.name = admin.name
+        if admin.surname:
+            db_admin.surname = admin.surname
+        if admin.patronymic:
+            db_admin.patronymic = admin.patronymic
+
         db.commit()
-        db.refresh(db_user)
-        return {"message": "Профиль админа успешно обновлен", "Админ": db_user}
+        db.refresh(db_admin)
+
+        return {"message": "Профиль админа успешно обновлен", "Admin": db_admin}
     else:
-        raise HTTPException(status_code=403, detail="Пользователь не является админом")
+        raise HTTPException(status_code=404, detail="Админ не найден")
 
 
-async def delete_admin(user_id: int, db: db_dependency):
-    db_admin = db.query(models_auth.User).filter(models_auth.User.id == user_id).first()
+async def delete_admin(admin_id: int, db: db_dependency):
+    db_admin = db.query(models_auth.Admin).filter(models_auth.Admin.id == admin_id).first()
 
     if db_admin:
+
+        ## Если удалить админа, то вместе с ним удалится юзер в таблице users, в котором лежат логин и пароль админа
+        user = db.query(models_auth.User).filter(
+            models_auth.User.id == db_admin.user_id).first()
+        db.delete(user)
 
         db.delete(db_admin)
         db.commit()
         return {"message": "Профиль админа успешно удален"}
     else:
         raise HTTPException(status_code=404, detail="Админ не найден")
+
+
+async def get_admins_all(db: db_dependency):
+    admins = (
+        db.query(
+            models_auth.User.phone_number,
+            models_auth.Admin.id,
+            models_auth.Admin.name,
+            models_auth.Admin.surname,
+            models_auth.Admin.patronymic
+        )
+        .join(models_auth.Admin, models_auth.User.id == models_auth.Admin.user_id)
+    )
+    return [
+        {
+            "id": admin.id,
+            "name": admin.name,
+            "surname": admin.surname,
+            "login": admin.patronymic,
+            "phone_number": admin.phone_number
+        }
+        for admin in admins.all()
+    ]
+
+
+async def get_admin_by_id(admin_id: int, db: db_dependency):
+
+    db_admin = (
+        db.query(
+            models_auth.Admin.id,
+            models_auth.Admin.name,
+            models_auth.Admin.surname,
+            models_auth.Admin.patronymic,
+            models_auth.User.phone_number
+        )
+        .join(models_auth.User, models_auth.User.id == models_auth.Admin.user_id)
+    )
+
+    if admin_id:
+
+        db_admin = db_admin.filter(models_auth.Admin.id == admin_id).all()
+
+    if db_admin:
+        return [
+            {
+                "id": admin.id,
+                "name": admin.name,
+                "surname": admin.surname,
+                "patronymic": admin.patronymic,
+                "phone_number": admin.phone_number,
+            }
+            for admin in db_admin
+        ]
+    else:
+        raise HTTPException(status_code=404, detail={"message": "Админ не найден"})
 
 
 def authenticate_user(db: Session, login: str, password: str):
