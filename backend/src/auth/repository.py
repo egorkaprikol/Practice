@@ -1,5 +1,7 @@
 import time
-from fastapi import HTTPException, Request, status
+from pathlib import Path
+from typing import Union
+from fastapi import HTTPException, Request, status, UploadFile
 from fastapi.params import Depends
 from jwt import PyJWTError, decode, encode
 from sqlalchemy.orm import Session
@@ -210,3 +212,15 @@ def verify_token(token: str):
 
 def get_password_hash(password: str):
     return pwd_context.hash(password)
+
+
+async def upload_image(file: Union[UploadFile, None] = None):
+
+    if not file:
+        return {"message": "No upload file sent"}
+    else:
+        data = await file.read()
+        save_to = Path("mediafiles/") / file.filename
+        with open(save_to, "wb") as f:
+            f.write(data)
+        return {"filename": file.filename}

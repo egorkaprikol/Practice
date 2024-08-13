@@ -72,3 +72,9 @@ def secure(user=Depends(get_current_user)):
 async def role_create(role: RoleBase, db: db_dependency):
     response = await create_role(db, role)
     return response
+
+
+@router.post("/uploadfile", status_code=status.HTTP_200_OK)
+async def upload_file(file: Union[UploadFile, None] = None):
+    response = await upload_image(file)
+    return response
