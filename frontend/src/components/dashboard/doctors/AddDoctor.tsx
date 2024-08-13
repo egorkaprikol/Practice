@@ -18,6 +18,7 @@ import { playNotification } from "../../../utils/playNotification";
 // Схема валидации с помощью zod
 const schema = z.object({
   name: z.string().min(2, "Name is required"),
+  image_file: z.instanceof(File).nullable(),
   surname: z.string().min(2, "Surname is required"),
   patronymic: z.string().optional(),
   birth_date: z.date().min(new Date("1900-01-01")).max(new Date()),
@@ -33,6 +34,12 @@ const AddDoctor = () => {
   const navigate = useNavigate();
   const [genders, setGenders] = useState<Gender[]>();
   const [profiles, setProfiles] = useState<Profile[]>();
+  // const [file, setFile] = useState<File | null>(null);
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setValue("image_file", file); // Установка значения поля формы
+  };
 
   useEffect(() => {
     const getGendersData = async () => {
@@ -59,6 +66,7 @@ const AddDoctor = () => {
     control,
     setError,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -244,6 +252,24 @@ const AddDoctor = () => {
             className="form-input"
             {...register("password")}
             placeholder="e.g., password123"
+          />
+          {errors.password && (
+            <p className="form-label form-label text-sm text-red-500">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="image" className="form-label">
+            Image*
+          </label>
+          <input
+            id="password"
+            type="file"
+            className="form-input"
+            {...register("image_file")}
+            onChange={handleFileInputChange}
           />
           {errors.password && (
             <p className="form-label form-label text-sm text-red-500">
