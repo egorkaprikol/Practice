@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class SignUpRequest(BaseModel):
-    login: str
+    phone_number: str
     password: str
 
 
@@ -11,7 +11,7 @@ class RoleBase(BaseModel):
 
 
 class SignInRequest(BaseModel):
-    login: str
+    phone_number: str
     password: str
 
 
@@ -21,7 +21,7 @@ class SignInResponse(BaseModel):
 
 class UserBase(BaseModel):
     id: int
-    login: str
+    phone_number: str
     hashed_password: str
 
     class Config:
@@ -29,7 +29,7 @@ class UserBase(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    login: str
+    phone_number: str
     password: str
 
 
@@ -40,7 +40,7 @@ class AdminBase(BaseModel):
 
 
 class AdminCreateRequest(AdminBase):
-    login: str
+    phone_number: str
     password: str
 
 

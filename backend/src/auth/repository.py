@@ -128,8 +128,8 @@ async def get_admin_by_id(admin_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail={"message": "Админ не найден"})
 
 
-def authenticate_user(db: Session, login: str, password: str):
-    user = db.query(models_auth.User).filter(models_auth.User.login == login).first()
+def authenticate_user(db: Session, phone_number: str, password: str):
+    user = db.query(models_auth.User).filter(models_auth.User.phone_number == phone_number).first()
 
     if not user:
         return False
@@ -180,7 +180,7 @@ def role_required(required_role: int):
 
 def create_access_token(user: models_auth.User) -> str:
     payload = {
-        "login": user.login,
+        "phone_number": user.phone_number,
         "role_id": user.role_id,
         "expires": time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60),
     }

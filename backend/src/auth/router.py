@@ -8,7 +8,7 @@ router = APIRouter()
 
 @router.post("/admins", status_code=status.HTTP_201_CREATED)
 async def register(request: AdminCreateRequest, db: db_dependency):
-    user = create_user(db, request.login, request.password, 1)
+    user = create_user(db, request.phone_number, request.password, 1)
     return await create_admin(request, user.id, db)
 
 
@@ -38,12 +38,12 @@ async def get_by_id(admin_id: int, db: db_dependency):
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(request: SignInRequest, db: Session = Depends(get_db)):
-    user = authenticate_user(db, request.login, request.password)
+    user = authenticate_user(db, request.phone_number, request.password)
 
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect login or password",
+            detail="Incorrect phone_number or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -65,7 +65,7 @@ def get_protected_resource(request: Request):
 
 @router.get("/secure", status_code=status.HTTP_200_OK)
 def secure(user=Depends(get_current_user)):
-    return {"message": "This is a secure endpoint for " + user["login"]}
+    return {"message": "This is a secure endpoint for " + user["phone_number"]}
 
 
 @router.post("/role", status_code=status.HTTP_201_CREATED)
