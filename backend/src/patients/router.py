@@ -15,7 +15,7 @@ async def register(
         request: PatientCreateRequest,
         db: Session = Depends(get_db),
                 ):
-    user = create_user(db, request.login, request.password, 3)
+    user = create_user(db, request.phone_number, request.password, 3)
     return await create_patient(request, user.id, db)
 
 

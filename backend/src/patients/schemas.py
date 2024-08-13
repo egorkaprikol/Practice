@@ -17,6 +17,6 @@ class GenderBase(BaseModel):
 
 
 class PatientCreateRequest(PatientBase):
-    login: str
+    phone_number: str
     password: str
 

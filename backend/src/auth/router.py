@@ -68,13 +68,13 @@ def secure(user=Depends(get_current_user)):
     return {"message": "This is a secure endpoint for " + user["phone_number"]}
 
 
-@router.post("/role", status_code=status.HTTP_201_CREATED)
+@router.post("/roles", status_code=status.HTTP_201_CREATED)
 async def role_create(role: RoleBase, db: db_dependency):
     response = await create_role(db, role)
     return response
 
 
-@router.post("/uploadfile", status_code=status.HTTP_200_OK)
-async def upload_file(file: Union[UploadFile, None] = None):
-    response = await upload_image(file)
+@router.post("/files/upload", status_code=status.HTTP_200_OK)
+async def upload_file(image_file: Union[UploadFile, None] = None):
+    response = await upload_image(image_file)
     return response
