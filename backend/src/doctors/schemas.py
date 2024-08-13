@@ -21,7 +21,7 @@ class DoctorUpdate(BaseModel):
 
 
 class DoctorCreateRequest(DoctorBase):
-    login: str
+    phone_number: str
     password: str
 
 

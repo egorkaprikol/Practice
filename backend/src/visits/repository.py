@@ -26,14 +26,14 @@ async def update_visit(visit_id: int, visit: VisitUpdate, db: db_dependency):
         .first()
     )
     if db_visit:
-        if visit.place:
-            db_visit.place = visit.place
+        if visit.place_id:
+            db_visit.place_id = visit.place
         if visit.date:
             db_visit.date = visit.date
-        if visit.doctor:
-            db_visit.doctor = visit.doctor
-        if visit.patient:
-            db_visit.patient = visit.patient
+        if visit.doctor_id:
+            db_visit.doctor_id = visit.doctor
+        if visit.patient_id:
+            db_visit.patient_id = visit.patient
         if visit.symptom:
             db_visit.symptom = visit.symptom
         if visit.diagnosis:

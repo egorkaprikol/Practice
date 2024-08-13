@@ -214,13 +214,14 @@ def get_password_hash(password: str):
     return pwd_context.hash(password)
 
 
-async def upload_image(file: Union[UploadFile, None] = None):
+async def upload_image(image_file: Union[UploadFile, None] = None):
 
-    if not file:
-        return {"message": "No upload file sent"}
+    if not image_file:
+        return {"message": "No upload image_file sent"}
     else:
-        data = await file.read()
-        save_to = Path("mediafiles/") / file.filename
+        data = await image_file.read()
+        save_to = Path("mediafiles/") / image_file.filename
         with open(save_to, "wb") as f:
             f.write(data)
-        return {"filename": file.filename}
+        return {"filename": image_file.filename}
+

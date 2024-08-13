@@ -26,14 +26,14 @@ async def get_patients(db: db_dependency):
             models_patients.Patient.name.label("patient_name"),
             models_patients.Patient.surname.label("patient_surname"),
             models_patients.Patient.patronymic.label("patient_patronymic"),
-            models_auth.User.login,
+            models_auth.User.phone_number,
         )
         .join(models_patients.Patient, models_auth.User.id == models_patients.Patient.user_id)
     )
     return [
         {
             "patient_info": f"{patient.patient_name} {patient.patient_surname} {patient.patient_patronymic}",
-            "patient_phone_number": patient.login,
+            "patient_phone_number": patient.phone_number,
         }
         for patient in patient.all()
     ]
@@ -61,7 +61,7 @@ async def get_visits_all_for_patients(db: db_dependency, date: str = None):
             models_doctors.Doctor.surname.label("doctor_surname"),
             models_doctors.Doctor.patronymic.label("doctor_patronymic"),
         )
-        .join(models_doctors.Doctor, models_visits.Visit.doctor == models_doctors.Doctor.id)
+        .join(models_doctors.Doctor, models_visits.Visit.doctor_id == models_doctors.Doctor.id)
     )
 
     if date:

@@ -80,7 +80,7 @@ async def delete_doctor(doctor_id: int, db: db_dependency):
 async def get_doctors_all(db: db_dependency):
     doctors = (
         db.query(
-            models_auth.User.login.label("doctor_login"),
+            models_auth.User.phone_number.label("doctor_phone_number"),
             models_doctors.Doctor.id,
             models_doctors.Doctor.name.label("doctor_name"),
             models_doctors.Doctor.surname,
@@ -94,7 +94,7 @@ async def get_doctors_all(db: db_dependency):
             "id": doctor.id,
             "name": f"{doctor.doctor_name}",
             "surname": doctor.surname,
-            "login": doctor.doctor_login,
+            "phone_number": doctor.doctor_phone_number,
             "profile_name": f"{doctor.profile_name}"
         }
         for doctor in doctors.all()
@@ -111,7 +111,7 @@ async def get_doctor_by_id(doctor_id: int, db: db_dependency):
             models_doctors.Doctor.patronymic,
             models_doctors.Doctor.birth_date,
             models_patients.Gender.name.label("gender_name"),
-            models_auth.User.login.label("doctor_login"),
+            models_auth.User.phone_number.label("doctor_phone_number"),
             models_doctors.Profile.name.label("profile_name")
         )
         .join(models_patients.Gender, models_doctors.Doctor.gender_id == models_patients.Gender.id)
@@ -131,7 +131,7 @@ async def get_doctor_by_id(doctor_id: int, db: db_dependency):
                 "patronymic": doctor.patronymic,
                 "gender": doctor.gender_name,
                 "birth_date": doctor.birth_date,
-                "login": doctor.doctor_login,
+                "phone_number": doctor.doctor_phone_number,
                 "profile_name": doctor.profile_name
             }
             for doctor in db_doctor
@@ -364,7 +364,7 @@ async def get_visits_all_for_doctor(db: db_dependency, date: str = None):
             models_patients.Patient.surname.label("patient_surname"),
             models_patients.Patient.patronymic.label("patient_patronymic"),
         )
-        .join(models_patients.Patient, models_visits.Visit.patient == models_patients.Patient.id)
+        .join(models_patients.Patient, models_visits.Visit.patient_id == models_patients.Patient.id)
     )
 
     if date:
