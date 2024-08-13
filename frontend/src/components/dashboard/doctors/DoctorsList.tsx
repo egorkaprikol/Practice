@@ -69,27 +69,32 @@ const DoctorsList = () => {
       </div>
       <div
         className={twMerge(
-          "grid grid-cols-8 gap-3 pb-4 sticky top-[68px] bg-white z-10"
+          "grid grid-cols-9 gap-3 pb-4 sticky top-[68px] bg-white z-10"
         )}
       >
-        <div className="text-primary flex col-span-3">
-          <div className="w-8 text-center">#</div>
-          <div className="">Name</div>
+        <div className="text-primary flex col-span-1">
+          <div className="w-[32px] text-center">#</div>
         </div>
+        <div className="text-primary col-span-3">Name</div>
         <div className="text-primary col-span-2">Number</div>
         <div className="text-primary col-span-2">Profile</div>
-        <div className="text-primary flex justify-self-end">Actions</div>
+        <div className="text-primary col-span-1 flex justify-self-end">
+          Actions
+        </div>
       </div>
       <div className={twMerge("overflow-y-auto hide-scrollbar flex-1")}>
         {data &&
           data.map((doctor, index) => (
             <div
-              className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
+              className="grid grid-cols-9 py-4 gap-3 border-t border-gray-300"
               key={doctor.login}
             >
-              <div className="col-span-3 flex">
+              <div className="text-primary flex col-span-1">
                 <div className="text-primary w-8 text-center">{index + 1}</div>
-                <div className="">
+                <div className="">photo</div>
+              </div>
+              <div className="col-span-3 flex">
+                <div className="truncate">
                   {doctor.name} {doctor.surname}
                 </div>
               </div>
