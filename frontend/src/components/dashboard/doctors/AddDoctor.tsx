@@ -18,7 +18,7 @@ import { playNotification } from "../../../utils/playNotification";
 // Схема валидации с помощью zod
 const schema = z.object({
   name: z.string().min(2, "Name is required"),
-  image: z.instanceof(File),
+  image_file: z.instanceof(File).nullable(),
   surname: z.string().min(2, "Surname is required"),
   patronymic: z.string().optional(),
   birth_date: z.date().min(new Date("1900-01-01")).max(new Date()),
@@ -34,12 +34,11 @@ const AddDoctor = () => {
   const navigate = useNavigate();
   const [genders, setGenders] = useState<Gender[]>();
   const [profiles, setProfiles] = useState<Profile[]>();
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
-    console.log(file);
-    setFile(file);
+    setValue("image_file", file); // Установка значения поля формы
   };
 
   useEffect(() => {
@@ -67,6 +66,7 @@ const AddDoctor = () => {
     control,
     setError,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -268,7 +268,7 @@ const AddDoctor = () => {
             id="password"
             type="file"
             className="form-input"
-            {...register("image")}
+            {...register("image_file")}
             onChange={handleFileInputChange}
           />
           {errors.password && (
