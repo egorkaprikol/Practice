@@ -22,7 +22,7 @@ export const handleResponse = async (res: Response) => {
 };
 
 export const loginAdmin = async (
-  login: string,
+  phone_number: string,
   password: string
 ): Promise<string | void> => {
   return fetch(`${API_URL}/login`, {
@@ -30,7 +30,7 @@ export const loginAdmin = async (
     headers: {
       "Content-type": "application/json",
     },
-    body: JSON.stringify({ login, password }),
+    body: JSON.stringify({ phone_number, password }),
   })
     .then((res) => {
       if (!res.ok) {
