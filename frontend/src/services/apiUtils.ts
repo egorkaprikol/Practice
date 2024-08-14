@@ -21,8 +21,23 @@ export const handleResponse = async (res: Response) => {
   }
 };
 
+export const uploadImage = async (data: FormData) => {
+  try {
+    const res = await fetch(`${API_URL}/files/upload`, {
+      method: "POST",
+      body: data,
+    });
+    if (!res.ok) {
+      return res.statusText;
+    }
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const loginAdmin = async (
-  login: string,
+  phone_number: string,
   password: string
 ): Promise<string | void> => {
   return fetch(`${API_URL}/login`, {
@@ -30,7 +45,7 @@ export const loginAdmin = async (
     headers: {
       "Content-type": "application/json",
     },
-    body: JSON.stringify({ login, password }),
+    body: JSON.stringify({ phone_number, password }),
   })
     .then((res) => {
       if (!res.ok) {
@@ -41,7 +56,7 @@ export const loginAdmin = async (
     })
     .then((data) => {
       const token = data.access_token;
-      Cookies.set("token", token, { expires: 10 });
+      Cookies.set("token", token, { expires: 50 });
       return token;
     })
     .catch((error) => {

@@ -14,6 +14,6 @@ export const playNotification = (num: number = 1) => {
       break;
   }
   const sound = new Audio(url);
-  sound.volume = 1;
+  sound.volume = 0.1;
   sound.play();
 };

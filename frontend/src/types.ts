@@ -6,7 +6,7 @@ export type Doctor = {
   birth_date?: string; // ISO e.g., "2024-08-04"
   gender?: string;
   profile_name?: string;
-  login?: string;
+  phone_number?: string;
   password?: string;
   gender_id?: string;
   profile_id?: string;

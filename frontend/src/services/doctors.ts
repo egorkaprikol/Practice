@@ -126,8 +126,7 @@ export const createDoctor = async ({
     if (!response.ok) {
       throw new Error("Failed to create doctor");
     }
-
-    return await response.json();
+    return await response.json().then((data) => data.Doctor.id);
   } catch (error) {
     console.error("Error creating doctor:", error);
     alert("Failed to create doctor");
