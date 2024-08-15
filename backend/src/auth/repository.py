@@ -1,7 +1,6 @@
 import time
 from pathlib import Path
-from typing import Union
-from fastapi import HTTPException, Request, status, UploadFile
+from fastapi import HTTPException, Request, status, UploadFile, File
 from fastapi.params import Depends
 from jwt import PyJWTError, decode, encode
 from sqlalchemy.orm import Session
@@ -214,14 +213,35 @@ def get_password_hash(password: str):
     return pwd_context.hash(password)
 
 
-async def upload_image(image_file: Union[UploadFile, None] = None):
-
-    if not image_file:
-        return {"message": "No upload image_file sent"}
-    else:
-        data = await image_file.read()
-        save_to = Path("mediafiles/") / image_file.filename
-        with open(save_to, "wb") as f:
-            f.write(data)
-        return {"filename": image_file.filename}
-
+# async def upload_image(image_file: UploadFile = File(None), multimedia: MultimediaBase):
+#
+#     default_image_path = Path("multimedia/user.jpg")
+#
+#     if image_file:
+#
+#         data = await image_file.read()
+#         save_to = Path("mediafiles/") / image_file.filename
+#         with open(save_to, "wb") as f:
+#             f.write(data)
+#         db_image = models_auth.Multimedia(
+#                 name=multimedia.name,
+#                 url=multimedia.url,
+#                 type=multimedia.type)
+#         db.add(db_image)
+#         db.commit()
+#         db.refresh(db_image)
+#
+#         return {"file_name": image_file.filename,
+#                 "file_type": image_file.content_type,
+#                 "file_path": save_to}
+#
+#     else:
+#
+#         if default_image_path.exists():
+#             return {
+#                 "file_name": default_image_path.name,
+#                 "file_type": default_image_path.suffix[1:],
+#                 "file_path": default_image_path
+#             }
+#         else:
+#             raise HTTPException(status_code=404, detail="Default image not found")

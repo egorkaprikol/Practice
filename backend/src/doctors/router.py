@@ -18,7 +18,7 @@ async def register(
         request: DoctorCreateRequest,
         db: Session = Depends(get_db),
         _=Depends(role_required(1)),):
-    user = create_user(db, request.login, request.password, 2)
+    user = create_user(db, request.phone_number, request.password, 2)
     return await create_doctor(request, user.id, db)
 
 
@@ -40,7 +40,7 @@ async def doctors_get(db: db_dependency):
     return response
 
 
-@router.get("/doctors/:id", status_code=status.HTTP_200_OK)
+@router.get("/doctors/{doctor_id}", status_code=status.HTTP_200_OK)
 async def doctors_get_by_id(doctor_id: int, db: db_dependency):
     response = await get_doctor_by_id(doctor_id, db)
     return response
@@ -70,7 +70,7 @@ async def profiles_get(db: db_dependency):
     return response
 
 
-@router.get("/profiles/:id", status_code=status.HTTP_200_OK)
+@router.get("/profiles/{profile_id}", status_code=status.HTTP_200_OK)
 async def get_profiles_by_id(profile_id: int, db: db_dependency):
     response = await get_profile_by_id(profile_id, db)
     return response
@@ -94,7 +94,7 @@ async def delete_service(service_id: int, db: db_dependency):
     return response
 
 
-@router.get("/services/:profile_id", status_code=status.HTTP_200_OK)
+@router.get("/services/{profile_id}", status_code=status.HTTP_200_OK)
 async def services_get(db: db_dependency, profile_id: int):
     response = await get_services_by_profile_id(db, profile_id)
     return response
@@ -124,7 +124,13 @@ async def experience_delete(experience_id: int, db: db_dependency):
     return response
 
 
-@router.get("/experiences/:doctor_id", status_code=status.HTTP_200_OK)
+@router.get("/experiences/{experience_id}", status_code=status.HTTP_200_OK)
+async def experience_get_by_id(experience_id: int, db: db_dependency):
+    response = await get_experience_by_id(experience_id, db)
+    return response
+
+
+@router.get("/experiences/{doctor_id}", status_code=status.HTTP_200_OK)
 async def experience_get_all_by_doctor_id(doctor_id: int, db: db_dependency):
     response = await get_all_experiences_by_doctor_id(doctor_id, db)
     return response
