@@ -107,8 +107,8 @@ async def get_services(db: db_dependency):
 
 
 @router.post("/experiences", status_code=status.HTTP_201_CREATED)
-async def experience_create(experience: ExperienceBase, db: db_dependency):
-    response = await add_experience(experience, db)
+async def experience_create(experiences: List[ExperienceBase], db: db_dependency):
+    response = await add_experience(experiences, db)
     return response
 
 
@@ -130,7 +130,7 @@ async def experience_get_by_id(experience_id: int, db: db_dependency):
     return response
 
 
-@router.get("/experiences/{doctor_id}", status_code=status.HTTP_200_OK)
+@router.get("/experiences/get_by_doctor_id/{doctor_id}", status_code=status.HTTP_200_OK)
 async def experience_get_all_by_doctor_id(doctor_id: int, db: db_dependency):
     response = await get_all_experiences_by_doctor_id(doctor_id, db)
     return response
