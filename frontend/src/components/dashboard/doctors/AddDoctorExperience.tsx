@@ -1,16 +1,27 @@
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { format } from "date-fns";
+import { playNotification } from "../../../utils/playNotification";
+import { toast } from "sonner";
+import Button from "../shared/Button";
+import { FaPlusCircle, FaPlusSquare, FaTrashAlt } from "react-icons/fa";
+import {
+  addDoctorsExperienceById,
+  getExperienceById,
+} from "../../../services/experience";
 
-// Zod Schema for validation
+// Zod schema for validation
 const experienceSchema = z.object({
   name: z.string().min(2, "Organization name is required"),
   position: z.string().min(2, "Position is required"),
   start_date: z.date({ required_error: "Start date is required" }),
   end_date: z.date({ required_error: "End date is required" }),
+  doctor_id: z.number(),
 });
 
 const schema = z.object({
@@ -23,11 +34,14 @@ type FormFields = z.infer<typeof schema>;
 
 const AddDoctorExperience = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [dataLoaded, setDataLoaded] = useState(false);
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting, isSubmitted },
+    getValues,
     reset,
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -38,54 +52,99 @@ const AddDoctorExperience = () => {
           position: "",
           start_date: new Date(),
           end_date: new Date(),
+          doctor_id: Number(id),
         },
       ],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { insert, fields, append, remove } = useFieldArray({
     control,
     name: "experiences",
   });
-
-  const onSubmit = (data: FormFields) => {
-    console.log(data);
+  const handleDelete = (i: number) => {
+    if (getValues().experiences.length > 1) {
+      remove(i);
+    } else {
+      reset();
+    }
+  };
+  const onSubmit = async (data: FormFields) => {
+    try {
+      const formattedData = data.experiences.map((item) => ({
+        ...item,
+        start_date: format(new Date(item.start_date), "yyyy-MM-dd"),
+        end_date: format(new Date(item.end_date), "yyyy-MM-dd"),
+      }));
+      const res = await addDoctorsExperienceById(formattedData);
+      if (res) {
+        playNotification(2);
+        navigate(`/admin/dashboard/doctors`);
+        toast.success("Experience has been successfully added");
+      }
+    } catch (error) {
+      console.error("Error adding doctor experience", error);
+    }
   };
 
+  useEffect(() => {
+    if (!dataLoaded) {
+      const getData = async () => {
+        const experience = await getExperienceById(id!);
+        if (Array.isArray(experience)) {
+          const formattedData = experience.map((data) => ({
+            ...data,
+            start_date: new Date(data.start_date),
+            end_date: new Date(data.end_date),
+          }));
+          reset({ experiences: formattedData });
+          setDataLoaded(true);
+        }
+      };
+      getData();
+    }
+  }, [id, dataLoaded, reset]);
+
   return (
-    <form className="overflow-y-auto" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="pt-16 px-44 w-full overflow-y-auto h-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       {fields.map((item, index) => (
-        <div key={item.id} className="mb-4 p-4 border border-gray-300 rounded">
-          <div>
-            <label className="block mb-1">Organization Name</label>
+        <div
+          key={item.id}
+          className="grid grid-cols-2 border-b py-4 border-gray-300 w-full gap-x-8 gap-y-2"
+        >
+          <div className="flex flex-col">
+            <label className="form-label">Organization Name</label>
             <input
               {...register(`experiences.${index}.name`)}
               className="form-input"
               placeholder="Organization name"
             />
-            {errors.experiences?.[index]?.name && (
-              <p className="text-red-500 text-sm">
+            {isSubmitted && errors.experiences?.[index]?.name && (
+              <p className="form-label text-sm text-red-500">
                 {errors.experiences[index]?.name?.message}
               </p>
             )}
           </div>
 
-          <div>
-            <label className="block mb-1">Position</label>
+          <div className="flex flex-col">
+            <label className="form-label">Position</label>
             <input
               {...register(`experiences.${index}.position`)}
               className="form-input"
               placeholder="Position"
             />
-            {errors.experiences?.[index]?.position && (
-              <p className="text-red-500 text-sm">
+            {isSubmitted && errors.experiences?.[index]?.position && (
+              <p className="form-label text-sm text-red-500">
                 {errors.experiences[index]?.position?.message}
               </p>
             )}
           </div>
 
-          <div>
-            <label className="block mb-1">Start Date</label>
+          <div className="flex flex-col">
+            <label className="form-label">Start Date</label>
             <Controller
               control={control}
               name={`experiences.${index}.start_date`}
@@ -97,15 +156,15 @@ const AddDoctorExperience = () => {
                 />
               )}
             />
-            {errors.experiences?.[index]?.start_date && (
-              <p className="text-red-500 text-sm">
+            {isSubmitted && errors.experiences?.[index]?.start_date && (
+              <p className="form-label text-sm text-red-500">
                 {errors.experiences[index]?.start_date?.message}
               </p>
             )}
           </div>
 
-          <div>
-            <label className="block mb-1">End Date</label>
+          <div className="flex flex-col">
+            <label className="form-label">End Date</label>
             <Controller
               control={control}
               name={`experiences.${index}.end_date`}
@@ -117,43 +176,43 @@ const AddDoctorExperience = () => {
                 />
               )}
             />
-            {errors.experiences?.[index]?.end_date && (
-              <p className="text-red-500 text-sm">
+            {isSubmitted && errors.experiences?.[index]?.end_date && (
+              <p className="form-label text-sm text-red-500">
                 {errors.experiences[index]?.end_date?.message}
               </p>
             )}
           </div>
 
-          <button
-            type="button"
-            onClick={() => remove(index)}
-            className="mt-2 text-red-500"
-          >
-            Remove Experience
-          </button>
+          <div className="flex gap-x-3 pt-4">
+            <button
+              type="button"
+              onClick={() =>
+                append({
+                  name: "",
+                  position: "",
+                  start_date: new Date(),
+                  end_date: new Date(),
+                  doctor_id: Number(id),
+                })
+              }
+            >
+              <FaPlusCircle size={22} className="text-teal-600" />
+            </button>
+            <button
+              type="button"
+              className="place-self-end"
+              onClick={() => handleDelete(index)}
+            >
+              <FaTrashAlt className="text-red-600" size={22} />
+            </button>
+          </div>
         </div>
       ))}
-
-      <button
-        type="button"
-        onClick={() =>
-          append({
-            name: "",
-            position: "",
-            start_date: new Date(),
-            end_date: new Date(),
-          })
-        }
-      >
-        + Add Experience
-      </button>
-
-      <button
-        type="submit"
-        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-      >
-        Submit
-      </button>
+      <div className="w-full flex justify-end pt-10">
+        <Button type="submit" className="w-1/2">
+          {isSubmitting ? "Loading..." : "Submit"}
+        </Button>
+      </div>
     </form>
   );
 };

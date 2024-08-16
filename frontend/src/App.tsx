@@ -6,11 +6,11 @@ import DashboardMain from "./components/dashboard/DashboardMain";
 import VisitsList from "./components/dashboard/VisitsList";
 import DoctorsList from "./components/dashboard/doctors/DoctorsList";
 import NotFoundPage from "./pages/NotFoundPage";
-import AddDoctor from "./components/dashboard/doctors/AddDoctor";
 import ManageList from "./components/dashboard/manage/ManageList";
 import EditDoctor from "./components/dashboard/doctors/EditDoctorById";
 import { Toaster } from "sonner";
 import AddDoctorExperience from "./components/dashboard/doctors/AddDoctorExperience";
+import CreateDoctorProfile from "./components/dashboard/doctors/CreateDoctorProfile";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
             <Route index element={<DashboardMain />}></Route>
             <Route path="visits" element={<VisitsList />}></Route>
             <Route path="doctors" element={<DoctorsList />}></Route>
-            <Route path="doctors/new" element={<AddDoctor />}></Route>
+            <Route path="doctors/new" element={<CreateDoctorProfile />}></Route>
             <Route path="doctors/:id/edit/" element={<EditDoctor />}></Route>
             <Route
               path="doctors/:id/experience/"
