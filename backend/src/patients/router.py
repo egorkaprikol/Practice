@@ -1,43 +1,58 @@
 from fastapi import APIRouter, status, Depends
 from sqlalchemy.orm import Session
 from backend.src.auth.repository import create_user
-from backend.src.database.config import db_dependency, get_db
-from backend.src.patients.repository import create_gender, create_patient, get_patients, get_visits_all_for_patients, \
-    get_all_genders
+from backend.src.database.config import get_db
+from backend.src.patients.repository import *
 from backend.src.patients.schemas import *
 
 
 router = APIRouter()
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
-async def register(
-        request: PatientCreateRequest,
-        db: Session = Depends(get_db),
-                ):
+@router.post("/patients", status_code=status.HTTP_201_CREATED)
+async def register(request: PatientCreateRequest, db: Session = Depends(get_db),):
     user = create_user(db, request.phone_number, request.password, 3)
     return await create_patient(request, user.id, db)
 
 
-@router.get("/get_patients", status_code=status.HTTP_200_OK)
-async def patients_get(db: db_dependency):
-    response = await get_patients(db)
+@router.patch("/patients", status_code=status.HTTP_200_OK)
+async def patient_update(patient_id: int, patient: PatientUpdate, db: db_dependency):
+    response = await update_patient(patient_id, patient, db)
     return response
 
 
-@router.post("/create_gender", status_code=status.HTTP_201_CREATED)
+@router.delete("/patients", status_code=status.HTTP_200_OK)
+async def patient_delete(patient_id: int, db: db_dependency):
+    response = await delete_patient(patient_id, db)
+    return response
+
+
+@router.get("/patients", status_code=status.HTTP_200_OK)
+async def patients_get_all(db: db_dependency):
+    response = await get_all_patients(db)
+    return response
+
+
+@router.get("/patients/{patient_id}", status_code=status.HTTP_200_OK)
+async def patient_get_by_id(patient_id: int, db: db_dependency):
+    response = await get_patient_by_id(patient_id, db)
+    return response
+
+
+@router.post("/genders", status_code=status.HTTP_201_CREATED)
 async def gender_create(gender: GenderBase, db: db_dependency):
     response = await create_gender(gender, db)
     return response
 
 
-@router.get("/get_all_genders", status_code=status.HTTP_200_OK)
+@router.get("/genders", status_code=status.HTTP_200_OK)
 async def get_genders_all(db: db_dependency):
     response = await get_all_genders(db)
     return response
 
 
-@router.get("/get_visits", status_code=status.HTTP_200_OK)
+@router.get("/patients/visits", status_code=status.HTTP_200_OK)
 async def visit_get(db: db_dependency, date: str = None):
     visits = await get_visits_all_for_patients(db, date)
     return {"visits": visits}
+

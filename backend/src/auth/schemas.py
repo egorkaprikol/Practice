@@ -48,3 +48,9 @@ class AdminUpdate(BaseModel):
     name: str
     surname: str
     patronymic: str = None
+
+
+class MultimediaBase(BaseModel):
+    name: str
+    url: str
+    type: str

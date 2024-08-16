@@ -30,7 +30,7 @@ async def get_all_admins(db: db_dependency):
     return response
 
 
-@router.get("/admins/:id", status_code=status.HTTP_200_OK)
+@router.get("/admins/{admin_id}", status_code=status.HTTP_200_OK)
 async def get_by_id(admin_id: int, db: db_dependency):
     response = await get_admin_by_id(admin_id, db)
     return response
@@ -74,7 +74,7 @@ async def role_create(role: RoleBase, db: db_dependency):
     return response
 
 
-@router.post("/files/upload", status_code=status.HTTP_200_OK)
-async def upload_file(image_file: Union[UploadFile, None] = None):
-    response = await upload_image(image_file)
-    return response
+# @router.post("/files/upload", status_code=status.HTTP_200_OK)
+# async def upload_file(image_file: UploadFile = File(None)):
+#     response = await upload_image(image_file)
+#     return response

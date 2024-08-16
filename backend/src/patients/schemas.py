@@ -20,3 +20,11 @@ class PatientCreateRequest(PatientBase):
     phone_number: str
     password: str
 
+
+class PatientUpdate(BaseModel):
+    name: str
+    surname: str
+    patronymic: str = None
+    gender_id: int
+    birth_date: date
+    address: str
