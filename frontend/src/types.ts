@@ -23,3 +23,12 @@ export type Profile = {
   name: string;
   description?: string;
 };
+
+export type Experience = {
+  name: string;
+  id?: number;
+  position: string;
+  start_date: string | Date;
+  end_date: string | Date;
+  doctor_id: number;
+};

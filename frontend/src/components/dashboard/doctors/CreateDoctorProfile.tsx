@@ -110,197 +110,195 @@ const CreateDoctorProfile = () => {
   };
 
   return (
-    <>
-      <form
-        className="grid pt-20 grid-cols-2 w-full gap-x-8 gap-y-2"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="flex flex-col">
-          <label htmlFor="name" className="font-light">
-            First Name*
-          </label>
-          <input
-            id="name"
-            className="form-input"
-            {...register("name")}
-            placeholder="e.g., John"
-          />
-          {errors.name && (
-            <p className="form-label text-sm text-red-500">
-              {errors.name.message}
-            </p>
-          )}
-        </div>
+    <form
+      className="px-44 grid pt-20 grid-cols-2 w-full gap-x-8 gap-y-2"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="flex flex-col">
+        <label htmlFor="name" className="form-label">
+          First Name*
+        </label>
+        <input
+          id="name"
+          className="form-input"
+          {...register("name")}
+          placeholder="e.g., John"
+        />
+        {errors.name && (
+          <p className="form-label text-sm text-red-500">
+            {errors.name.message}
+          </p>
+        )}
+      </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="surname" className="form-label">
-            Surname*
-          </label>
-          <input
-            id="surname"
-            className="form-input"
-            {...register("surname")}
-            placeholder="e.g., Doe"
-          />
-          {errors.surname && (
-            <p className="form-label text-sm text-red-500">
-              {errors.surname.message}
-            </p>
-          )}
-        </div>
+      <div className="flex flex-col">
+        <label htmlFor="surname" className="form-label">
+          Surname*
+        </label>
+        <input
+          id="surname"
+          className="form-input"
+          {...register("surname")}
+          placeholder="e.g., Doe"
+        />
+        {errors.surname && (
+          <p className="form-label text-sm text-red-500">
+            {errors.surname.message}
+          </p>
+        )}
+      </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="patronymic" className="form-label">
-            Patronymic
-          </label>
-          <input
-            id="patronymic"
-            className="form-input"
-            {...register("patronymic")}
-            placeholder="e.g., Ivanovich"
-          />
-          {errors.patronymic && (
-            <p className="form-label text-sm text-red-500">
-              {errors.patronymic.message}
-            </p>
-          )}
-        </div>
+      <div className="flex flex-col">
+        <label htmlFor="patronymic" className="form-label">
+          Patronymic
+        </label>
+        <input
+          id="patronymic"
+          className="form-input"
+          {...register("patronymic")}
+          placeholder="e.g., Ivanovich"
+        />
+        {errors.patronymic && (
+          <p className="form-label text-sm text-red-500">
+            {errors.patronymic.message}
+          </p>
+        )}
+      </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="birth_date" className="form-label">
-            Birth Date*
-          </label>
-          <Controller
-            name="birth_date"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                selected={field.value}
-                onChange={field.onChange}
-                dateFormat="yyyy-MM-dd"
-                placeholderText="yyyy-MM-dd"
-                className="form-input"
+      <div className="flex flex-col">
+        <label htmlFor="birth_date" className="form-label">
+          Birth Date*
+        </label>
+        <Controller
+          name="birth_date"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              selected={field.value}
+              onChange={field.onChange}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="yyyy-MM-dd"
+              className="form-input"
+            />
+          )}
+        />
+        {errors.birth_date && (
+          <p className="form-label text-sm text-red-500">
+            {errors.birth_date.message}
+          </p>
+        )}
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="phone_number" className="form-label">
+          Phone Number*
+        </label>
+        <input
+          id="phone_number"
+          className="form-input"
+          {...register("phone_number")}
+          placeholder="e.g., +7 999 012 1212"
+        />
+        {errors.phone_number && (
+          <p className="form-label text-sm text-red-500">
+            {errors.phone_number.message}
+          </p>
+        )}
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="gender_id" className="form-label">
+          Gender*
+        </label>
+        <div className="flex gap-4 h-full items-center">
+          {genders?.map((gender, index) => (
+            <div key={gender.id} className="flex gap-2 font-light">
+              <input
+                type="radio"
+                value={gender.id}
+                defaultChecked={index === 0}
+                {...register("gender_id")}
               />
-            )}
-          />
-          {errors.birth_date && (
-            <p className="form-label text-sm text-red-500">
-              {errors.birth_date.message}
-            </p>
-          )}
+              <label>{gender.name}</label>
+            </div>
+          ))}
         </div>
+        {errors.gender_id && (
+          <p className="form-label text-sm text-red-500">
+            {errors.gender_id.message}
+          </p>
+        )}
+      </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="phone_number" className="form-label">
-            Phone Number*
-          </label>
-          <input
-            id="phone_number"
-            className="form-input"
-            {...register("phone_number")}
-            placeholder="e.g., +7 999 012 1212"
-          />
-          {errors.phone_number && (
-            <p className="form-label text-sm text-red-500">
-              {errors.phone_number.message}
-            </p>
-          )}
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="gender_id" className="form-label">
-            Gender*
-          </label>
-          <div className="flex gap-4 h-full items-center">
-            {genders?.map((gender, index) => (
-              <div key={gender.id} className="flex gap-2 font-light">
-                <input
-                  type="radio"
-                  value={gender.id}
-                  defaultChecked={index === 0}
-                  {...register("gender_id")}
-                />
-                <label>{gender.name}</label>
-              </div>
-            ))}
-          </div>
-          {errors.gender_id && (
-            <p className="form-label text-sm text-red-500">
-              {errors.gender_id.message}
-            </p>
-          )}
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="profile_id" className="form-label">
-            Profile*
-          </label>
-          <select
-            id="profile_id"
-            {...register("profile_id")}
-            className="form-input"
-          >
-            <option disabled value="">
-              Select Profile
+      <div className="flex flex-col">
+        <label htmlFor="profile_id" className="form-label">
+          Profile*
+        </label>
+        <select
+          id="profile_id"
+          {...register("profile_id")}
+          className="form-input"
+        >
+          <option disabled value="">
+            Select Profile
+          </option>
+          {profiles?.map((profile) => (
+            <option key={profile.id} value={profile.id}>
+              {profile.name}
             </option>
-            {profiles?.map((profile) => (
-              <option key={profile.id} value={profile.id}>
-                {profile.name}
-              </option>
-            ))}
-          </select>
-          {errors.profile_id && (
-            <p className="form-label text-sm text-red-500">
-              {errors.profile_id.message}
-            </p>
-          )}
-        </div>
+          ))}
+        </select>
+        {errors.profile_id && (
+          <p className="form-label text-sm text-red-500">
+            {errors.profile_id.message}
+          </p>
+        )}
+      </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="password" className="form-label">
-            Password*
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="form-input"
-            {...register("password")}
-            placeholder="e.g., password123"
-          />
-          {errors.password && (
-            <p className="form-label text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
+      <div className="flex flex-col">
+        <label htmlFor="password" className="form-label">
+          Password*
+        </label>
+        <input
+          id="password"
+          type="password"
+          className="form-input"
+          {...register("password")}
+          placeholder="e.g., password123"
+        />
+        {errors.password && (
+          <p className="form-label text-sm text-red-500">
+            {errors.password.message}
+          </p>
+        )}
+      </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="image_file" className="form-label">
-            Image
-          </label>
-          <input
-            id="image_file"
-            type="file"
-            className="form-input"
-            onChange={handleFileInputChange}
-          />
-          {errors.image_file && (
-            <p className="form-label text-sm text-red-500">
-              {errors.image_file.message}
-            </p>
-          )}
-        </div>
-        <div className="flex items-end justify-center">
-          <Button
-            className="w-full mt-3 my-1"
-            disabled={isSubmitting}
-            type="submit"
-          >
-            {isSubmitting ? "Loading..." : "Add Doctor"}
-          </Button>
-        </div>
-      </form>
-    </>
+      <div className="flex flex-col">
+        <label htmlFor="image_file" className="form-label">
+          Image
+        </label>
+        <input
+          id="image_file"
+          type="file"
+          className="form-input"
+          onChange={handleFileInputChange}
+        />
+        {errors.image_file && (
+          <p className="form-label text-sm text-red-500">
+            {errors.image_file.message}
+          </p>
+        )}
+      </div>
+      <div className="flex items-end justify-center">
+        <Button
+          className="w-full mt-3 my-1"
+          disabled={isSubmitting}
+          type="submit"
+        >
+          {isSubmitting ? "Loading..." : "Create Profile"}
+        </Button>
+      </div>
+    </form>
   );
 };
 

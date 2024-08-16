@@ -1,4 +1,4 @@
-import { Doctor } from "../types";
+import { Doctor, Experience } from "../types";
 import { API_URL, getToken, handleResponse } from "./apiUtils";
 
 export interface DoctorsFilters {
@@ -26,18 +26,14 @@ export const getDoctorById = async (
   id: string
 ): Promise<Doctor | undefined> => {
   try {
-    const res = await fetch(`${API_URL}/doctors/:id?doctor_id=${id}`);
+    const res = await fetch(`${API_URL}/doctors/${id}`);
     if (!res.ok) {
       return undefined;
     }
-
     const data = await res.json();
-
-    // Предположим, что `data` — это массив, содержащий один объект `doctor`.
     if (Array.isArray(data) && data.length > 0) {
       return data[0] as Doctor;
     }
-
     return undefined;
   } catch (error) {
     console.error("Error fetching doctor by ID:", error);

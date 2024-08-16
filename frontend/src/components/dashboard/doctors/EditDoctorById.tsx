@@ -13,6 +13,7 @@ import { getProfiles } from "../../../services/profiles";
 import Button from "../shared/Button";
 import { toast } from "sonner";
 import { playNotification } from "../../../utils/playNotification";
+import { getExperienceById } from "../../../services/experience";
 
 const schema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -52,6 +53,10 @@ const EditDoctor = () => {
       };
     },
   });
+
+  const handleNavigateToExperience = () => {
+    navigate(`/admin/dashboard/doctors/${id}/experience`);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -117,7 +122,7 @@ const EditDoctor = () => {
   };
 
   return (
-    <div className="px-44">
+    <div className="px-44 ">
       <form
         className="grid pt-20 grid-cols-2 w-full gap-x-8 gap-y-2"
         onSubmit={handleSubmit(onSubmit)}
@@ -133,7 +138,7 @@ const EditDoctor = () => {
             placeholder="e.g., John"
           />
           {errors.name && (
-            <p className="form-label form-label text-sm text-red-500">
+            <p className=" form-label text-sm text-red-500">
               {errors.name.message}
             </p>
           )}
@@ -246,8 +251,14 @@ const EditDoctor = () => {
           )}
         </div>
 
-        <Button className="w-40 mt-3" disabled={isSubmitting} type="submit">
+        <Button className=" mt-3 w-full" disabled={isSubmitting} type="submit">
           {isSubmitting ? "Loading..." : "Edit doctor"}
+        </Button>
+        <Button
+          onClick={handleNavigateToExperience}
+          className="w-full mt-3 bg-slate-500 hover:bg-slate-600"
+        >
+          Edit experience →
         </Button>
       </form>
     </div>
