@@ -63,7 +63,7 @@ const DoctorsList = () => {
             setSearch(filters.search);
           }}
         />
-        <Button onClick={handleNavigate} className="w-60 py-1 px-3 my-1 h-10">
+        <Button onClick={handleNavigate} className=" w-60 py-1 px-3 my-1 h-10">
           Add new doctor
         </Button>
       </div>

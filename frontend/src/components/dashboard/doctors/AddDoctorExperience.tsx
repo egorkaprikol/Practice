@@ -53,7 +53,7 @@ const AddDoctorExperience = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="overflow-y-auto" onSubmit={handleSubmit(onSubmit)}>
       {fields.map((item, index) => (
         <div key={item.id} className="mb-4 p-4 border border-gray-300 rounded">
           <div>
