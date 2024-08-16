@@ -10,6 +10,7 @@ import AddDoctor from "./components/dashboard/doctors/AddDoctor";
 import ManageList from "./components/dashboard/manage/ManageList";
 import EditDoctor from "./components/dashboard/doctors/EditDoctorById";
 import { Toaster } from "sonner";
+import AddDoctorExperience from "./components/dashboard/doctors/AddDoctorExperience";
 
 function App() {
   return (
@@ -22,7 +23,11 @@ function App() {
             <Route path="visits" element={<VisitsList />}></Route>
             <Route path="doctors" element={<DoctorsList />}></Route>
             <Route path="doctors/new" element={<AddDoctor />}></Route>
-            <Route path="doctors/edit/:id" element={<EditDoctor />}></Route>
+            <Route path="doctors/:id/edit/" element={<EditDoctor />}></Route>
+            <Route
+              path="doctors/:id/experience/"
+              element={<AddDoctorExperience />}
+            ></Route>
             <Route path="manage" element={<ManageList />}></Route>
           </Route>
         </Route>

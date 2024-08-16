@@ -34,7 +34,7 @@ const DoctorsList = () => {
   };
 
   const handleNavigateToEdit = (id: number) => {
-    navigate(`edit/${id}`, { replace: true });
+    navigate(`${id}/edit`, { replace: true });
   };
 
   const handleNavigate = () => {
@@ -63,7 +63,7 @@ const DoctorsList = () => {
             setSearch(filters.search);
           }}
         />
-        <Button onClick={handleNavigate} className="w-60">
+        <Button onClick={handleNavigate} className=" w-60 py-1 px-3 my-1 h-10">
           Add new doctor
         </Button>
       </div>
@@ -85,7 +85,7 @@ const DoctorsList = () => {
           data.map((doctor, index) => (
             <div
               className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
-              key={doctor.login}
+              key={doctor.phone_number}
             >
               <div className="col-span-3 flex">
                 <div className="text-primary w-8 text-center">{index + 1}</div>
@@ -93,7 +93,7 @@ const DoctorsList = () => {
                   {doctor.name} {doctor.surname}
                 </div>
               </div>
-              <div className="col-span-2">{doctor.login}</div>
+              <div className="col-span-2">{doctor.phone_number}</div>
               <div className="col-span-2">{doctor.profile_name}</div>
               <div className="flex justify-end gap-5">
                 <button onClick={() => handleNavigateToEdit(doctor.id!)}>
