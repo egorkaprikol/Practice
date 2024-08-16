@@ -66,7 +66,6 @@ const AddDoctorExperience = () => {
     if (getValues().experiences.length > 1) {
       remove(i);
     } else {
-      reset();
     }
   };
   const onSubmit = async (data: FormFields) => {
