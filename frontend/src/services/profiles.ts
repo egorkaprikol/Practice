@@ -33,7 +33,13 @@ export const createProfile = async (data: Profile) => {
 
 export const deleteProfileById = async (id: number) => {
   try {
-    const res = await fetch(`${API_URL}/prodfiles?profile_id=${id}`);
+    const token = getToken();
+    const res = await fetch(`${API_URL}/profiles?profile_id=${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (!res.ok) {
       toast.error("Couldn`t remove profile");
       return;

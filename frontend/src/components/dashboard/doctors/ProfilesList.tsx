@@ -46,7 +46,7 @@ const ProfilesList = () => {
       }
     };
     getProfilesData();
-  }, []);
+  }, [refresh]);
 
   if (isLoading) return <div className=""> -- Loading -- </div>;
   return (

@@ -34,7 +34,9 @@ const CreateProfile = () => {
       }
       navigate("/admin/dashboard/profiles");
       toast.success("Profile created");
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <form
