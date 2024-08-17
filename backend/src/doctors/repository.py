@@ -1,5 +1,4 @@
 from typing import List
-
 from fastapi import HTTPException, status
 from backend.src.database.config import db_dependency
 from backend.src.doctors.schemas import *
@@ -370,7 +369,7 @@ async def get_all_experiences_by_doctor_id(doctor_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail="У данного доктора не указан опыт")
 
 
-async def get_visits_all_for_doctor(db: db_dependency, date: str = None):
+async def get_visits_all_for_doctors(db: db_dependency, date: str = None):
     visits = (
         db.query(
             models_visits.Visit.date,
