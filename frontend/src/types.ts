@@ -19,7 +19,7 @@ export type Gender = {
 };
 
 export type Profile = {
-  id: string;
+  id?: number;
   name: string;
   description?: string;
 };

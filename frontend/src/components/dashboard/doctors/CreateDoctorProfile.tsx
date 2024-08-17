@@ -111,9 +111,10 @@ const CreateDoctorProfile = () => {
 
   return (
     <form
-      className="px-44 grid pt-20 grid-cols-2 w-full gap-x-8 gap-y-2"
+      className="xl:px-52 md:px-24 px-6 grid pt-16 grid-cols-2 w-full gap-x-8 gap-y-2"
       onSubmit={handleSubmit(onSubmit)}
     >
+      <p className="text-2xl pb-4 font-semibold col-span-2">Create Doctor's profile</p>
       <div className="flex flex-col">
         <label htmlFor="name" className="form-label">
           First Name*

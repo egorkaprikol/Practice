@@ -13,7 +13,6 @@ import { getProfiles } from "../../../services/profiles";
 import Button from "../shared/Button";
 import { toast } from "sonner";
 import { playNotification } from "../../../utils/playNotification";
-import { getExperienceById } from "../../../services/experience";
 
 const schema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -122,146 +121,141 @@ const EditDoctor = () => {
   };
 
   return (
-    <div className="px-44 ">
-      <form
-        className="grid pt-20 grid-cols-2 w-full gap-x-8 gap-y-2"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="flex flex-col">
-          <label htmlFor="name" className="font-light">
-            First Name*
-          </label>
-          <input
-            id="name"
-            className="form-input"
-            {...register("name")}
-            placeholder="e.g., John"
-          />
-          {errors.name && (
-            <p className=" form-label text-sm text-red-500">
-              {errors.name.message}
-            </p>
+    <form
+      className="grid xl:px-52 md:px-24 px-6 pt-20 grid-cols-2 w-full gap-x-8 gap-y-2"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <p className="text-2xl pb-4 font-semibold col-span-2">
+        Edit Doctor's profile
+      </p>
+      <div className="flex flex-col">
+        <label htmlFor="name" className="font-light">
+          First Name*
+        </label>
+        <input
+          id="name"
+          className="form-input"
+          {...register("name")}
+          placeholder="e.g., John"
+        />
+        {errors.name && (
+          <p className=" form-label text-sm text-red-500">
+            {errors.name.message}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="surname" className="form-label">
+          Surname*
+        </label>
+        <input
+          id="surname"
+          className="form-input"
+          {...register("surname")}
+          placeholder="e.g., Doe"
+        />
+        {errors.surname && (
+          <p className="form-label form-label text-sm text-red-500">
+            {errors.surname.message}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="patronymic" className="form-label">
+          Patronymic
+        </label>
+        <input
+          id="patronymic"
+          className="form-input"
+          {...register("patronymic")}
+          placeholder="e.g., Ivanovich"
+        />
+        {errors.patronymic && (
+          <p className="form-label form-label text-sm text-red-500">
+            {errors.patronymic.message}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="birth_date" className="form-label">
+          Birth Date*
+        </label>
+        <Controller
+          name="birth_date"
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              selected={field.value}
+              onChange={field.onChange}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="yyyy-MM-dd"
+              className="form-input"
+            />
           )}
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="surname" className="form-label">
-            Surname*
-          </label>
-          <input
-            id="surname"
-            className="form-input"
-            {...register("surname")}
-            placeholder="e.g., Doe"
-          />
-          {errors.surname && (
-            <p className="form-label form-label text-sm text-red-500">
-              {errors.surname.message}
-            </p>
-          )}
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="patronymic" className="form-label">
-            Patronymic
-          </label>
-          <input
-            id="patronymic"
-            className="form-input"
-            {...register("patronymic")}
-            placeholder="e.g., Ivanovich"
-          />
-          {errors.patronymic && (
-            <p className="form-label form-label text-sm text-red-500">
-              {errors.patronymic.message}
-            </p>
-          )}
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="birth_date" className="form-label">
-            Birth Date*
-          </label>
-          <Controller
-            name="birth_date"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                selected={field.value}
-                onChange={field.onChange}
-                dateFormat="yyyy-MM-dd"
-                placeholderText="yyyy-MM-dd"
-                className="form-input"
+        />
+        {errors.birth_date && (
+          <p className="form-label form-label text-sm text-red-500">
+            {errors.birth_date.message}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-col ">
+        <label htmlFor="gender" className="form-label pr-4">
+          Gender*
+        </label>
+        <div className="flex gap-4 h-full items-center">
+          {genders?.map((gender) => (
+            <div key={gender.id} className="flex gap-2 font-light">
+              <input
+                type="radio"
+                value={gender.id}
+                defaultChecked={gender.name === doctor?.gender}
+                {...register("gender_id")}
               />
-            )}
-          />
-          {errors.birth_date && (
-            <p className="form-label form-label text-sm text-red-500">
-              {errors.birth_date.message}
-            </p>
-          )}
+              <label>{gender.name}</label>
+            </div>
+          ))}
         </div>
-
-        <div className="flex flex-col ">
-          <label htmlFor="gender" className="form-label pr-4">
-            Gender*
-          </label>
-          <div className="flex gap-4 h-full items-center">
-            {genders?.map((gender) => (
-              <div key={gender.id} className="flex gap-2 font-light">
-                <input
-                  type="radio"
-                  value={gender.id}
-                  defaultChecked={gender.name === doctor?.gender}
-                  {...register("gender_id")}
-                />
-                <label>{gender.name}</label>
-              </div>
-            ))}
-          </div>
-          {errors.gender_id && (
-            <p className="form-label form-label text-sm text-red-500">
-              {errors.gender_id.message}
-            </p>
-          )}
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="profile_id" className="form-label">
-            Profile
-          </label>
-          <select
-            id="profile_id"
-            {...register("profile_id")}
-            className="form-input"
-          >
-            <option value="" disabled>
-              Select Profile
-            </option>
-            {profiles?.map((profile) => (
-              <option key={profile.id} value={profile.id}>
-                {profile.name}
-              </option>
-            ))}
-          </select>
-          {errors.profile_id && (
-            <p className="form-label form-label text-sm text-red-500">
-              {errors.profile_id.message}
-            </p>
-          )}
-        </div>
-
-        <Button className=" mt-3 w-full" disabled={isSubmitting} type="submit">
-          {isSubmitting ? "Loading..." : "Edit doctor"}
-        </Button>
-        <Button
-          onClick={handleNavigateToExperience}
-          className="w-full mt-3 bg-slate-500 hover:bg-slate-600"
+        {errors.gender_id && (
+          <p className="form-label form-label text-sm text-red-500">
+            {errors.gender_id.message}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-col">
+        <label htmlFor="profile_id" className="form-label">
+          Profile
+        </label>
+        <select
+          id="profile_id"
+          {...register("profile_id")}
+          className="form-input"
         >
-          Edit experience →
-        </Button>
-      </form>
-    </div>
+          <option value="" disabled>
+            Select Profile
+          </option>
+          {profiles?.map((profile) => (
+            <option key={profile.id} value={profile.id}>
+              {profile.name}
+            </option>
+          ))}
+        </select>
+        {errors.profile_id && (
+          <p className="form-label form-label text-sm text-red-500">
+            {errors.profile_id.message}
+          </p>
+        )}
+      </div>
+      <Button className=" mt-3 w-full" disabled={isSubmitting} type="submit">
+        {isSubmitting ? "Loading..." : "Edit doctor"}
+      </Button>
+      <Button
+        onClick={handleNavigateToExperience}
+        className="w-full mt-3 bg-slate-500 hover:bg-slate-600"
+      >
+        Edit experience →
+      </Button>
+    </form>
   );
 };
 

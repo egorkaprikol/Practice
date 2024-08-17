@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { playNotification } from "../../../utils/playNotification";
 import { toast } from "sonner";
 import Button from "../shared/Button";
-import { FaPlusCircle, FaPlusSquare, FaTrashAlt } from "react-icons/fa";
+import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import {
   addDoctorsExperienceById,
   getExperienceById,
@@ -19,8 +19,10 @@ import {
 const experienceSchema = z.object({
   name: z.string().min(2, "Organization name is required"),
   position: z.string().min(2, "Position is required"),
-  start_date: z.date({ required_error: "Start date is required" }),
-  end_date: z.date({ required_error: "End date is required" }),
+  start_date: z
+    .date({ required_error: "Start date is required" })
+    .max(new Date()),
+  end_date: z.date({ required_error: "End date is required" }).max(new Date()),
   doctor_id: z.number(),
 });
 
@@ -58,14 +60,22 @@ const AddDoctorExperience = () => {
     },
   });
 
-  const { insert, fields, append, remove } = useFieldArray({
+  const { fields, append, insert, remove } = useFieldArray({
     control,
     name: "experiences",
   });
   const handleDelete = (i: number) => {
     if (getValues().experiences.length > 1) {
       remove(i);
-    } else {
+    } else if (i === 0 && getValues().experiences.length <= 1) {
+      remove(0);
+      insert(0, {
+        name: "",
+        position: "",
+        start_date: new Date(),
+        end_date: new Date(),
+        doctor_id: Number(id),
+      });
     }
   };
   const onSubmit = async (data: FormFields) => {
@@ -106,9 +116,10 @@ const AddDoctorExperience = () => {
 
   return (
     <form
-      className="pt-16 px-44 w-full overflow-y-auto h-full"
+      className="pt-16 xl:px-52 md:px-24 px-6 w-full overflow-y-auto h-full"
       onSubmit={handleSubmit(onSubmit)}
     >
+      <p className="text-2xl pb-4 font-semibold">Edit Doctor's experience</p>
       {fields.map((item, index) => (
         <div
           key={item.id}
