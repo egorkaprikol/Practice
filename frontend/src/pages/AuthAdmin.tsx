@@ -14,7 +14,6 @@ const AuthAdmin = () => {
       try {
         const isToken = await checkToken();
         if (isToken) {
-          console.log("auth");
           login();
           if (
             location.pathname === "/admin" ||
@@ -23,12 +22,10 @@ const AuthAdmin = () => {
             navigate("/admin/dashboard", { replace: true });
           }
         } else {
-          console.log("not auth");
           logout();
           navigate("/admin");
         }
       } catch (error) {
-        console.log("not auth");
         logout();
         navigate("/admin");
       } finally {

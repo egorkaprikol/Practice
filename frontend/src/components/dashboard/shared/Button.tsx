@@ -19,7 +19,7 @@ const Button = ({
   return (
     <button
       className={twMerge(
-        "p-2 rounded-xl text-white bg-primary font-bold flex  items-center justify-center w-20 h-10",
+        "p-2 rounded-xl text-white hover:bg-primary_hover bg-primary font-bold flex  items-center justify-center w-20 h-10",
         className
       )}
       type={type}
