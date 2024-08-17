@@ -30,9 +30,9 @@ const DashboardSidebar = () => {
         icon: FaUserDoctor,
       },
       {
-        active: pathname.startsWith("/admin/dashboard/manage"),
-        label: "Manage",
-        href: "/admin/dashboard/manage",
+        active: pathname.startsWith("/admin/dashboard/profiles"),
+        label: "Profiles",
+        href: "/admin/dashboard/profiles",
         icon: FaUserDoctor,
       },
       {

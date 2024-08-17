@@ -6,11 +6,12 @@ import DashboardMain from "./components/dashboard/DashboardMain";
 import VisitsList from "./components/dashboard/VisitsList";
 import DoctorsList from "./components/dashboard/doctors/DoctorsList";
 import NotFoundPage from "./pages/NotFoundPage";
-import ManageList from "./components/dashboard/manage/ManageList";
 import EditDoctor from "./components/dashboard/doctors/EditDoctorById";
 import { Toaster } from "sonner";
 import AddDoctorExperience from "./components/dashboard/doctors/AddDoctorExperience";
 import CreateDoctorProfile from "./components/dashboard/doctors/CreateDoctorProfile";
+import ProfilesList from "./components/dashboard/doctors/ProfilesList";
+import CreateProfile from "./components/dashboard/doctors/CreateProfile";
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
               path="doctors/:id/experience/"
               element={<AddDoctorExperience />}
             ></Route>
-            <Route path="manage" element={<ManageList />}></Route>
+            <Route path="profiles" element={<ProfilesList />}></Route>
+            <Route path="profiles/new" element={<CreateProfile />}></Route>
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />}></Route>

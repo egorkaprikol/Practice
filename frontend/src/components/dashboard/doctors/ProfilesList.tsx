@@ -1,35 +1,29 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Button from "../shared/Button";
 import { useNavigate } from "react-router-dom";
-import {
-  deleteDoctorById,
-  DoctorsFilters,
-  getFilteredDoctors,
-} from "../../../services/doctors";
-import DoctorsListsFilters from "./DoctorsListsFilters";
-import { Doctor } from "../../../types";
+import { deleteProfileById, getProfiles } from "../../../services/profiles";
+import { Profile } from "../../../types";
 import { twMerge } from "tailwind-merge";
 import { toast } from "sonner";
 import { playNotification } from "../../../utils/playNotification";
-const DoctorsList = () => {
-  const [data, setData] = useState<Doctor[] | undefined>([]);
+const ProfilesList = () => {
+  const [data, setData] = useState<Profile[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
-  const [search, setSearch] = useState<DoctorsFilters["search"]>();
   const navigate = useNavigate();
 
-  const handleDeleteDoctor = async (id: number) => {
+  const handleDeleteProfile = async (id: number) => {
     try {
-      const res = await deleteDoctorById(id);
+      const res = await deleteProfileById(id);
       if (res) {
         setRefresh(!refresh); // Обновляем состояние, чтобы компонент перерисовался
         playNotification(3);
-        toast.success("Doctor deleted");
+        toast.success("Profile removed");
       }
     } catch (error) {
-      console.error("Ошибка при удалении доктора:", error);
+      console.error("deleting profile error:", error);
     }
   };
 
@@ -41,66 +35,57 @@ const DoctorsList = () => {
     navigate("new", { replace: true });
   };
   useEffect(() => {
-    const getDoctorsData = async () => {
+    const getProfilesData = async () => {
       try {
-        const doctorsData = await getFilteredDoctors({ search });
-        setData(doctorsData);
+        const profilesData = await getProfiles();
+        setData(profilesData);
       } catch (error) {
-        console.error(error);
+        alert(error);
       } finally {
         setIsLoading(false);
       }
     };
-    getDoctorsData();
-  }, [search, refresh]);
+    getProfilesData();
+  }, [refresh]);
 
   if (isLoading) return <div className=""> -- Loading -- </div>;
   return (
     <div className="h-full flex flex-col">
       <div className="pb-5 flex justify-between items-center sticky top-0 bg-white z-10">
-        <DoctorsListsFilters
-          onChange={(filters) => {
-            setSearch(filters.search);
-          }}
-        />
-        <p className="font-semibold text-2xl">Doctors</p>
+        <p className="font-semibold text-2xl place-self-center">Profiles</p>
         <Button onClick={handleNavigate} className=" w-60 py-1 px-3 my-1 h-10">
-          Add new doctor
+          Add new profile
         </Button>
       </div>
       <div
         className={twMerge(
-          "grid grid-cols-8 gap-3 pb-4 sticky top-[68px] bg-white z-10"
+          "grid grid-cols-5 gap-3 pb-4 sticky top-[68px] bg-white z-10"
         )}
       >
-        <div className="text-primary flex col-span-3">
+        <div className="text-primary flex col-span-2">
           <div className="w-8 text-center">#</div>
           <div className="">Name</div>
         </div>
-        <div className="text-primary col-span-2">Number</div>
-        <div className="text-primary col-span-2">Profile</div>
+        <div className="text-primary col-span-2">Description</div>
         <div className="text-primary flex justify-self-end">Actions</div>
       </div>
       <div className={twMerge("overflow-y-auto hide-scrollbar flex-1")}>
         {data &&
-          data.map((doctor, index) => (
+          data.map((profile, index) => (
             <div
-              className="grid grid-cols-8 py-4 gap-3 border-t border-gray-300"
-              key={doctor.phone_number}
+              className="grid grid-cols-5 py-4 gap-3 border-t border-gray-300"
+              key={profile.id}
             >
-              <div className="col-span-3 flex">
+              <div className="col-span-2 flex">
                 <div className="text-primary w-8 text-center">{index + 1}</div>
-                <div className="">
-                  {doctor.name} {doctor.surname}
-                </div>
+                <div className="">{profile.name}</div>
               </div>
-              <div className="col-span-2">{doctor.phone_number}</div>
-              <div className="col-span-2">{doctor.profile_name}</div>
+              <div className="col-span-2">{profile.description}</div>
               <div className="flex justify-end gap-5">
-                <button onClick={() => handleNavigateToEdit(doctor.id!)}>
+                <button onClick={() => handleNavigateToEdit(profile.id!)}>
                   <FaEdit className="text-teal-600" />
                 </button>
-                <button onClick={() => handleDeleteDoctor(doctor.id!)}>
+                <button onClick={() => handleDeleteProfile(profile.id!)}>
                   <FaTrashAlt className="text-red-600" size={18} />
                 </button>
               </div>
@@ -111,4 +96,4 @@ const DoctorsList = () => {
   );
 };
 
-export default DoctorsList;
+export default ProfilesList;
