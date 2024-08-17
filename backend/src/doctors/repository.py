@@ -312,26 +312,27 @@ async def add_experience(experiences: List[ExperienceBase], db: db_dependency):
     return {"message": "Опыт успешно добавлен"}
 
 
-async def update_experience(experience_id: int, experience: ExperienceUpdate, db: db_dependency):
+async def update_experience(experience_id: int, experiences: List[ExperienceUpdate], db: db_dependency):
 
-    db_experience = db.query(models_doctors.Experience).filter(models_doctors.Experience.id == experience_id).first()
+    for experience in experiences:
+        db_experience = db.query(models_doctors.Experience).filter(models_doctors.Experience.id == experience_id).first()
 
-    if db_experience:
-        if experience.name:
-            db_experience.name = experience.name,
-        if experience.position:
-            db_experience.position = experience.position,
-        if experience.start_date:
-            db_experience.start_date = experience.start_date,
-        if experience.end_date:
-            db_experience.end_date = experience.end_date,
-        if experience.doctor_id:
-            db_experience.doctor_id = experience.doctor_id
-        db.commit()
-        db.refresh(db_experience)
-        return {"message": "Опыт успешно обновлен", "Experience": db_experience}
+        if db_experience:
+            if experience.name:
+                db_experience.name = experience.name,
+            if experience.position:
+                db_experience.position = experience.position,
+            if experience.start_date:
+                db_experience.start_date = experience.start_date,
+            if experience.end_date:
+                db_experience.end_date = experience.end_date,
+            if experience.doctor_id:
+                db_experience.doctor_id = experience.doctor_id
+            db.commit()
+            db.refresh(db_experience)
+            return {"message": "Опыт успешно обновлен", "Experience": db_experience}
 
-    raise HTTPException(status_code=404, detail="Опыт не найден")
+        raise HTTPException(status_code=404, detail="Опыт не найден")
 
 
 async def delete_experience(experience_id: int, db: db_dependency):

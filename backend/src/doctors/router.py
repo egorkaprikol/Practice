@@ -113,8 +113,8 @@ async def experience_create(experiences: List[ExperienceBase], db: db_dependency
 
 
 @router.put("/experiences", status_code=status.HTTP_200_OK)
-async def experience_update(experience_id: int, experience: ExperienceUpdate, db: db_dependency):
-    response = await update_experience(experience_id, experience, db)
+async def experience_update(experience_id: int, experiences: List[ExperienceUpdate], db: db_dependency):
+    response = await update_experience(experience_id, experiences, db)
     return response
 
 
