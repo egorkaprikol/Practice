@@ -369,26 +369,4 @@ async def get_all_experiences_by_doctor_id(doctor_id: int, db: db_dependency):
         raise HTTPException(status_code=404, detail="У данного доктора не указан опыт")
 
 
-async def get_visits_all_for_doctors(db: db_dependency, date: str = None):
-    visits = (
-        db.query(
-            models_visits.Visit.date,
-            models_patients.Patient.name.label("patient_name"),
-            models_patients.Patient.surname.label("patient_surname"),
-            models_patients.Patient.patronymic.label("patient_patronymic"),
-        )
-        .join(models_patients.Patient, models_visits.Visit.patient_id == models_patients.Patient.id)
-    )
-
-    if date:
-        visits = visits.filter(models_visits.Visit.date == date)
-
-    return [
-        {
-            "date": visit.date,
-            "patient_name": f"{visit.patient_name} {visit.patient_surname} {visit.patient_patronymic}",
-        }
-        for visit in visits.all()
-    ]
-
 

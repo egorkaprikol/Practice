@@ -74,7 +74,7 @@ async def role_create(role: RoleBase, db: db_dependency):
     return response
 
 
-# @router.post("/files/upload", status_code=status.HTTP_200_OK)
-# async def upload_file(image_file: UploadFile = File(None)):
-#     response = await upload_image(image_file)
-#     return response
+@router.post("/files/upload", status_code=status.HTTP_200_OK)
+async def upload_file(image_file: UploadFile = File(None)):
+    response = await upload_image(image_file)
+    return response

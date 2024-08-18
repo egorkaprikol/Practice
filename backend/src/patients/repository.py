@@ -2,8 +2,6 @@ from fastapi import HTTPException
 from backend.src.database.config import db_dependency
 from backend.src.patients import models as models_patients
 from backend.src.patients.schemas import *
-from backend.src.visits import models as models_visits
-from backend.src.doctors import models as models_doctors
 from backend.src.auth import models as models_auth
 
 
@@ -139,27 +137,6 @@ async def get_all_genders(db: db_dependency):
     return db_genders
 
 
-async def get_visits_all_for_patients(db: db_dependency, date: str = None):
-    visits = (
-        db.query(
-            models_visits.Visit.date,
-            models_doctors.Doctor.name.label("doctor_name"),
-            models_doctors.Doctor.surname.label("doctor_surname"),
-            models_doctors.Doctor.patronymic.label("doctor_patronymic"),
-        )
-        .join(models_doctors.Doctor, models_visits.Visit.doctor_id == models_doctors.Doctor.id)
-    )
-
-    if date:
-        visits = visits.filter(models_visits.Visit.date == date)
-
-    return [
-        {
-            "date": visit.date,
-            "doctor_name": f"{visit.doctor_name} {visit.doctor_surname} {visit.doctor_patronymic}",
-        }
-        for visit in visits.all()
-    ]
 
 
 

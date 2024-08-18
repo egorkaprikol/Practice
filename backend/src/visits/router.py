@@ -31,6 +31,18 @@ async def visit_get_by_id(db: db_dependency, visit_id):
     return response
 
 
+@router.get("/visits/for_doctors/all", status_code=status.HTTP_200_OK)
+async def visit_get(db: db_dependency, date: str = None):
+    response = await get_visits_all_for_doctors(db, date)
+    return response
+
+
+@router.get("/visits/for_patients/all", status_code=status.HTTP_200_OK)
+async def visit_get(db: db_dependency, date: str = None):
+    response = await get_visits_all_for_patients(db, date)
+    return response
+
+
 @router.post("/appointments", status_code=status.HTTP_201_CREATED)
 async def appointment_create(appointment: AppointmentBase, db: db_dependency):
     response = await create_appointment(appointment, db)

@@ -213,35 +213,17 @@ def get_password_hash(password: str):
     return pwd_context.hash(password)
 
 
-# async def upload_image(image_file: UploadFile = File(None), multimedia: MultimediaBase):
-#
-#     default_image_path = Path("multimedia/user.jpg")
-#
-#     if image_file:
-#
-#         data = await image_file.read()
-#         save_to = Path("mediafiles/") / image_file.filename
-#         with open(save_to, "wb") as f:
-#             f.write(data)
-#         db_image = models_auth.Multimedia(
-#                 name=multimedia.name,
-#                 url=multimedia.url,
-#                 type=multimedia.type)
-#         db.add(db_image)
-#         db.commit()
-#         db.refresh(db_image)
-#
-#         return {"file_name": image_file.filename,
-#                 "file_type": image_file.content_type,
-#                 "file_path": save_to}
-#
-#     else:
-#
-#         if default_image_path.exists():
-#             return {
-#                 "file_name": default_image_path.name,
-#                 "file_type": default_image_path.suffix[1:],
-#                 "file_path": default_image_path
-#             }
-#         else:
-#             raise HTTPException(status_code=404, detail="Default image not found")
+async def upload_image(image_file: UploadFile = File(None)):
+
+    if image_file:
+
+        data = await image_file.read()
+        save_to = Path("mediafiles/") / image_file.filename
+        with open(save_to, "wb") as f:
+            f.write(data)
+        return {"file_name": image_file.filename,
+                "file_type": image_file.content_type,
+                "file_path": save_to}
+    else:
+       raise HTTPException(status_code=404, detail="Default image not found")
+

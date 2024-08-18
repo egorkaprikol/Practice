@@ -156,6 +156,52 @@ async def get_visit_by_id(db: db_dependency, visit_id):
         raise HTTPException(status_code=404, detail="Осмотр не найден")
 
 
+async def get_visits_all_for_doctors(db: db_dependency, date: str = None):
+    visits = (
+        db.query(
+            models_visits.Visit.date,
+            models_patients.Patient.name.label("patient_name"),
+            models_patients.Patient.surname.label("patient_surname"),
+            models_patients.Patient.patronymic.label("patient_patronymic"),
+        )
+        .join(models_patients.Patient, models_visits.Visit.patient_id == models_patients.Patient.id)
+    )
+
+    if date:
+        visits = visits.filter(models_visits.Visit.date == date).all()
+
+    return [
+        {
+            "date": visit.date,
+            "patient_name": f"{visit.patient_name} {visit.patient_surname} {visit.patient_patronymic}",
+        }
+        for visit in visits
+    ]
+
+
+async def get_visits_all_for_patients(db: db_dependency, date: str = None):
+    visits = (
+        db.query(
+            models_visits.Visit.date,
+            models_doctors.Doctor.name.label("doctor_name"),
+            models_doctors.Doctor.surname.label("doctor_surname"),
+            models_doctors.Doctor.patronymic.label("doctor_patronymic"),
+        )
+        .join(models_doctors.Doctor, models_visits.Visit.doctor_id == models_doctors.Doctor.id)
+    )
+
+    if date:
+        visits = visits.filter(models_visits.Visit.date == date).all()
+
+    return [
+        {
+            "date": visit.date,
+            "doctor_name": f"{visit.doctor_name} {visit.doctor_surname} {visit.doctor_patronymic}",
+        }
+        for visit in visits
+    ]
+
+
 async def create_appointment(appointment: AppointmentBase, db: db_dependency):
     db_appointment = models_visits.Appointment(date=appointment.date,
                                                doctor_id=appointment.doctor_id,

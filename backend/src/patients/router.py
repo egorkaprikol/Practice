@@ -51,8 +51,3 @@ async def get_genders_all(db: db_dependency):
     return response
 
 
-@router.get("/visits/patients", status_code=status.HTTP_200_OK)
-async def visit_get(db: db_dependency, date: str = None):
-    visits = await get_visits_all_for_patients(db, date)
-    return {"visits": visits}
-

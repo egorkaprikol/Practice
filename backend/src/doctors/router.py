@@ -135,8 +135,3 @@ async def experience_get_all_by_doctor_id(doctor_id: int, db: db_dependency):
     response = await get_all_experiences_by_doctor_id(doctor_id, db)
     return response
 
-
-@router.get("/visits/doctors")
-async def visit_get(db: db_dependency, date: str = None):
-    visits = await get_visits_all_for_doctors(db, date)
-    return {"visits": visits}
