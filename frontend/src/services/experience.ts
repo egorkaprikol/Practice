@@ -18,6 +18,14 @@ export const addDoctorsExperienceById = async (items: Experience[]) => {
   }
 };
 
+export const editDoctorsExperienceById = async (id: string) => {
+  try {
+    const token = getToken();
+    const res = await fetch(`${API_URL}/experience`);
+    return res;
+  } catch (error) {}
+};
+
 export const getExperienceById = async (id: string) => {
   try {
     const res = await fetch(`${API_URL}/experiences/get_by_doctor_id/${id}`);

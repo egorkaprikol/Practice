@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import AddDoctorExperience from "./components/dashboard/doctors/AddDoctorExperience";
 import CreateDoctorProfile from "./components/dashboard/doctors/CreateDoctorProfile";
 import ProfilesList from "./components/dashboard/doctors/ProfilesList";
+import EditProfileById from "./components/dashboard/doctors/EditProfileById";
 import CreateProfile from "./components/dashboard/doctors/CreateProfile";
 
 function App() {
@@ -30,6 +31,10 @@ function App() {
               element={<AddDoctorExperience />}
             ></Route>
             <Route path="profiles" element={<ProfilesList />}></Route>
+            <Route
+              path="profiles/:id/edit"
+              element={<EditProfileById />}
+            ></Route>
             <Route path="profiles/new" element={<CreateProfile />}></Route>
           </Route>
         </Route>

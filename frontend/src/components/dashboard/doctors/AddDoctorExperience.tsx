@@ -12,8 +12,10 @@ import Button from "../shared/Button";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import {
   addDoctorsExperienceById,
+  editDoctorsExperienceById,
   getExperienceById,
 } from "../../../services/experience";
+import { twMerge } from "tailwind-merge";
 
 // Zod schema for validation
 const experienceSchema = z.object({
@@ -38,6 +40,7 @@ const AddDoctorExperience = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [mode, setMode] = useState<"add" | "update">("add");
   const {
     register,
     control,
@@ -85,11 +88,26 @@ const AddDoctorExperience = () => {
         start_date: format(new Date(item.start_date), "yyyy-MM-dd"),
         end_date: format(new Date(item.end_date), "yyyy-MM-dd"),
       }));
-      const res = await addDoctorsExperienceById(formattedData);
-      if (res) {
-        playNotification(2);
-        navigate(`/admin/dashboard/doctors`);
-        toast.success("Experience has been successfully added");
+      switch (mode) {
+        case "add":
+          {
+            const res = await addDoctorsExperienceById(formattedData);
+            if (res) {
+              playNotification(2);
+              navigate(`/admin/dashboard/doctors`);
+              toast.success("Experience has been successfully added");
+            }
+          }
+          break;
+        case "update": {
+          const res = await editDoctorsExperienceById("2");
+          if (res) {
+            playNotification(2);
+            navigate(`/admin/dashboard/doctors`);
+            toast.success("Experience has been successfully added");
+          }
+          break;
+        }
       }
     } catch (error) {
       console.error("Error adding doctor experience", error);
@@ -116,15 +134,21 @@ const AddDoctorExperience = () => {
 
   return (
     <form
-      className="pt-16 xl:px-52 md:px-24 px-6 w-full overflow-y-auto h-full"
+      className="pt-8 xl:px-52 md:px-24 px-6 w-full overflow-y-auto h-full"
       onSubmit={handleSubmit(onSubmit)}
     >
       <p className="text-2xl pb-4 font-semibold">Edit Doctor's experience</p>
       {fields.map((item, index) => (
         <div
           key={item.id}
-          className="grid grid-cols-2 border-b py-4 border-gray-300 w-full gap-x-8 gap-y-2"
+          className="grid grid-cols-2 py-2  w-full gap-x-8 gap-y-2"
         >
+          <div className="col-span-2 flex  justify-between gap-x-3">
+            <div className="text-base font-semibold">#{index + 1}</div>
+            <button type="button" onClick={() => handleDelete(index)}>
+              <FaTrashAlt className="text-red-600" size={18} />
+            </button>
+          </div>
           <div className="flex flex-col">
             <label className="form-label">Organization Name</label>
             <input
@@ -138,7 +162,6 @@ const AddDoctorExperience = () => {
               </p>
             )}
           </div>
-
           <div className="flex flex-col">
             <label className="form-label">Position</label>
             <input
@@ -152,7 +175,6 @@ const AddDoctorExperience = () => {
               </p>
             )}
           </div>
-
           <div className="flex flex-col">
             <label className="form-label">Start Date</label>
             <Controller
@@ -172,7 +194,6 @@ const AddDoctorExperience = () => {
               </p>
             )}
           </div>
-
           <div className="flex flex-col">
             <label className="form-label">End Date</label>
             <Controller
@@ -193,28 +214,27 @@ const AddDoctorExperience = () => {
             )}
           </div>
 
-          <div className="flex gap-x-3 pt-4">
-            <button
-              type="button"
-              onClick={() =>
-                append({
-                  name: "",
-                  position: "",
-                  start_date: new Date(),
-                  end_date: new Date(),
-                  doctor_id: Number(id),
-                })
-              }
-            >
-              <FaPlusCircle size={22} className="text-teal-600" />
-            </button>
-            <button
-              type="button"
-              className="place-self-end"
-              onClick={() => handleDelete(index)}
-            >
-              <FaTrashAlt className="text-red-600" size={22} />
-            </button>
+          <div className="border-t col-span-2 mt-1 border-t-gray-300">
+            {index === getValues().experiences.length - 1 ? (
+              <button
+                className="mt-3 flex gap-x-2"
+                type="button"
+                onClick={() =>
+                  append({
+                    name: "",
+                    position: "",
+                    start_date: new Date(),
+                    end_date: new Date(),
+                    doctor_id: Number(id),
+                  })
+                }
+              >
+                <FaPlusCircle size={26} className="text-teal-600" />
+                Add Experience
+              </button>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ))}
