@@ -145,7 +145,11 @@ const ExperienceForm = () => {
     switch (method) {
       case "update": {
         const res = await deleteDoctorsExperienceById(id!);
-        if (res?.ok) navigate("/admin/dashboard/doctors");
+        if (res?.ok) {
+          navigate("/admin/dashboard/doctors");
+          playNotification();
+          toast.success("Experience has been successfully deleted!");
+        }
         break;
       }
       case "create":
@@ -271,7 +275,7 @@ const ExperienceForm = () => {
             ? "Add Experience"
             : "Edit Experience"}
         </Button>
-        <Button onClick={() => handleRemoveExperience()} className="w-1/3">
+        <Button onClick={handleRemoveExperience} className="w-1/3">
           {isSubmitting ? "Loading..." : "No experience"}
         </Button>
       </div>
