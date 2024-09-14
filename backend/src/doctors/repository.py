@@ -345,6 +345,20 @@ async def delete_experience(experience_id: int, db: db_dependency):
     raise HTTPException(status_code=404, detail="Опыт не найден")
 
 
+async def delete_experience_by_doctor_id(doctor_id: int, db: db_dependency):
+    db_doctor = db.query(models_doctors.Doctor).filter(models_doctors.Doctor.id == doctor_id).first()
+
+    if not db_doctor:
+        raise HTTPException(status_code=404, detail="Доктор не найден")
+
+    db_experiences = db.query(models_doctors.Experience).filter(models_doctors.Experience.doctor_id == doctor_id).all()
+    for experience in db_experiences:
+        db.delete(experience)
+        db.commit()
+
+    raise HTTPException(status_code=404, detail="Опыт не найден")
+
+
 async def get_experience_by_id(experience_id: int, db: db_dependency):
 
     db_experience = db.query(models_doctors.Experience).filter(models_doctors.Experience.id == experience_id).first()
