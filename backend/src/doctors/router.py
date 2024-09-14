@@ -124,6 +124,12 @@ async def experience_delete(experience_id: int, db: db_dependency):
     return response
 
 
+@router.delete("/experiences/doctor_id={doctor_id}", status_code=status.HTTP_200_OK)
+async def delete_experience_by_doctor(doctor_id: int, db: db_dependency):
+    response = await delete_experience_by_doctor_id(doctor_id, db)
+    return response
+
+
 @router.get("/experiences/{experience_id}", status_code=status.HTTP_200_OK)
 async def experience_get_by_id(experience_id: int, db: db_dependency):
     response = await get_experience_by_id(experience_id, db)

@@ -37,7 +37,7 @@ type FormFields = z.infer<typeof schema>;
 //   onComplete?: () => void;
 // }
 
-const CreateDoctorProfile = () => {
+const CreateDoctor = () => {
   const [genders, setGenders] = useState<Gender[]>();
   const [profiles, setProfiles] = useState<Profile[]>();
   const navigate = useNavigate();
@@ -97,7 +97,7 @@ const CreateDoctorProfile = () => {
       const res = await createDoctor(formattedData);
       if (res) {
         playNotification(2);
-        navigate(`/admin/dashboard/doctors/${res}/experience`);
+        navigate(`/admin/dashboard/doctors/${res}/experience/`);
         toast.success(
           `Doctor ${data.surname} ${data.name} has been successfully added`
         );
@@ -114,7 +114,9 @@ const CreateDoctorProfile = () => {
       className="xl:px-52 md:px-24 px-6 grid pt-16 grid-cols-2 w-full gap-x-8 gap-y-2"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <p className="text-2xl pb-4 font-semibold col-span-2">Create Doctor's profile</p>
+      <p className="text-2xl pb-4 font-semibold col-span-2">
+        Create Doctor's profile
+      </p>
       <div className="flex flex-col">
         <label htmlFor="name" className="form-label">
           First Name*
@@ -303,4 +305,4 @@ const CreateDoctorProfile = () => {
   );
 };
 
-export default CreateDoctorProfile;
+export default CreateDoctor;

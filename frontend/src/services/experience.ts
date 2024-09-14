@@ -18,12 +18,33 @@ export const addDoctorsExperienceById = async (items: Experience[]) => {
   }
 };
 
-export const editDoctorsExperienceById = async (id: string) => {
+export const editDoctorsExperienceById = async (
+  items: Experience[],
+  id: string
+) => {
+  const res = await deleteDoctorsExperienceById(id).then(() =>
+    addDoctorsExperienceById(items)
+  );
+  return res;
+};
+
+export const deleteDoctorsExperienceById = async (id: string) => {
+  console.log(id);
   try {
     const token = getToken();
-    const res = await fetch(`${API_URL}/experience`);
+    const res = await fetch(`${API_URL}/experiences/doctor_id=${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(res.statusText);
+    console.log(res);
     return res;
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    return;
+  }
 };
 
 export const getExperienceById = async (id: string) => {
