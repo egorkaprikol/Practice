@@ -8,7 +8,6 @@ import DoctorsList from "./components/dashboard/doctors/DoctorsList";
 import NotFoundPage from "./pages/NotFoundPage";
 import EditDoctor from "./components/dashboard/doctors/EditDoctorById";
 import { Toaster } from "sonner";
-import AddDoctorExperience from "./components/dashboard/doctors/AddDoctorExperience";
 import CreateDoctor from "./components/dashboard/doctors/CreateDoctor";
 import ProfilesList from "./components/dashboard/doctors/ProfilesList";
 import EditProfileById from "./components/dashboard/doctors/EditProfileById";
