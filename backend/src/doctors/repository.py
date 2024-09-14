@@ -355,7 +355,7 @@ async def delete_experience_by_doctor_id(doctor_id: int, db: db_dependency):
     for experience in db_experiences:
         db.delete(experience)
         db.commit()
-
+    return {"message": "Опыт успешно удален"}
     raise HTTPException(status_code=404, detail="Опыт не найден")
 
 
