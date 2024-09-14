@@ -8,11 +8,11 @@ import DoctorsList from "./components/dashboard/doctors/DoctorsList";
 import NotFoundPage from "./pages/NotFoundPage";
 import EditDoctor from "./components/dashboard/doctors/EditDoctorById";
 import { Toaster } from "sonner";
-import AddDoctorExperience from "./components/dashboard/doctors/AddDoctorExperience";
 import CreateDoctor from "./components/dashboard/doctors/CreateDoctor";
 import ProfilesList from "./components/dashboard/doctors/ProfilesList";
 import EditProfileById from "./components/dashboard/doctors/EditProfileById";
 import CreateProfile from "./components/dashboard/doctors/CreateProfile";
+import ExperienceForm from "./components/dashboard/doctors/ExperienceForm";
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
             <Route path="doctors/:id/edit/" element={<EditDoctor />}></Route>
             <Route
               path="doctors/:id/experience/"
-              element={<AddDoctorExperience />}
+              element={<ExperienceForm />}
             ></Route>
             <Route path="profiles" element={<ProfilesList />}></Route>
             <Route

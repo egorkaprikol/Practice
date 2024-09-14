@@ -16,7 +16,7 @@ import {
   editDoctorsExperienceById,
   getExperienceById,
 } from "../../../services/experience";
-import { Experience } from "../../../types";
+// import { Experience } from "../../../types";
 
 // Zod schema for validation
 const experienceSchema = z.object({
@@ -37,19 +37,16 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>;
 
-interface ExperienceFormProps {
-  redirectURL?: string;
-  method: "create" | "update";
-  id: string;
-  defaultData?: Experience;
-}
+// interface ExperienceFormProps {
+//   redirectURL?: string;
+//   method: "create" | "update";
+//   id: string;
+//   defaultData?: Experience;
+// }
 
-const ExperienceForm = ({
-  method,
-  defaultData,
-  id,
-  redirectURL,
-}: ExperienceFormProps) => {
+const ExperienceForm = () => {
+  const { id } = useParams<{ id: string }>();
+  const [method, setMethod] = useState<"create" | "update">("create");
   const navigate = useNavigate();
   const [dataLoaded, setDataLoaded] = useState(false);
   const {
@@ -129,15 +126,16 @@ const ExperienceForm = ({
     if (!dataLoaded) {
       const getData = async () => {
         const experience = await getExperienceById(id!);
-        if (Array.isArray(experience)) {
+        if (Array.isArray(experience) && experience.length > 0) {
+          setMethod("update");
           const formattedData = experience.map((data) => ({
             ...data,
             start_date: new Date(data.start_date),
             end_date: new Date(data.end_date),
           }));
           reset({ experiences: formattedData });
-          setDataLoaded(true);
         }
+        setDataLoaded(true);
       };
       getData();
     }
@@ -146,8 +144,7 @@ const ExperienceForm = ({
   const handleRemoveExperience = async () => {
     switch (method) {
       case "update": {
-        console.log("rem");
-        const res = await deleteDoctorsExperienceById(id);
+        const res = await deleteDoctorsExperienceById(id!);
         if (res?.ok) navigate("/admin/dashboard/doctors");
         break;
       }
@@ -258,7 +255,7 @@ const ExperienceForm = ({
                 }
               >
                 <FaPlusCircle size={26} className="text-teal-600" />
-                {method === "create" ? "Add Experience" : "Edit Experience"}
+                Add Experience
               </button>
             ) : (
               ""
@@ -268,9 +265,13 @@ const ExperienceForm = ({
       ))}
       <div className="w-full flex justify-between pt-10">
         <Button type="submit" className="w-1/3">
-          {isSubmitting ? "Loading..." : "Submit"}
+          {isSubmitting
+            ? "Loading..."
+            : method === "create"
+            ? "Add Experience"
+            : "Edit Experience"}
         </Button>
-        <Button onClick={handleRemoveExperience} className="w-1/3">
+        <Button onClick={() => handleRemoveExperience()} className="w-1/3">
           {isSubmitting ? "Loading..." : "No experience"}
         </Button>
       </div>
